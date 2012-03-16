@@ -344,7 +344,7 @@ garvb1 init 0 ;</Orcini_tw>
   <ana_sense_cb>1</ana_sense_cb>
   <audio_driver_mbw>JACK</audio_driver_mbw>
   <base_param_le>12</base_param_le>
-  <bkp_path_pe>/home/er/Csgrouper/run/bkp/</bkp_path_pe>
+  <bkp_path_pe>~/Csgrouper/run/bkp/</bkp_path_pe>
   <char_set>0123456789ABCDEFGHIJKLMN</char_set>
   <cline>$CsgObj-&gt;sequences-&gt;{Seq_1}-&gt;tree-&gt;notes-&gt;{0}-&gt;Shownote()</cline>
   <cs_after></cs_after>
@@ -354,8 +354,8 @@ garvb1 init 0 ;</Orcini_tw>
   <csg_file>~/Csgrouper/lib/csgrouper.pl</csg_file>
   <csg_key>2011-12-05_16:05:41</csg_key>
   <csg_label>2</csg_label>
-  <csg_part>/home/er/Csgrouper/run/default.xml</csg_part>
-  <csg_path_pe>/home/er/Csgrouper/</csg_path_pe>
+  <csg_part>~/Csgrouper/run/default.xml</csg_part>
+  <csg_path_pe>~/Csgrouper/</csg_path_pe>
   <csg_status>reload : init</csg_status>
   <csg_version>2.0.1</csg_version>
   <csound_hbuffer_le>1024</csound_hbuffer_le>
@@ -365,7 +365,7 @@ garvb1 init 0 ;</Orcini_tw>
   <csound_path_pe>/usr/bin/csound</csound_path_pe>
   <csound_sample_mbw>SHORT</csound_sample_mbw>
   <csound_sbuffer_le>256</csound_sbuffer_le>
-  <csound_sf2path_pe>/home/er/Csgrouper/ins/sf2/</csound_sf2path_pe>
+  <csound_sf2path_pe>~/Csgrouper/ins/sf2/</csound_sf2path_pe>
   <csound_sr_le>44100</csound_sr_le>
   <db_encoding>latin1</db_encoding>
   <db_name_le>series</db_name_le>
@@ -1758,7 +1758,7 @@ endin</i7_content>
   <i7_path>~/Csgrouper/ins/flute.in</i7_path>
   <i7_type>ins</i7_type>
   <ins_param_le>i1</ins_param_le>
-  <ins_path_pe>/home/er/Csgrouper/ins/</ins_path_pe>
+  <ins_path_pe>~/Csgrouper/ins/</ins_path_pe>
   <interface>Csgrouperinter</interface>
   <midi_driver_mbw>ALSA</midi_driver_mbw>
   <min_amp>0</min_amp>
@@ -1776,7 +1776,7 @@ endin</i7_content>
   <part_durtype_mw>0</part_durtype_mw>
   <part_intersil_le>2</part_intersil_le>
   <part_octs_le>333333333333</part_octs_le>
-  <part_path_pe>/home/er/Csgrouper/part/</part_path_pe>
+  <part_path_pe>~/Csgrouper/part/</part_path_pe>
   <part_randur_cb>0</part_randur_cb>
   <part_rythmtype_mw>3</part_rythmtype_mw>
   <part_sections_le>1,2;3</part_sections_le>
@@ -1797,8 +1797,8 @@ endin</i7_content>
   <part_yryc_le>1#B,2#B</part_yryc_le>
   <range_param_le>3</range_param_le>
   <realtime_params_le>-o dac</realtime_params_le>
-  <render_path_pe>/home/er/Csgrouper/run/sndout/</render_path_pe>
-  <run_path_pe>/home/er/Csgrouper/run/</run_path_pe>
+  <render_path_pe>~/Csgrouper/run/sndout/</render_path_pe>
+  <run_path_pe>~/Csgrouper/run/</run_path_pe>
   <saved>2012-03-16_10:07:12</saved>
   <savenotes_enabled_cb>disabled</savenotes_enabled_cb>
   <sel_sect>0</sel_sect>
