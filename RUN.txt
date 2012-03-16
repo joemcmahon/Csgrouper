@@ -1,6 +1,5 @@
 
 
-
 *** How to run Csgrouper?
 
 Once installed Csgrouper can be run with the default part by running 
@@ -21,17 +20,25 @@ It can also take an argument which is the name of a part file as in:
 
 *** How to produce audio output?
 
-Once a set of sequences is properly defined it can pass the evaluation stage (button "Eval" from the "Sequences" tab or from the "CSD" tab). If this evaluation completes, it's ready to be written (button "Rewrite" from the "CSD" tab) and then only it can be heard through the button "Play" from the "CSD" tab.
+Once a set of sequences is properly defined it can pass the evaluation stage 
+(button "Eval" from the "Sequences" tab or from the "CSD" tab). If this evaluation 
+completes, it's ready to be written (button "Rewrite" from the "CSD" tab) 
+and then only it can be heard through the button "Play" from the "CSD" tab.
 
-When producing output some sequences can be easily commented out but this must be done from the "CSD" tab by mentionning their coma-separated ids list into the proper field instead of deselecting them from the "Sequences" tab, because this last action would modify the structure of the part and its resulting output. 
+When producing output some sequences can be easily commented out but this must be 
+done from the "CSD" tab by mentionning their coma-separated ids list into the proper 
+field instead of deselecting them from the "Sequences" tab, because this last action 
+would modify the structure of the part and its resulting output. 
 
 
 
 *** How to run in DEBUG mode?
 
-Csgrouper outputs a lot of description output on the terminal, prefixed by ' *** DESCR', but it can output still much more when running in debug mode.
+Csgrouper outputs a lot of description output on the terminal, prefixed by 
+' *** DESCR', but it can output still much more when running in debug mode.
 
-One can do this through various means, either for a particular subroutine, for a group of them or for all.
+One can do this through various means, either for a particular subroutine, 
+for a group of them or for all.
 
 a) Debug All:
 
@@ -41,7 +48,9 @@ From the "Series" tab:
 
 	~$Csgrouper::DEBFLAG = 1 
 
-into the "cmd line" field and press button "Send". All commands prefixed with a '~' are Perl oneliners that can access the modules' globals. (Command without prefixe are Csgrouper function calls mainly useful for csg_Sets.pm).
+into the "cmd line" field and press button "Send". 
+All commands prefixed with a '~' are Perl oneliners that can access the modules' globals. 
+(Command without prefixe are Csgrouper function calls mainly useful for csg_Sets.pm).
 
 	~$Csgrouper::DEBFLAG = 0 (to suppress debug output).
 
