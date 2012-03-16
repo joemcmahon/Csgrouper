@@ -1,0 +1,1812 @@
+<opt>
+  <A_octs_le>333444333444</A_octs_le>
+  <A_series_le>A0376D14GHEBC2598F</A_series_le>
+  <B_octs_le>333444333444</B_octs_le>
+  <B_series_le>19A20345678B</B_series_le>
+  <Ftb_tw>; 	WAVE FORMS: f1,f1*,f1**.
+f1   0   4096  10 1 ; Simple sine
+f10  0   65536 10 1 ; Sine	
+f101 0 513 9 .5 1 0; Half sine
+f11 0 8192 9 1 1 90; Cosine
+
+f12 0 513 9 1 1 0 3 .333 180 5 .2 0 7 .143 180 9 .111 0; Triangle 
+
+f13 0   512  7  1  512 -1 ; Saw
+f131 0   1024  7  0  124 1 900 0 ; Saw
+f132 0 513 10 1 .5 .333 .25 .2 .166 .143 .125 .111 .1 .0909 .0833 .077 ; Sawtooth wave -all harmonics -&gt; 13th.
+
+f14 0   1024  7  1  512 1 0 -1 512 -1; Square
+f141 0 513 10 1 0 .333 0 .2 0 .143 0 .111 0 .0909 0 .077 0 .0666 0 .0588; Square (odd harmonics-&gt;17th)
+
+f150 0   1024  21 1 ; Noise
+
+
+; 	END WAVE FORMS
+;
+;	ENVELOPES  : f2, f2*, f2**
+f20  0  1025 5 .01 824 1 200 .75 ; 	Slow attack, peak, fast rel.
+f21  0  513 8 0 150 0,5 50 1 113 1 50 0.5 150 0 ; 	Quasi gaussian. fog speed chng
+f22  0  1025 5 .01 10 1 1015 .45 ; 	Fast attack, peak, fast rel.
+f23  0  1024 19 .5 .5 270 .5 ; 	Grain envelope. [was f60]
+f24  0  1025 5  .001 824 1 200 .75 ; space env [was f51]
+
+; 	END ENVELOPES
+;	 
+;	 FM CARIER : f3, f3*, f3**
+f3  0 1025 20 9 1  ; 	
+f30 0 1024 6  0 1024 1  ; 	
+f31 0 1024 10 .3 0 0 0 .1 .1 .1 .1 .1 .1 ; 	
+f32 0 8193 6  0 2048 1 2048 -1 2048 1 2049 0; 	
+f33 0 8193 6  0 2048 .25 2048 .5 2048 .75 2049 1 ;
+; 	END FM CARIER
+;	 
+; 	RANDOM SERIES : f4, f4*, f4** 
+f9000 0   16 -2  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ; 	 test
+f9001 0   16 -2  1 2 3 4 5 6 7 8 9 8 7 6 5 4 3 2 1 ; 	 Additive table 1
+f9002 0   16 -2  3 1 2 6 4 5 9 8 7 8 6 4 5 3 1 2 1 ; 	 Additive table 2
+;	END RANDOM SERIES
+;	 
+; 	SOUND SAMPLES : f5, f5*, f5** 
+;f#  t siz 1 filcod skip frmt chan; 0 = all ch., 0 = head. frmt, 4=16bit, 5=32L, 6=32F.	
+;f50 0  524288 1 &quot;female.aif&quot; 0 4 0 ;	
+; 	END SOUND SAMPLES
+;	 
+; 	LOCAL F-TABLES
+; LOCAL F-TABLES rev. 080501: f1**** : never use f9*.. (reseved to tables made on the fly).
+; 	WAVE FORMS: f10001,f1001*,f101**.
+; 	END WAVE FORMS
+;
+;	ENVELOPES  : f10002, f1002*, f102**
+; 	END ENVELOPES
+;	 
+;	FM CARIER : f10003, f10023*, f103**
+; 	END FM CARIER
+;	 
+; 	RANDOM SERIES : f10004, f1004*, f104**
+f10004 0  	8 -2  1 2 3 4 5 6 7 8 9 10 11	; Random series test
+f10041 0  	8 -2  10 2 0 6 4 8	 		; space series 1 H0
+f10042 0  	8 -2  1 7 9 5 11 3			; Random series 1
+f10043 0  	8 -2  6 9 6 1 6 4			; Random series 2
+f10044 0  	8 -2  1 6 9 6 1 6 4			; Random series 3
+;	END RANDOM SERIES
+;	 
+; 	SOUND SAMPLES : f10005, f1005*, f105**
+;f#  t siz 1 filcod skip frmt chan; 0 = all ch., 0 = head. frmt, 4=16bit, 5=32L, 6=32F.	
+;; soundin 100 = Cello.wav, 102 = Violin.aif.
+;f10051 0 	65536  1 	&quot;Violin-2.aiff&quot; .3 0 1; 67785 samples, 1.537 sec. 16bit, stereo 
+; 	END SOUND SAMPLES
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;	END LOCAL F-TABLES
+;****************************************************************</Ftb_tw>
+  <I1>2012-03-16_09:57:27</I1>
+  <I2>2012-03-16_09:57:27</I2>
+  <I3>2012-03-16_09:57:27</I3>
+  <I4>2012-03-16_09:57:27</I4>
+  <I5>2012-03-16_09:57:28</I5>
+  <I576>2012-03-16_09:57:28</I576>
+  <I6>2012-03-16_09:57:28</I6>
+  <I7>2012-03-16_09:57:28</I7>
+  <N_param_le>1</N_param_le>
+  <Notes_tw>Some notes...</Notes_tw>
+  <Orcini_tw>; global reverbs:
+
+garvbsig init 0 ;
+gacmb1 init 0 ;	
+gacmb2 init 0 ;	
+gacmb3 init 0 ;	
+gacmb4 init 0 ;	
+gamet1 init 0 ;	
+garvb1 init 0 ;</Orcini_tw>
+  <Score_tw></Score_tw>
+  <Seq_1_tid>1</Seq_1_tid>
+  <Seq_2_tid>2</Seq_2_tid>
+  <Seq_3_tid>3</Seq_3_tid>
+  <Seq_4_tid>4</Seq_4_tid>
+  <Seq_5_tid>5</Seq_5_tid>
+  <Seq_6_tid>6</Seq_6_tid>
+  <Seq_7_tid>7</Seq_7_tid>
+  <Seq_8_tid>8</Seq_8_tid>
+  <Sflag>0</Sflag>
+  <Tkrow_1_A>F8952CBEHG41D6730A</Tkrow_1_A>
+  <Tkrow_1_Aoct>555555555555555555</Tkrow_1_Aoct>
+  <Tkrow_1_Aroc>0</Tkrow_1_Aroc>
+  <Tkrow_1_B>0123456789ABCDEFGH</Tkrow_1_B>
+  <Tkrow_1_Boct>777777777777777777</Tkrow_1_Boct>
+  <Tkrow_1_Broc>0</Tkrow_1_Broc>
+  <Tkrow_1_basis>18</Tkrow_1_basis>
+  <Tkrow_1_com>Gradual of the dodecaphonic reverse (R) for the bass.</Tkrow_1_com>
+  <Tkrow_1_exp>1</Tkrow_1_exp>
+  <Tkrow_1_fun>Gradual</Tkrow_1_fun>
+  <Tkrow_1_funt>Gradual(A)d</Tkrow_1_funt>
+  <Tkrow_1_id>1</Tkrow_1_id>
+  <Tkrow_1_ind>1</Tkrow_1_ind>
+  <Tkrow_1_ins>i1</Tkrow_1_ins>
+  <Tkrow_1_mode>0123456789ABCDEFGH</Tkrow_1_mode>
+  <Tkrow_1_modo>0</Tkrow_1_modo>
+  <Tkrow_1_n>1</Tkrow_1_n>
+  <Tkrow_1_name>R Basse</Tkrow_1_name>
+  <Tkrow_1_ord>0123456789ABCDEFGH</Tkrow_1_ord>
+  <Tkrow_1_pre>1</Tkrow_1_pre>
+  <Tkrow_1_rep>0</Tkrow_1_rep>
+  <Tkrow_1_sel>1</Tkrow_1_sel>
+  <Tkrow_1_sets>1</Tkrow_1_sets>
+  <Tkrow_1_sign>++++++++++++++++++</Tkrow_1_sign>
+  <Tkrow_1_tone>0</Tkrow_1_tone>
+  <Tkrow_1_x>0</Tkrow_1_x>
+  <Tkrow_1_y>0</Tkrow_1_y>
+  <Tkrow_1_z>0</Tkrow_1_z>
+  <Tkrow_2_A>A2HDE71G436980FBC5</Tkrow_2_A>
+  <Tkrow_2_Aoct>666666666666666666</Tkrow_2_Aoct>
+  <Tkrow_2_Aroc>0</Tkrow_2_Aroc>
+  <Tkrow_2_B>0123456789ABCDEFGH</Tkrow_2_B>
+  <Tkrow_2_Boct>777777777777777777</Tkrow_2_Boct>
+  <Tkrow_2_Broc>0</Tkrow_2_Broc>
+  <Tkrow_2_basis>18</Tkrow_2_basis>
+  <Tkrow_2_com>Gradual of the dodecaphonic inverse (I) for an alto voice.</Tkrow_2_com>
+  <Tkrow_2_exp>1</Tkrow_2_exp>
+  <Tkrow_2_fun>Gradual</Tkrow_2_fun>
+  <Tkrow_2_funt>Gradual(A)d</Tkrow_2_funt>
+  <Tkrow_2_id>2</Tkrow_2_id>
+  <Tkrow_2_ind>2</Tkrow_2_ind>
+  <Tkrow_2_ins>i2</Tkrow_2_ins>
+  <Tkrow_2_mode>0123456789ABCDEFGH</Tkrow_2_mode>
+  <Tkrow_2_modo>0</Tkrow_2_modo>
+  <Tkrow_2_n>1</Tkrow_2_n>
+  <Tkrow_2_name>I Alto</Tkrow_2_name>
+  <Tkrow_2_ord>0123456789ABCDEFGH</Tkrow_2_ord>
+  <Tkrow_2_pre>2</Tkrow_2_pre>
+  <Tkrow_2_rep>0</Tkrow_2_rep>
+  <Tkrow_2_sel>1</Tkrow_2_sel>
+  <Tkrow_2_sets>1</Tkrow_2_sets>
+  <Tkrow_2_sign>++++++++++++++++++</Tkrow_2_sign>
+  <Tkrow_2_tone>0</Tkrow_2_tone>
+  <Tkrow_2_x>0</Tkrow_2_x>
+  <Tkrow_2_y>0</Tkrow_2_y>
+  <Tkrow_2_z>0</Tkrow_2_z>
+  <Tkrow_3_A>5CBF089634G17EDH2A</Tkrow_3_A>
+  <Tkrow_3_Aoct>777777777777777777</Tkrow_3_Aoct>
+  <Tkrow_3_Aroc>0</Tkrow_3_Aroc>
+  <Tkrow_3_B>0123456789ABCDEFGH</Tkrow_3_B>
+  <Tkrow_3_Boct>777777777777777777</Tkrow_3_Boct>
+  <Tkrow_3_Broc>0</Tkrow_3_Broc>
+  <Tkrow_3_basis>18</Tkrow_3_basis>
+  <Tkrow_3_com>Gradual of the opposite (O) for a soprano.</Tkrow_3_com>
+  <Tkrow_3_exp>1</Tkrow_3_exp>
+  <Tkrow_3_fun>Gradual</Tkrow_3_fun>
+  <Tkrow_3_funt>Gradual(A)d</Tkrow_3_funt>
+  <Tkrow_3_id>3</Tkrow_3_id>
+  <Tkrow_3_ind>3</Tkrow_3_ind>
+  <Tkrow_3_ins>i3</Tkrow_3_ins>
+  <Tkrow_3_mode>0123456789ABCDEFGH</Tkrow_3_mode>
+  <Tkrow_3_modo>0</Tkrow_3_modo>
+  <Tkrow_3_n>1</Tkrow_3_n>
+  <Tkrow_3_name>O Soprano</Tkrow_3_name>
+  <Tkrow_3_ord>0123456789ABCDEFGH</Tkrow_3_ord>
+  <Tkrow_3_pre>3</Tkrow_3_pre>
+  <Tkrow_3_rep>0</Tkrow_3_rep>
+  <Tkrow_3_sel>1</Tkrow_3_sel>
+  <Tkrow_3_sets>1</Tkrow_3_sets>
+  <Tkrow_3_sign>++++++++++++++++++</Tkrow_3_sign>
+  <Tkrow_3_tone>0</Tkrow_3_tone>
+  <Tkrow_3_x>0</Tkrow_3_x>
+  <Tkrow_3_y>0</Tkrow_3_y>
+  <Tkrow_3_z>0</Tkrow_3_z>
+  <Tkrow_4_A>A0376D14GHEBC2598F</Tkrow_4_A>
+  <Tkrow_4_Aoct>887777777777777777</Tkrow_4_Aoct>
+  <Tkrow_4_Aroc>1</Tkrow_4_Aroc>
+  <Tkrow_4_B>0123456789ABCDEFGH</Tkrow_4_B>
+  <Tkrow_4_Boct>777777777777777777</Tkrow_4_Boct>
+  <Tkrow_4_Broc>0</Tkrow_4_Broc>
+  <Tkrow_4_basis>18</Tkrow_4_basis>
+  <Tkrow_4_com>Oppgrad of the root series (S) - not the same as gradual of the opposite - for the solo flute in section 1.</Tkrow_4_com>
+  <Tkrow_4_exp>1</Tkrow_4_exp>
+  <Tkrow_4_fun>Oppgrad</Tkrow_4_fun>
+  <Tkrow_4_funt>Gradual(Opposite(A))</Tkrow_4_funt>
+  <Tkrow_4_id>4</Tkrow_4_id>
+  <Tkrow_4_ind>4</Tkrow_4_ind>
+  <Tkrow_4_ins>i7,sta=16</Tkrow_4_ins>
+  <Tkrow_4_mode>0123456789ABCDEFGH</Tkrow_4_mode>
+  <Tkrow_4_modo>0</Tkrow_4_modo>
+  <Tkrow_4_n>1</Tkrow_4_n>
+  <Tkrow_4_name>S Flute</Tkrow_4_name>
+  <Tkrow_4_ord>0123456789ABCDEFGH</Tkrow_4_ord>
+  <Tkrow_4_pre>4</Tkrow_4_pre>
+  <Tkrow_4_rep>0</Tkrow_4_rep>
+  <Tkrow_4_sel>1</Tkrow_4_sel>
+  <Tkrow_4_sets>1</Tkrow_4_sets>
+  <Tkrow_4_sign>++++++++++++++++++</Tkrow_4_sign>
+  <Tkrow_4_tone>0</Tkrow_4_tone>
+  <Tkrow_4_x>0</Tkrow_4_x>
+  <Tkrow_4_y>0</Tkrow_4_y>
+  <Tkrow_4_z>0</Tkrow_4_z>
+  <Tkrow_5_A>F8952CBEHG41D6730A</Tkrow_5_A>
+  <Tkrow_5_Aoct>555555555555555555</Tkrow_5_Aoct>
+  <Tkrow_5_Aroc>1</Tkrow_5_Aroc>
+  <Tkrow_5_B>0123456789ABCDEFGH</Tkrow_5_B>
+  <Tkrow_5_Boct>777777777777777777</Tkrow_5_Boct>
+  <Tkrow_5_Broc>0</Tkrow_5_Broc>
+  <Tkrow_5_basis>18</Tkrow_5_basis>
+  <Tkrow_5_com>Bass (R) oppgrad support with randocts.</Tkrow_5_com>
+  <Tkrow_5_exp>1</Tkrow_5_exp>
+  <Tkrow_5_fun>Oppgrad</Tkrow_5_fun>
+  <Tkrow_5_funt>Gradual(Opposite(A))</Tkrow_5_funt>
+  <Tkrow_5_id>5</Tkrow_5_id>
+  <Tkrow_5_ind>5</Tkrow_5_ind>
+  <Tkrow_5_ins>i4</Tkrow_5_ins>
+  <Tkrow_5_mode>0123456789ABCDEFGH</Tkrow_5_mode>
+  <Tkrow_5_modo>0</Tkrow_5_modo>
+  <Tkrow_5_n>1</Tkrow_5_n>
+  <Tkrow_5_name>R Basse 2</Tkrow_5_name>
+  <Tkrow_5_ord>0123456789ABCDEFGH</Tkrow_5_ord>
+  <Tkrow_5_pre>5</Tkrow_5_pre>
+  <Tkrow_5_rep>0</Tkrow_5_rep>
+  <Tkrow_5_sel>1</Tkrow_5_sel>
+  <Tkrow_5_sets>2</Tkrow_5_sets>
+  <Tkrow_5_sign>++++++++++++++++++</Tkrow_5_sign>
+  <Tkrow_5_tone>0</Tkrow_5_tone>
+  <Tkrow_5_x>0</Tkrow_5_x>
+  <Tkrow_5_y>0</Tkrow_5_y>
+  <Tkrow_5_z>0</Tkrow_5_z>
+  <Tkrow_6_A>A2HDE71G436980FBC5</Tkrow_6_A>
+  <Tkrow_6_Aoct>666666666666666666</Tkrow_6_Aoct>
+  <Tkrow_6_Aroc>1</Tkrow_6_Aroc>
+  <Tkrow_6_B>0123456789ABCDEFGH</Tkrow_6_B>
+  <Tkrow_6_Boct>777777777777777777</Tkrow_6_Boct>
+  <Tkrow_6_Broc>0</Tkrow_6_Broc>
+  <Tkrow_6_basis>18</Tkrow_6_basis>
+  <Tkrow_6_com>Alto (I) oppgrad support with randocts.</Tkrow_6_com>
+  <Tkrow_6_exp>1</Tkrow_6_exp>
+  <Tkrow_6_fun>Oppgrad</Tkrow_6_fun>
+  <Tkrow_6_funt>Gradual(Opposite(A))</Tkrow_6_funt>
+  <Tkrow_6_id>6</Tkrow_6_id>
+  <Tkrow_6_ind>6</Tkrow_6_ind>
+  <Tkrow_6_ins>i5</Tkrow_6_ins>
+  <Tkrow_6_mode>0123456789ABCDEFGH</Tkrow_6_mode>
+  <Tkrow_6_modo>0</Tkrow_6_modo>
+  <Tkrow_6_n>1</Tkrow_6_n>
+  <Tkrow_6_name>I Alto 2</Tkrow_6_name>
+  <Tkrow_6_ord>0123456789ABCDEFGH</Tkrow_6_ord>
+  <Tkrow_6_pre>6</Tkrow_6_pre>
+  <Tkrow_6_rep>0</Tkrow_6_rep>
+  <Tkrow_6_sel>1</Tkrow_6_sel>
+  <Tkrow_6_sets>2</Tkrow_6_sets>
+  <Tkrow_6_sign>++++++++++++++++++</Tkrow_6_sign>
+  <Tkrow_6_tone>0</Tkrow_6_tone>
+  <Tkrow_6_x>0</Tkrow_6_x>
+  <Tkrow_6_y>0</Tkrow_6_y>
+  <Tkrow_6_z>0</Tkrow_6_z>
+  <Tkrow_7_A>5CBF089634G17EDH2A</Tkrow_7_A>
+  <Tkrow_7_Aoct>777777777777777777</Tkrow_7_Aoct>
+  <Tkrow_7_Aroc>1</Tkrow_7_Aroc>
+  <Tkrow_7_B>0123456789ABCDEFGH</Tkrow_7_B>
+  <Tkrow_7_Boct>777777777777777777</Tkrow_7_Boct>
+  <Tkrow_7_Broc>0</Tkrow_7_Broc>
+  <Tkrow_7_basis>18</Tkrow_7_basis>
+  <Tkrow_7_com>Soprane (O) oppgrad support with randocts.</Tkrow_7_com>
+  <Tkrow_7_exp>1</Tkrow_7_exp>
+  <Tkrow_7_fun>Oppgrad</Tkrow_7_fun>
+  <Tkrow_7_funt>Gradual(Opposite(A))</Tkrow_7_funt>
+  <Tkrow_7_id>7</Tkrow_7_id>
+  <Tkrow_7_ind>7</Tkrow_7_ind>
+  <Tkrow_7_ins>i6</Tkrow_7_ins>
+  <Tkrow_7_mode>0123456789ABCDEFGH</Tkrow_7_mode>
+  <Tkrow_7_modo>0</Tkrow_7_modo>
+  <Tkrow_7_n>1</Tkrow_7_n>
+  <Tkrow_7_name>O Soprano 2</Tkrow_7_name>
+  <Tkrow_7_ord>0123456789ABCDEFGH</Tkrow_7_ord>
+  <Tkrow_7_pre>7</Tkrow_7_pre>
+  <Tkrow_7_rep>0</Tkrow_7_rep>
+  <Tkrow_7_sel>1</Tkrow_7_sel>
+  <Tkrow_7_sets>2</Tkrow_7_sets>
+  <Tkrow_7_sign>++++++++++++++++++</Tkrow_7_sign>
+  <Tkrow_7_tone>0</Tkrow_7_tone>
+  <Tkrow_7_x>0</Tkrow_7_x>
+  <Tkrow_7_y>0</Tkrow_7_y>
+  <Tkrow_7_z>0</Tkrow_7_z>
+  <Tkrow_8_A>0123456789ABCDEFGH0123456789ABCDEFGH0123456789ABCDEFGH0123456789ABCDEFGH0123456789ABCDEFGH0123456789ABCDEFGH</Tkrow_8_A>
+  <Tkrow_8_Aoct>444444444444444444555555555555555555666666666666666666777777777777777777888888888888888888999999999999999999</Tkrow_8_Aoct>
+  <Tkrow_8_Aroc>0</Tkrow_8_Aroc>
+  <Tkrow_8_B>0123456789ABCDEFGH</Tkrow_8_B>
+  <Tkrow_8_Boct>777777777777777777</Tkrow_8_Boct>
+  <Tkrow_8_Broc>0</Tkrow_8_Broc>
+  <Tkrow_8_basis>18</Tkrow_8_basis>
+  <Tkrow_8_com>To locate notes in base 18 and test some chords.</Tkrow_8_com>
+  <Tkrow_8_exp>1</Tkrow_8_exp>
+  <Tkrow_8_fun>Suite</Tkrow_8_fun>
+  <Tkrow_8_funt>Suite(A,oct)</Tkrow_8_funt>
+  <Tkrow_8_id>8</Tkrow_8_id>
+  <Tkrow_8_ind>8</Tkrow_8_ind>
+  <Tkrow_8_ins>i7</Tkrow_8_ins>
+  <Tkrow_8_mode>0123456789ABCDEFGH</Tkrow_8_mode>
+  <Tkrow_8_modo>0</Tkrow_8_modo>
+  <Tkrow_8_n>1</Tkrow_8_n>
+  <Tkrow_8_name>Gamme chromatique.</Tkrow_8_name>
+  <Tkrow_8_ord>0123456789ABCDEFGH</Tkrow_8_ord>
+  <Tkrow_8_pre>8</Tkrow_8_pre>
+  <Tkrow_8_rep>0</Tkrow_8_rep>
+  <Tkrow_8_sel>0</Tkrow_8_sel>
+  <Tkrow_8_sets>3</Tkrow_8_sets>
+  <Tkrow_8_sign>++++++++++++++++++</Tkrow_8_sign>
+  <Tkrow_8_tone>0</Tkrow_8_tone>
+  <Tkrow_8_x>0</Tkrow_8_x>
+  <Tkrow_8_y>0</Tkrow_8_y>
+  <Tkrow_8_z>0</Tkrow_8_z>
+  <X_param_le>1</X_param_le>
+  <Y_param_le>1</Y_param_le>
+  <Z_param_le>1</Z_param_le>
+  <_sel>0</_sel>
+  <ana_Aroc_cb>0</ana_Aroc_cb>
+  <ana_Broc_cb>0</ana_Broc_cb>
+  <ana_exp_cb>0</ana_exp_cb>
+  <ana_line_cb>0</ana_line_cb>
+  <ana_sense_cb>1</ana_sense_cb>
+  <audio_driver_mbw>JACK</audio_driver_mbw>
+  <base_param_le>12</base_param_le>
+  <bkp_path_pe>/home/er/Csgrouper/run/bkp/</bkp_path_pe>
+  <char_set>0123456789ABCDEFGHIJKLMN</char_set>
+  <cline>$CsgObj-&gt;sequences-&gt;{Seq_1}-&gt;tree-&gt;notes-&gt;{0}-&gt;Shownote()</cline>
+  <cs_after></cs_after>
+  <cs_before>i1 + 1 65</cs_before>
+  <cs_midi>48</cs_midi>
+  <csg_appl>csgrouper</csg_appl>
+  <csg_file>~/Csgrouper/lib/csgrouper.pl</csg_file>
+  <csg_key>2011-12-05_16:05:41</csg_key>
+  <csg_label>2</csg_label>
+  <csg_part>/home/er/Csgrouper/run/default.xml</csg_part>
+  <csg_path_pe>/home/er/Csgrouper/</csg_path_pe>
+  <csg_status>reload : init</csg_status>
+  <csg_version>2.0.1</csg_version>
+  <csound_hbuffer_le>1024</csound_hbuffer_le>
+  <csound_ksmps_le>1</csound_ksmps_le>
+  <csound_nchnls_le>2</csound_nchnls_le>
+  <csound_params_le>-d</csound_params_le>
+  <csound_path_pe>/usr/bin/csound</csound_path_pe>
+  <csound_sample_mbw>SHORT</csound_sample_mbw>
+  <csound_sbuffer_le>256</csound_sbuffer_le>
+  <csound_sf2path_pe>/home/er/Csgrouper/ins/sf2/</csound_sf2path_pe>
+  <csound_sr_le>44100</csound_sr_le>
+  <db_encoding>latin1</db_encoding>
+  <db_name_le>series</db_name_le>
+  <db_password_le>er</db_password_le>
+  <db_type_mw>Pg</db_type_mw>
+  <db_user_le>er</db_user_le>
+  <default_mode>0123456789AB</default_mode>
+  <default_tone>0</default_tone>
+  <dur_max>24</dur_max>
+  <dur_min>0.1</dur_min>
+  <fractail>4</fractail>
+  <ft_base>10</ft_base>
+  <ftb_ran>90000</ftb_ran>
+  <html_manual>http://localhost/~er/local/csgrouper/csgrouper-manual.html</html_manual>
+  <i1_amp_type>ampdb</i1_amp_type>
+  <i1_author>er</i1_author>
+  <i1_comment>Sine wave.</i1_comment>
+  <i1_content>instr 1
+
+; parameters names
+; 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28
+; i	st	dur	amp	ft1	aty	atk	rel	hd1	hd2	gl1	gl2	fq1	fq2	fq3	pa1	pa2	del	car	mod	hm1	hm2	cro	buz	rvn	rvs	ft2	pcd
+
+; Csgrouper params.
+ipcd = p28 ;  precedence.
+
+;reverb
+irvn = p25 ;  fxnmbr.
+irvs = p26 ;  fxsend.
+
+
+; functions
+ifn1 = p5 ;	
+ifn2 = p27 ;
+
+;enveloppe
+iamp	=	ampdb(p4);
+
+idur	= 	p3
+iaty	=	p6	; atk type 
+iatk	=	p7*idur
+irel	=	p8*idur
+ista	=	idur-iatk-irel
+
+if (iaty == 0) goto slowat
+kenv	linen	iamp,iatk, idur, irel ; 
+goto endat
+
+slowat:
+kenv	envlpx	iamp, iatk, idur, irel, ifn2, 1, .01 ;
+endat:
+
+; frequences 
+ifq1	=	p13;
+ifq2	=	p14;
+ifq3	=	p15;
+
+;; glissandi
+ihd1	=	p9*idur  ; during the attack
+ihd2	=	p10*idur ; during the release
+igl1	=	p11*idur ; from freq1 to freq2
+igl2	=	p12*idur ; from freq2 to freq3
+
+itop	=	idur-ihd1-ihd2-igl1-igl2; 
+
+kfrq	linseg	ifq1, ihd1,  ifq1, igl1, ifq2, itop, ifq2, igl2, ifq3, ihd2, ifq3; 
+
+; modulation
+kcar	= 	p19
+kmod	= 	p20
+ihm1	= 	p21
+ihm2	= 	p22 
+
+ibuz	=	p24
+
+kfqm	line    ihm1, idur, ihm2
+
+; wave
+if (ihm1 &lt; 0)  goto noharm
+; buzz choice 1
+if (ibuz &gt; 0) goto dobuzz
+; Boulanger 114 :
+awv1	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn1
+goto endbuzz
+dobuzz:
+awv1	buzz  kenv, kfrq, kfqm, ifn1
+endbuzz:
+goto endwave
+
+noharm:
+
+kwv1    oscil   1000,   kfrq,  ifn1
+awv1    oscil   kenv,   kwv1,   ifn1
+
+endwave:
+awv2	=	awv1
+
+; crossover
+kfad	=	1
+icro	=	p23
+if (icro == 0)  goto nofade ; &gt;0&lt;1
+
+if (ihm2 &lt; 0)  goto noharm2
+
+; buzz choice 3:
+if (ibuz &gt; 1) goto dobuzz3
+awv2	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn2
+goto endbuzz3
+dobuzz3:
+awv2	buzz  kenv, kfrq, kfqm, ifn2
+endbuzz3:
+goto endtable
+
+noharm2:	; (no h = no buzz)
+kwv1    oscil   1000,   kfrq,  ifn1
+awv2    oscil   kenv,   kwv1,   ifn2
+
+endtable:
+ifd1	= 	idur-(icro*idur)
+ifd2	=	idur-ifd1
+kfad	linseg	1, ifd1, 0, ifd2, 0; 
+
+nofade:	
+afn1 	= 	kfad*(awv1)
+afn2	=	(1-kfad)*(awv2)
+afun 	= 	afn1 + afn2
+
+
+; pan : 0 &lt; ipnx &lt; 1 
+ipn1	=	abs(p16) ; starting balance: &lt;.5 = R, &gt;.5 = L
+ipn2	=	abs(p17) ; target   balance
+
+if (ipn1 &lt; 1)	goto nextpn1
+	ipn1 = 1
+nextpn1:
+if (ipn2 &lt; 1)	igoto nextpn2
+	ipn2 = 1
+nextpn2:
+idel	=	p18*idur ; &gt;0&lt;1
+ista	=	idur-idel
+
+kpan	linseg	ipn1, idel, ipn2, ista, ipn2 ;
+
+; REVERB
+if (irvn == 0)	goto norev 
+if (irvn == 3)	goto rev3 
+if (irvn == 2)	goto rev2 
+gacmb1	=	gacmb1+(afun*irvs)	;
+goto norev 
+rev2: 
+garvb1	=	garvb1+(afun*irvs)	;
+goto norev 
+rev3: 
+gamet1	=	gamet1+(afun*irvs)	;
+norev: 
+
+; OUT
+
+outs     afun*(1-kpan),afun*kpan
+
+;display		kenv,idur
+
+endin</i1_content>
+  <i1_freq_type>cps</i1_freq_type>
+  <i1_id>1</i1_id>
+  <i1_name>xpace-csg</i1_name>
+  <i1_oldid></i1_oldid>
+  <i1_p10_def>0.</i1_p10_def>
+  <i1_p10_fun>hd2</i1_p10_fun>
+  <i1_p11_def>0.</i1_p11_def>
+  <i1_p11_fun>gl1</i1_p11_fun>
+  <i1_p12_def>0.</i1_p12_def>
+  <i1_p12_fun>gl2</i1_p12_fun>
+  <i1_p13_def>440</i1_p13_def>
+  <i1_p13_fun>fq1</i1_p13_fun>
+  <i1_p14_def>440</i1_p14_def>
+  <i1_p14_fun>fq2</i1_p14_fun>
+  <i1_p15_def>440</i1_p15_def>
+  <i1_p15_fun>fq3</i1_p15_fun>
+  <i1_p16_def>0.5</i1_p16_def>
+  <i1_p16_fun>pa1</i1_p16_fun>
+  <i1_p17_def>0.5</i1_p17_def>
+  <i1_p17_fun>pa2</i1_p17_fun>
+  <i1_p18_def>0.3.</i1_p18_def>
+  <i1_p18_fun>del</i1_p18_fun>
+  <i1_p19_def>1.</i1_p19_def>
+  <i1_p19_fun>car</i1_p19_fun>
+  <i1_p20_def>11.</i1_p20_def>
+  <i1_p20_fun>mod</i1_p20_fun>
+  <i1_p21_def>2.</i1_p21_def>
+  <i1_p21_fun>hm1</i1_p21_fun>
+  <i1_p22_def>-1.</i1_p22_def>
+  <i1_p22_fun>hm2</i1_p22_fun>
+  <i1_p23_def>0.</i1_p23_def>
+  <i1_p23_fun>cro</i1_p23_fun>
+  <i1_p24_def>0.</i1_p24_def>
+  <i1_p24_fun>buz</i1_p24_fun>
+  <i1_p25_def>0.</i1_p25_def>
+  <i1_p25_fun>rvn</i1_p25_fun>
+  <i1_p26_def>0.</i1_p26_def>
+  <i1_p26_fun>rvs</i1_p26_fun>
+  <i1_p27_def>24.</i1_p27_def>
+  <i1_p27_fun>ft2</i1_p27_fun>
+  <i1_p28_def>1.</i1_p28_def>
+  <i1_p28_fun>pcd</i1_p28_fun>
+  <i1_p3_def>1</i1_p3_def>
+  <i1_p3_fun>dur</i1_p3_fun>
+  <i1_p4_def>60</i1_p4_def>
+  <i1_p4_fun>amp</i1_p4_fun>
+  <i1_p5_def>10.</i1_p5_def>
+  <i1_p5_fun>ft1</i1_p5_fun>
+  <i1_p6_def>0.</i1_p6_def>
+  <i1_p6_fun>aty</i1_p6_fun>
+  <i1_p7_def>0.</i1_p7_def>
+  <i1_p7_fun>atk</i1_p7_fun>
+  <i1_p8_def>1.</i1_p8_def>
+  <i1_p8_fun>rel</i1_p8_fun>
+  <i1_p9_def>1.</i1_p9_def>
+  <i1_p9_fun>hd1</i1_p9_fun>
+  <i1_parnum>26</i1_parnum>
+  <i1_path>~/Csgrouper/ins/xpace-csg.in</i1_path>
+  <i1_type>ins</i1_type>
+  <i2_amp_type>ampdb</i2_amp_type>
+  <i2_author>er</i2_author>
+  <i2_comment>Triangle wave.</i2_comment>
+  <i2_content>instr 2
+
+; parameters names
+; 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28
+; i	st	dur	amp	ft1	aty	atk	rel	hd1	hd2	gl1	gl2	fq1	fq2	fq3	pa1	pa2	del	car	mod	hm1	hm2	cro	buz	rvn	rvs	ft2	pcd
+
+; Csgrouper params.
+ipcd = p28 ;  precedence.
+
+;reverb
+irvn = p25 ;  fxnmbr.
+irvs = p26 ;  fxsend.
+
+
+; functions
+ifn1 = p5 ;	
+ifn2 = p27 ;
+
+;enveloppe
+iamp	=	ampdb(p4);
+
+idur	= 	p3
+iaty	=	p6	; atk type 
+iatk	=	p7*idur
+irel	=	p8*idur
+ista	=	idur-iatk-irel
+
+if (iaty == 0) goto slowat
+kenv	linen	iamp,iatk, idur, irel ; 
+goto endat
+
+slowat:
+kenv	envlpx	iamp, iatk, idur, irel, ifn2, 1, .01 ;
+endat:
+
+; frequences 
+ifq1	=	p13;
+ifq2	=	p14;
+ifq3	=	p15;
+
+;; glissandi
+ihd1	=	p9*idur  ; during the attack
+ihd2	=	p10*idur ; during the release
+igl1	=	p11*idur ; from freq1 to freq2
+igl2	=	p12*idur ; from freq2 to freq3
+
+itop	=	idur-ihd1-ihd2-igl1-igl2; 
+
+kfrq	linseg	ifq1, ihd1,  ifq1, igl1, ifq2, itop, ifq2, igl2, ifq3, ihd2, ifq3; 
+
+; modulation
+kcar	= 	p19
+kmod	= 	p20
+ihm1	= 	p21
+ihm2	= 	p22 
+
+ibuz	=	p24
+
+kfqm	line    ihm1, idur, ihm2
+
+; wave
+if (ihm1 &lt; 0)  goto noharm
+; buzz choice 1
+if (ibuz &gt; 0) goto dobuzz
+; Boulanger 114 :
+awv1	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn1
+goto endbuzz
+dobuzz:
+awv1	buzz  kenv, kfrq, kfqm, ifn1
+endbuzz:
+goto endwave
+
+noharm:
+
+kwv1    oscil   1000,   kfrq,  ifn1
+awv1    oscil   kenv,   kwv1,   ifn1
+
+endwave:
+awv2	=	awv1
+
+; crossover
+kfad	=	1
+icro	=	p23
+if (icro == 0)  goto nofade ; &gt;0&lt;1
+
+if (ihm2 &lt; 0)  goto noharm2
+
+; buzz choice 3:
+if (ibuz &gt; 1) goto dobuzz3
+awv2	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn2
+goto endbuzz3
+dobuzz3:
+awv2	buzz  kenv, kfrq, kfqm, ifn2
+endbuzz3:
+goto endtable
+
+noharm2:	; (no h = no buzz)
+kwv1    oscil   1000,   kfrq,  ifn1
+awv2    oscil   kenv,   kwv1,   ifn2
+
+endtable:
+ifd1	= 	idur-(icro*idur)
+ifd2	=	idur-ifd1
+kfad	linseg	1, ifd1, 0, ifd2, 0; 
+
+nofade:	
+afn1 	= 	kfad*(awv1)
+afn2	=	(1-kfad)*(awv2)
+afun 	= 	afn1 + afn2
+
+
+; pan : 0 &lt; ipnx &lt; 1 
+ipn1	=	abs(p16) ; starting balance: &lt;.5 = R, &gt;.5 = L
+ipn2	=	abs(p17) ; target   balance
+
+if (ipn1 &lt; 1)	goto nextpn1
+	ipn1 = 1
+nextpn1:
+if (ipn2 &lt; 1)	igoto nextpn2
+	ipn2 = 1
+nextpn2:
+idel	=	p18*idur ; &gt;0&lt;1
+ista	=	idur-idel
+
+kpan	linseg	ipn1, idel, ipn2, ista, ipn2 ;
+
+; REVERB
+if (irvn == 0)	goto norev 
+if (irvn == 3)	goto rev3 
+if (irvn == 2)	goto rev2 
+gacmb1	=	gacmb1+(afun*irvs)	;
+goto norev 
+rev2: 
+garvb1	=	garvb1+(afun*irvs)	;
+goto norev 
+rev3: 
+gamet1	=	gamet1+(afun*irvs)	;
+norev: 
+
+; OUT
+
+outs     afun*(1-kpan),afun*kpan
+
+;display		kenv,idur
+
+endin</i2_content>
+  <i2_freq_type>cps</i2_freq_type>
+  <i2_id>2</i2_id>
+  <i2_name>xpace</i2_name>
+  <i2_oldid></i2_oldid>
+  <i2_p10_def>0.</i2_p10_def>
+  <i2_p10_fun>hd2</i2_p10_fun>
+  <i2_p11_def>0.</i2_p11_def>
+  <i2_p11_fun>gl1</i2_p11_fun>
+  <i2_p12_def>0.</i2_p12_def>
+  <i2_p12_fun>gl2</i2_p12_fun>
+  <i2_p13_def>440</i2_p13_def>
+  <i2_p13_fun>fq1</i2_p13_fun>
+  <i2_p14_def>440</i2_p14_def>
+  <i2_p14_fun>fq2</i2_p14_fun>
+  <i2_p15_def>440</i2_p15_def>
+  <i2_p15_fun>fq3</i2_p15_fun>
+  <i2_p16_def>0.3</i2_p16_def>
+  <i2_p16_fun>pa1</i2_p16_fun>
+  <i2_p17_def>0.7</i2_p17_def>
+  <i2_p17_fun>pa2</i2_p17_fun>
+  <i2_p18_def>0.3.</i2_p18_def>
+  <i2_p18_fun>del</i2_p18_fun>
+  <i2_p19_def>1.</i2_p19_def>
+  <i2_p19_fun>car</i2_p19_fun>
+  <i2_p20_def>1.</i2_p20_def>
+  <i2_p20_fun>mod</i2_p20_fun>
+  <i2_p21_def>0.</i2_p21_def>
+  <i2_p21_fun>hm1</i2_p21_fun>
+  <i2_p22_def>0.</i2_p22_def>
+  <i2_p22_fun>hm2</i2_p22_fun>
+  <i2_p23_def>0.</i2_p23_def>
+  <i2_p23_fun>cro</i2_p23_fun>
+  <i2_p24_def>0.</i2_p24_def>
+  <i2_p24_fun>buz</i2_p24_fun>
+  <i2_p25_def>0.</i2_p25_def>
+  <i2_p25_fun>rvn</i2_p25_fun>
+  <i2_p26_def>0.</i2_p26_def>
+  <i2_p26_fun>rvs</i2_p26_fun>
+  <i2_p27_def>24.</i2_p27_def>
+  <i2_p27_fun>ft2</i2_p27_fun>
+  <i2_p28_def>1.</i2_p28_def>
+  <i2_p28_fun>pcd</i2_p28_fun>
+  <i2_p3_def>1</i2_p3_def>
+  <i2_p3_fun>dur</i2_p3_fun>
+  <i2_p4_def>70</i2_p4_def>
+  <i2_p4_fun>amp</i2_p4_fun>
+  <i2_p5_def>12.</i2_p5_def>
+  <i2_p5_fun>ft1</i2_p5_fun>
+  <i2_p6_def>0.</i2_p6_def>
+  <i2_p6_fun>aty</i2_p6_fun>
+  <i2_p7_def>0.</i2_p7_def>
+  <i2_p7_fun>atk</i2_p7_fun>
+  <i2_p8_def>1.</i2_p8_def>
+  <i2_p8_fun>rel</i2_p8_fun>
+  <i2_p9_def>1.</i2_p9_def>
+  <i2_p9_fun>hd1</i2_p9_fun>
+  <i2_parnum>26</i2_parnum>
+  <i2_path>~/Csgrouper/ins/xpace-csg.in</i2_path>
+  <i2_type>ins</i2_type>
+  <i3_amp_type>ampdb</i3_amp_type>
+  <i3_author>er</i3_author>
+  <i3_comment>Cosine wave.</i3_comment>
+  <i3_content>instr 3
+
+; parameters names
+; 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28
+; i	st	dur	amp	ft1	aty	atk	rel	hd1	hd2	gl1	gl2	fq1	fq2	fq3	pa1	pa2	del	car	mod	hm1	hm2	cro	buz	rvn	rvs	ft2	pcd
+
+; Csgrouper params.
+ipcd = p28 ;  precedence.
+
+;reverb
+irvn = p25 ;  fxnmbr.
+irvs = p26 ;  fxsend.
+
+
+; functions
+ifn1 = p5 ;	
+ifn2 = p27 ;
+
+;enveloppe
+iamp	=	ampdb(p4);
+
+idur	= 	p3
+iaty	=	p6	; atk type 
+iatk	=	p7*idur
+irel	=	p8*idur
+ista	=	idur-iatk-irel
+
+if (iaty == 0) goto slowat
+kenv	linen	iamp,iatk, idur, irel ; 
+goto endat
+
+slowat:
+kenv	envlpx	iamp, iatk, idur, irel, ifn2, 1, .01 ;
+endat:
+
+; frequences 
+ifq1	=	p13;
+ifq2	=	p14;
+ifq3	=	p15;
+
+;; glissandi
+ihd1	=	p9*idur  ; during the attack
+ihd2	=	p10*idur ; during the release
+igl1	=	p11*idur ; from freq1 to freq2
+igl2	=	p12*idur ; from freq2 to freq3
+
+itop	=	idur-ihd1-ihd2-igl1-igl2; 
+
+kfrq	linseg	ifq1, ihd1,  ifq1, igl1, ifq2, itop, ifq2, igl2, ifq3, ihd2, ifq3; 
+
+; modulation
+kcar	= 	p19
+kmod	= 	p20
+ihm1	= 	p21
+ihm2	= 	p22 
+
+ibuz	=	p24
+
+kfqm	line    ihm1, idur, ihm2
+
+; wave
+if (ihm1 &lt; 0)  goto noharm
+; buzz choice 1
+if (ibuz &gt; 0) goto dobuzz
+; Boulanger 114 :
+awv1	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn1
+goto endbuzz
+dobuzz:
+awv1	buzz  kenv, kfrq, kfqm, ifn1
+endbuzz:
+goto endwave
+
+noharm:
+
+kwv1    oscil   1000,   kfrq,  ifn1
+awv1    oscil   kenv,   kwv1,   ifn1
+
+endwave:
+awv2	=	awv1
+
+; crossover
+kfad	=	1
+icro	=	p23
+if (icro == 0)  goto nofade ; &gt;0&lt;1
+
+if (ihm2 &lt; 0)  goto noharm2
+
+; buzz choice 3:
+if (ibuz &gt; 1) goto dobuzz3
+awv2	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn2
+goto endbuzz3
+dobuzz3:
+awv2	buzz  kenv, kfrq, kfqm, ifn2
+endbuzz3:
+goto endtable
+
+noharm2:	; (no h = no buzz)
+kwv1    oscil   1000,   kfrq,  ifn1
+awv2    oscil   kenv,   kwv1,   ifn2
+
+endtable:
+ifd1	= 	idur-(icro*idur)
+ifd2	=	idur-ifd1
+kfad	linseg	1, ifd1, 0, ifd2, 0; 
+
+nofade:	
+afn1 	= 	kfad*(awv1)
+afn2	=	(1-kfad)*(awv2)
+afun 	= 	afn1 + afn2
+
+
+; pan : 0 &lt; ipnx &lt; 1 
+ipn1	=	abs(p16) ; starting balance: &lt;.5 = R, &gt;.5 = L
+ipn2	=	abs(p17) ; target   balance
+
+if (ipn1 &lt; 1)	goto nextpn1
+	ipn1 = 1
+nextpn1:
+if (ipn2 &lt; 1)	igoto nextpn2
+	ipn2 = 1
+nextpn2:
+idel	=	p18*idur ; &gt;0&lt;1
+ista	=	idur-idel
+
+kpan	linseg	ipn1, idel, ipn2, ista, ipn2 ;
+
+; REVERB
+if (irvn == 0)	goto norev 
+if (irvn == 3)	goto rev3 
+if (irvn == 2)	goto rev2 
+gacmb1	=	gacmb1+(afun*irvs)	;
+goto norev 
+rev2: 
+garvb1	=	garvb1+(afun*irvs)	;
+goto norev 
+rev3: 
+gamet1	=	gamet1+(afun*irvs)	;
+norev: 
+
+; OUT
+
+outs     afun*(1-kpan),afun*kpan
+
+;display		kenv,idur
+
+endin</i3_content>
+  <i3_freq_type>cps</i3_freq_type>
+  <i3_id>3</i3_id>
+  <i3_name>xpace</i3_name>
+  <i3_oldid></i3_oldid>
+  <i3_p10_def>0.25.</i3_p10_def>
+  <i3_p10_fun>hd2</i3_p10_fun>
+  <i3_p11_def>0.25.</i3_p11_def>
+  <i3_p11_fun>gl1</i3_p11_fun>
+  <i3_p12_def>0.25.</i3_p12_def>
+  <i3_p12_fun>gl2</i3_p12_fun>
+  <i3_p13_def>440</i3_p13_def>
+  <i3_p13_fun>fq1</i3_p13_fun>
+  <i3_p14_def>440</i3_p14_def>
+  <i3_p14_fun>fq2</i3_p14_fun>
+  <i3_p15_def>440</i3_p15_def>
+  <i3_p15_fun>fq3</i3_p15_fun>
+  <i3_p16_def>0.7</i3_p16_def>
+  <i3_p16_fun>pa1</i3_p16_fun>
+  <i3_p17_def>0.3</i3_p17_def>
+  <i3_p17_fun>pa2</i3_p17_fun>
+  <i3_p18_def>0.3.</i3_p18_def>
+  <i3_p18_fun>del</i3_p18_fun>
+  <i3_p19_def>1.</i3_p19_def>
+  <i3_p19_fun>car</i3_p19_fun>
+  <i3_p20_def>1.</i3_p20_def>
+  <i3_p20_fun>mod</i3_p20_fun>
+  <i3_p21_def>4.</i3_p21_def>
+  <i3_p21_fun>hm1</i3_p21_fun>
+  <i3_p22_def>0.</i3_p22_def>
+  <i3_p22_fun>hm2</i3_p22_fun>
+  <i3_p23_def>0.</i3_p23_def>
+  <i3_p23_fun>cro</i3_p23_fun>
+  <i3_p24_def>0.</i3_p24_def>
+  <i3_p24_fun>buz</i3_p24_fun>
+  <i3_p25_def>0.</i3_p25_def>
+  <i3_p25_fun>rvn</i3_p25_fun>
+  <i3_p26_def>0.</i3_p26_def>
+  <i3_p26_fun>rvs</i3_p26_fun>
+  <i3_p27_def>24.</i3_p27_def>
+  <i3_p27_fun>ft2</i3_p27_fun>
+  <i3_p28_def>1.</i3_p28_def>
+  <i3_p28_fun>pcd</i3_p28_fun>
+  <i3_p3_def>1</i3_p3_def>
+  <i3_p3_fun>dur</i3_p3_fun>
+  <i3_p4_def>70</i3_p4_def>
+  <i3_p4_fun>amp</i3_p4_fun>
+  <i3_p5_def>11.</i3_p5_def>
+  <i3_p5_fun>ft1</i3_p5_fun>
+  <i3_p6_def>0.</i3_p6_def>
+  <i3_p6_fun>aty</i3_p6_fun>
+  <i3_p7_def>0.2.</i3_p7_def>
+  <i3_p7_fun>atk</i3_p7_fun>
+  <i3_p8_def>0.9.</i3_p8_def>
+  <i3_p8_fun>rel</i3_p8_fun>
+  <i3_p9_def>0.25.</i3_p9_def>
+  <i3_p9_fun>hd1</i3_p9_fun>
+  <i3_parnum>26</i3_parnum>
+  <i3_path>~/Csgrouper/ins/xpace-csg.in</i3_path>
+  <i3_type>ins</i3_type>
+  <i4_amp_type>ampdb</i4_amp_type>
+  <i4_author>er</i4_author>
+  <i4_comment>Sine wave support for i1.</i4_comment>
+  <i4_content>instr 4
+
+; parameters names
+; 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28
+; i	st	dur	amp	ft1	aty	atk	rel	hd1	hd2	gl1	gl2	fq1	fq2	fq3	pa1	pa2	del	car	mod	hm1	hm2	cro	buz	rvn	rvs	ft2	pcd
+
+; Csgrouper params.
+ipcd = p28 ;  precedence.
+
+;reverb
+irvn = p25 ;  fxnmbr.
+irvs = p26 ;  fxsend.
+
+
+; functions
+ifn1 = p5 ;	
+ifn2 = p27 ;
+
+;enveloppe
+iamp	=	ampdb(p4);
+
+idur	= 	p3
+iaty	=	p6	; atk type 
+iatk	=	p7*idur
+irel	=	p8*idur
+ista	=	idur-iatk-irel
+
+if (iaty == 0) goto slowat
+kenv	linen	iamp,iatk, idur, irel ; 
+goto endat
+
+slowat:
+kenv	envlpx	iamp, iatk, idur, irel, ifn2, 1, .01 ;
+endat:
+
+; frequences 
+ifq1	=	p13;
+ifq2	=	p14;
+ifq3	=	p15;
+
+;; glissandi
+ihd1	=	p9*idur  ; during the attack
+ihd2	=	p10*idur ; during the release
+igl1	=	p11*idur ; from freq1 to freq2
+igl2	=	p12*idur ; from freq2 to freq3
+
+itop	=	idur-ihd1-ihd2-igl1-igl2; 
+
+kfrq	linseg	ifq1, ihd1,  ifq1, igl1, ifq2, itop, ifq2, igl2, ifq3, ihd2, ifq3; 
+
+; modulation
+kcar	= 	p19
+kmod	= 	p20
+ihm1	= 	p21
+ihm2	= 	p22 
+
+ibuz	=	p24
+
+kfqm	line    ihm1, idur, ihm2
+
+; wave
+if (ihm1 &lt; 0)  goto noharm
+; buzz choice 1
+if (ibuz &gt; 0) goto dobuzz
+; Boulanger 114 :
+awv1	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn1
+goto endbuzz
+dobuzz:
+awv1	buzz  kenv, kfrq, kfqm, ifn1
+endbuzz:
+goto endwave
+
+noharm:
+
+kwv1    oscil   1000,   kfrq,  ifn1
+awv1    oscil   kenv,   kwv1,   ifn1
+
+endwave:
+awv2	=	awv1
+
+; crossover
+kfad	=	1
+icro	=	p23
+if (icro == 0)  goto nofade ; &gt;0&lt;1
+
+if (ihm2 &lt; 0)  goto noharm2
+
+; buzz choice 3:
+if (ibuz &gt; 1) goto dobuzz3
+awv2	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn2
+goto endbuzz3
+dobuzz3:
+awv2	buzz  kenv, kfrq, kfqm, ifn2
+endbuzz3:
+goto endtable
+
+noharm2:	; (no h = no buzz)
+kwv1    oscil   1000,   kfrq,  ifn1
+awv2    oscil   kenv,   kwv1,   ifn2
+
+endtable:
+ifd1	= 	idur-(icro*idur)
+ifd2	=	idur-ifd1
+kfad	linseg	1, ifd1, 0, ifd2, 0; 
+
+nofade:	
+afn1 	= 	kfad*(awv1)
+afn2	=	(1-kfad)*(awv2)
+afun 	= 	afn1 + afn2
+
+
+; pan : 0 &lt; ipnx &lt; 1 
+ipn1	=	abs(p16) ; starting balance: &lt;.5 = R, &gt;.5 = L
+ipn2	=	abs(p17) ; target   balance
+
+if (ipn1 &lt; 1)	goto nextpn1
+	ipn1 = 1
+nextpn1:
+if (ipn2 &lt; 1)	igoto nextpn2
+	ipn2 = 1
+nextpn2:
+idel	=	p18*idur ; &gt;0&lt;1
+ista	=	idur-idel
+
+kpan	linseg	ipn1, idel, ipn2, ista, ipn2 ;
+
+; REVERB
+if (irvn == 0)	goto norev 
+if (irvn == 3)	goto rev3 
+if (irvn == 2)	goto rev2 
+gacmb1	=	gacmb1+(afun*irvs)	;
+goto norev 
+rev2: 
+garvb1	=	garvb1+(afun*irvs)	;
+goto norev 
+rev3: 
+gamet1	=	gamet1+(afun*irvs)	;
+norev: 
+
+; OUT
+
+outs     afun*(1-kpan),afun*kpan
+
+;display		kenv,idur
+
+endin</i4_content>
+  <i4_freq_type>cps</i4_freq_type>
+  <i4_id>4</i4_id>
+  <i4_name>xpace</i4_name>
+  <i4_oldid></i4_oldid>
+  <i4_p10_def>0.</i4_p10_def>
+  <i4_p10_fun>hd2</i4_p10_fun>
+  <i4_p11_def>0.</i4_p11_def>
+  <i4_p11_fun>gl1</i4_p11_fun>
+  <i4_p12_def>0.</i4_p12_def>
+  <i4_p12_fun>gl2</i4_p12_fun>
+  <i4_p13_def>440</i4_p13_def>
+  <i4_p13_fun>fq1</i4_p13_fun>
+  <i4_p14_def>440</i4_p14_def>
+  <i4_p14_fun>fq2</i4_p14_fun>
+  <i4_p15_def>440</i4_p15_def>
+  <i4_p15_fun>fq3</i4_p15_fun>
+  <i4_p16_def>0.5</i4_p16_def>
+  <i4_p16_fun>pa1</i4_p16_fun>
+  <i4_p17_def>0.5</i4_p17_def>
+  <i4_p17_fun>pa2</i4_p17_fun>
+  <i4_p18_def>0.3.</i4_p18_def>
+  <i4_p18_fun>del</i4_p18_fun>
+  <i4_p19_def>1.</i4_p19_def>
+  <i4_p19_fun>car</i4_p19_fun>
+  <i4_p20_def>1.</i4_p20_def>
+  <i4_p20_fun>mod</i4_p20_fun>
+  <i4_p21_def>0.</i4_p21_def>
+  <i4_p21_fun>hm1</i4_p21_fun>
+  <i4_p22_def>0.</i4_p22_def>
+  <i4_p22_fun>hm2</i4_p22_fun>
+  <i4_p23_def>0.</i4_p23_def>
+  <i4_p23_fun>cro</i4_p23_fun>
+  <i4_p24_def>0.</i4_p24_def>
+  <i4_p24_fun>buz</i4_p24_fun>
+  <i4_p25_def>0.</i4_p25_def>
+  <i4_p25_fun>rvn</i4_p25_fun>
+  <i4_p26_def>0.</i4_p26_def>
+  <i4_p26_fun>rvs</i4_p26_fun>
+  <i4_p27_def>24.</i4_p27_def>
+  <i4_p27_fun>ft2</i4_p27_fun>
+  <i4_p28_def>2.</i4_p28_def>
+  <i4_p28_fun>pcd</i4_p28_fun>
+  <i4_p3_def>1</i4_p3_def>
+  <i4_p3_fun>dur</i4_p3_fun>
+  <i4_p4_def>70</i4_p4_def>
+  <i4_p4_fun>amp</i4_p4_fun>
+  <i4_p5_def>10.</i4_p5_def>
+  <i4_p5_fun>ft1</i4_p5_fun>
+  <i4_p6_def>0.</i4_p6_def>
+  <i4_p6_fun>aty</i4_p6_fun>
+  <i4_p7_def>0.</i4_p7_def>
+  <i4_p7_fun>atk</i4_p7_fun>
+  <i4_p8_def>1.</i4_p8_def>
+  <i4_p8_fun>rel</i4_p8_fun>
+  <i4_p9_def>1.</i4_p9_def>
+  <i4_p9_fun>hd1</i4_p9_fun>
+  <i4_parnum>26</i4_parnum>
+  <i4_path>~/Csgrouper/ins/xpace-csg.in</i4_path>
+  <i4_type>ins</i4_type>
+  <i576_amp_type></i576_amp_type>
+  <i576_author>csound</i576_author>
+  <i576_comment>An instrument that is receiving input from a global variable should have a higher number than any instrument that are producing output for that variable.(R. Pinkston)</i576_comment>
+  <i576_content>instr 576
+ idur = p3;
+ irvbtime = p4 ;
+ asig reverb garvbsig,irvbtime ;
+ outs asig,asig ;
+ garvbsig = 0 ;
+endin ;</i576_content>
+  <i576_freq_type></i576_freq_type>
+  <i576_id>576</i576_id>
+  <i576_name>Gobal Reverb</i576_name>
+  <i576_oldid></i576_oldid>
+  <i576_p3_def>120</i576_p3_def>
+  <i576_p3_fun>dur</i576_p3_fun>
+  <i576_p4_def>1</i576_p4_def>
+  <i576_p4_fun>rvt</i576_p4_fun>
+  <i576_parnum>2</i576_parnum>
+  <i576_path>internal</i576_path>
+  <i576_type>fx</i576_type>
+  <i5_amp_type></i5_amp_type>
+  <i5_author>er</i5_author>
+  <i5_comment>Sine wave support for i2.</i5_comment>
+  <i5_content>instr 5
+
+; parameters names
+; 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28
+; i	st	dur	amp	ft1	aty	atk	rel	hd1	hd2	gl1	gl2	fq1	fq2	fq3	pa1	pa2	del	car	mod	hm1	hm2	cro	buz	rvn	rvs	ft2	pcd
+
+
+; Csgrouper params.
+ipcd = p28 ;  precedence.
+
+;reverb
+irvn = p25 ;  fxnmbr.
+irvs = p26 ;  fxsend.
+
+
+; functions
+ifn1 = p5 ;	
+ifn2 = p27 ;
+
+;enveloppe
+iamp	=	ampdb(p4);
+
+idur	= 	p3
+iaty	=	p6	; atk type 
+iatk	=	p7*idur
+irel	=	p8*idur
+ista	=	idur-iatk-irel
+
+if (iaty == 0) goto slowat
+kenv	linen	iamp,iatk, idur, irel ; 
+goto endat
+
+slowat:
+kenv	envlpx	iamp, iatk, idur, irel, ifn2, 1, .01 ;
+endat:
+
+; frequences 
+ifq1	=	p13;
+ifq2	=	p14;
+ifq3	=	p15;
+
+;; glissandi
+ihd1	=	p9*idur  ; during the attack
+ihd2	=	p10*idur ; during the release
+igl1	=	p11*idur ; from freq1 to freq2
+igl2	=	p12*idur ; from freq2 to freq3
+
+itop	=	idur-ihd1-ihd2-igl1-igl2; 
+
+kfrq	linseg	ifq1, ihd1,  ifq1, igl1, ifq2, itop, ifq2, igl2, ifq3, ihd2, ifq3; 
+
+; modulation
+kcar	= 	p19
+kmod	= 	p20
+ihm1	= 	p21
+ihm2	= 	p22 
+
+ibuz	=	p24
+
+kfqm	line    ihm1, idur, ihm2
+
+; wave
+if (ihm1 &lt; 0)  goto noharm
+; buzz choice 1
+if (ibuz &gt; 0) goto dobuzz
+; Boulanger 114 :
+awv1	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn1
+goto endbuzz
+dobuzz:
+awv1	buzz  kenv, kfrq, kfqm, ifn1
+endbuzz:
+goto endwave
+
+noharm:
+
+kwv1    oscil   1000,   kfrq,  ifn1
+awv1    oscil   kenv,   kwv1,   ifn1
+
+endwave:
+awv2	=	awv1
+
+; crossover
+kfad	=	1
+icro	=	p23
+if (icro == 0)  goto nofade ; &gt;0&lt;1
+
+if (ihm2 &lt; 0)  goto noharm2
+
+; buzz choice 3:
+if (ibuz &gt; 1) goto dobuzz3
+awv2	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn2
+goto endbuzz3
+dobuzz3:
+awv2	buzz  kenv, kfrq, kfqm, ifn2
+endbuzz3:
+goto endtable
+
+noharm2:	; (no h = no buzz)
+kwv1    oscil   1000,   kfrq,  ifn1
+awv2    oscil   kenv,   kwv1,   ifn2
+
+endtable:
+ifd1	= 	idur-(icro*idur)
+ifd2	=	idur-ifd1
+kfad	linseg	1, ifd1, 0, ifd2, 0; 
+
+nofade:	
+afn1 	= 	kfad*(awv1)
+afn2	=	(1-kfad)*(awv2)
+afun 	= 	afn1 + afn2
+
+
+; pan : 0 &lt; ipnx &lt; 1 
+ipn1	=	abs(p16) ; starting balance: &lt;.5 = R, &gt;.5 = L
+ipn2	=	abs(p17) ; target   balance
+
+if (ipn1 &lt; 1)	goto nextpn1
+	ipn1 = 1
+nextpn1:
+if (ipn2 &lt; 1)	igoto nextpn2
+	ipn2 = 1
+nextpn2:
+idel	=	p18*idur ; &gt;0&lt;1
+ista	=	idur-idel
+
+kpan	linseg	ipn1, idel, ipn2, ista, ipn2 ;
+
+; REVERB
+if (irvn == 0)	goto norev 
+if (irvn == 3)	goto rev3 
+if (irvn == 2)	goto rev2 
+gacmb1	=	gacmb1+(afun*irvs)	;
+goto norev 
+rev2: 
+garvb1	=	garvb1+(afun*irvs)	;
+goto norev 
+rev3: 
+gamet1	=	gamet1+(afun*irvs)	;
+norev: 
+
+; OUT
+
+outs     afun*(1-kpan),afun*kpan
+
+;display		kenv,idur
+
+endin</i5_content>
+  <i5_freq_type></i5_freq_type>
+  <i5_id>5</i5_id>
+  <i5_name>xpace</i5_name>
+  <i5_oldid>2</i5_oldid>
+  <i5_p10_def>0</i5_p10_def>
+  <i5_p10_fun>hd2</i5_p10_fun>
+  <i5_p11_def>0</i5_p11_def>
+  <i5_p11_fun>gl1</i5_p11_fun>
+  <i5_p12_def>0</i5_p12_def>
+  <i5_p12_fun>gl2</i5_p12_fun>
+  <i5_p13_def>440</i5_p13_def>
+  <i5_p13_fun>fq1</i5_p13_fun>
+  <i5_p14_def>440</i5_p14_def>
+  <i5_p14_fun>fq2</i5_p14_fun>
+  <i5_p15_def>440</i5_p15_def>
+  <i5_p15_fun>fq3</i5_p15_fun>
+  <i5_p16_def>0.5</i5_p16_def>
+  <i5_p16_fun>pa1</i5_p16_fun>
+  <i5_p17_def>0.5</i5_p17_def>
+  <i5_p17_fun>pa2</i5_p17_fun>
+  <i5_p18_def>0.3.</i5_p18_def>
+  <i5_p18_fun>del</i5_p18_fun>
+  <i5_p19_def>1.</i5_p19_def>
+  <i5_p19_fun>car</i5_p19_fun>
+  <i5_p20_def>1.</i5_p20_def>
+  <i5_p20_fun>mod</i5_p20_fun>
+  <i5_p21_def>0.</i5_p21_def>
+  <i5_p21_fun>hm1</i5_p21_fun>
+  <i5_p22_def>0.</i5_p22_def>
+  <i5_p22_fun>hm2</i5_p22_fun>
+  <i5_p23_def>0.</i5_p23_def>
+  <i5_p23_fun>cro</i5_p23_fun>
+  <i5_p24_def>0.</i5_p24_def>
+  <i5_p24_fun>buz</i5_p24_fun>
+  <i5_p25_def>0.</i5_p25_def>
+  <i5_p25_fun>rvn</i5_p25_fun>
+  <i5_p26_def>0.</i5_p26_def>
+  <i5_p26_fun>rvs</i5_p26_fun>
+  <i5_p27_def>24.</i5_p27_def>
+  <i5_p27_fun>ft2</i5_p27_fun>
+  <i5_p28_def>2.</i5_p28_def>
+  <i5_p28_fun>pcd</i5_p28_fun>
+  <i5_p3_def>1</i5_p3_def>
+  <i5_p3_fun>dur</i5_p3_fun>
+  <i5_p4_def>70</i5_p4_def>
+  <i5_p4_fun>amp</i5_p4_fun>
+  <i5_p5_def>10</i5_p5_def>
+  <i5_p5_fun>ft1</i5_p5_fun>
+  <i5_p6_def>0</i5_p6_def>
+  <i5_p6_fun>aty</i5_p6_fun>
+  <i5_p7_def>0</i5_p7_def>
+  <i5_p7_fun>atk</i5_p7_fun>
+  <i5_p8_def>1</i5_p8_def>
+  <i5_p8_fun>rel</i5_p8_fun>
+  <i5_p9_def>1</i5_p9_def>
+  <i5_p9_fun>hd1</i5_p9_fun>
+  <i5_parnum>26</i5_parnum>
+  <i5_path>~/Csgrouper/ins/xpace-csg.in</i5_path>
+  <i5_type>ins</i5_type>
+  <i6_amp_type></i6_amp_type>
+  <i6_author>er</i6_author>
+  <i6_comment>Sine wave support for i3.</i6_comment>
+  <i6_content>instr 6
+
+; parameters names
+; 1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28
+; i	st	dur	amp	ft1	aty	atk	rel	hd1	hd2	gl1	gl2	fq1	fq2	fq3	pa1	pa2	del	car	mod	hm1	hm2	cro	buz	rvn	rvs	ft2	pcd
+
+
+; Csgrouper params.
+ipcd = p28 ;  precedence.
+
+;reverb
+irvn = p25 ;  fxnmbr.
+irvs = p26 ;  fxsend.
+
+
+; functions
+ifn1 = p5 ;	
+ifn2 = p27 ;
+
+;enveloppe
+iamp	=	ampdb(p4);
+
+idur	= 	p3
+iaty	=	p6	; atk type 
+iatk	=	p7*idur
+irel	=	p8*idur
+ista	=	idur-iatk-irel
+
+if (iaty == 0) goto slowat
+kenv	linen	iamp,iatk, idur, irel ; 
+goto endat
+
+slowat:
+kenv	envlpx	iamp, iatk, idur, irel, ifn2, 1, .01 ;
+endat:
+
+; frequences 
+ifq1	=	p13;
+ifq2	=	p14;
+ifq3	=	p15;
+
+;; glissandi
+ihd1	=	p9*idur  ; during the attack
+ihd2	=	p10*idur ; during the release
+igl1	=	p11*idur ; from freq1 to freq2
+igl2	=	p12*idur ; from freq2 to freq3
+
+itop	=	idur-ihd1-ihd2-igl1-igl2; 
+
+kfrq	linseg	ifq1, ihd1,  ifq1, igl1, ifq2, itop, ifq2, igl2, ifq3, ihd2, ifq3; 
+
+; modulation
+kcar	= 	p19
+kmod	= 	p20
+ihm1	= 	p21
+ihm2	= 	p22 
+
+ibuz	=	p24
+
+kfqm	line    ihm1, idur, ihm2
+
+; wave
+if (ihm1 &lt; 0)  goto noharm
+; buzz choice 1
+if (ibuz &gt; 0) goto dobuzz
+; Boulanger 114 :
+awv1	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn1
+goto endbuzz
+dobuzz:
+awv1	buzz  kenv, kfrq, kfqm, ifn1
+endbuzz:
+goto endwave
+
+noharm:
+
+kwv1    oscil   1000,   kfrq,  ifn1
+awv1    oscil   kenv,   kwv1,   ifn1
+
+endwave:
+awv2	=	awv1
+
+; crossover
+kfad	=	1
+icro	=	p23
+if (icro == 0)  goto nofade ; &gt;0&lt;1
+
+if (ihm2 &lt; 0)  goto noharm2
+
+; buzz choice 3:
+if (ibuz &gt; 1) goto dobuzz3
+awv2	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn2
+goto endbuzz3
+dobuzz3:
+awv2	buzz  kenv, kfrq, kfqm, ifn2
+endbuzz3:
+goto endtable
+
+noharm2:	; (no h = no buzz)
+kwv1    oscil   1000,   kfrq,  ifn1
+awv2    oscil   kenv,   kwv1,   ifn2
+
+endtable:
+ifd1	= 	idur-(icro*idur)
+ifd2	=	idur-ifd1
+kfad	linseg	1, ifd1, 0, ifd2, 0; 
+
+nofade:	
+afn1 	= 	kfad*(awv1)
+afn2	=	(1-kfad)*(awv2)
+afun 	= 	afn1 + afn2
+
+
+; pan : 0 &lt; ipnx &lt; 1 
+ipn1	=	abs(p16) ; starting balance: &lt;.5 = R, &gt;.5 = L
+ipn2	=	abs(p17) ; target   balance
+
+if (ipn1 &lt; 1)	goto nextpn1
+	ipn1 = 1
+nextpn1:
+if (ipn2 &lt; 1)	igoto nextpn2
+	ipn2 = 1
+nextpn2:
+idel	=	p18*idur ; &gt;0&lt;1
+ista	=	idur-idel
+
+kpan	linseg	ipn1, idel, ipn2, ista, ipn2 ;
+
+; REVERB
+if (irvn == 0)	goto norev 
+if (irvn == 3)	goto rev3 
+if (irvn == 2)	goto rev2 
+gacmb1	=	gacmb1+(afun*irvs)	;
+goto norev 
+rev2: 
+garvb1	=	garvb1+(afun*irvs)	;
+goto norev 
+rev3: 
+gamet1	=	gamet1+(afun*irvs)	;
+norev: 
+
+; OUT
+
+outs     afun*(1-kpan),afun*kpan
+
+;display		kenv,idur
+
+endin</i6_content>
+  <i6_freq_type></i6_freq_type>
+  <i6_id>6</i6_id>
+  <i6_name>xpace</i6_name>
+  <i6_oldid>2</i6_oldid>
+  <i6_p10_def>0</i6_p10_def>
+  <i6_p10_fun>hd2</i6_p10_fun>
+  <i6_p11_def>0</i6_p11_def>
+  <i6_p11_fun>gl1</i6_p11_fun>
+  <i6_p12_def>0</i6_p12_def>
+  <i6_p12_fun>gl2</i6_p12_fun>
+  <i6_p13_def>440</i6_p13_def>
+  <i6_p13_fun>fq1</i6_p13_fun>
+  <i6_p14_def>440</i6_p14_def>
+  <i6_p14_fun>fq2</i6_p14_fun>
+  <i6_p15_def>440</i6_p15_def>
+  <i6_p15_fun>fq3</i6_p15_fun>
+  <i6_p16_def>0.5</i6_p16_def>
+  <i6_p16_fun>pa1</i6_p16_fun>
+  <i6_p17_def>0.5</i6_p17_def>
+  <i6_p17_fun>pa2</i6_p17_fun>
+  <i6_p18_def>0.3.</i6_p18_def>
+  <i6_p18_fun>del</i6_p18_fun>
+  <i6_p19_def>1.</i6_p19_def>
+  <i6_p19_fun>car</i6_p19_fun>
+  <i6_p20_def>1.</i6_p20_def>
+  <i6_p20_fun>mod</i6_p20_fun>
+  <i6_p21_def>0.</i6_p21_def>
+  <i6_p21_fun>hm1</i6_p21_fun>
+  <i6_p22_def>0.</i6_p22_def>
+  <i6_p22_fun>hm2</i6_p22_fun>
+  <i6_p23_def>0.</i6_p23_def>
+  <i6_p23_fun>cro</i6_p23_fun>
+  <i6_p24_def>0.</i6_p24_def>
+  <i6_p24_fun>buz</i6_p24_fun>
+  <i6_p25_def>0.</i6_p25_def>
+  <i6_p25_fun>rvn</i6_p25_fun>
+  <i6_p26_def>0.</i6_p26_def>
+  <i6_p26_fun>rvs</i6_p26_fun>
+  <i6_p27_def>24.</i6_p27_def>
+  <i6_p27_fun>ft2</i6_p27_fun>
+  <i6_p28_def>2.</i6_p28_def>
+  <i6_p28_fun>pcd</i6_p28_fun>
+  <i6_p3_def>1</i6_p3_def>
+  <i6_p3_fun>dur</i6_p3_fun>
+  <i6_p4_def>70</i6_p4_def>
+  <i6_p4_fun>amp</i6_p4_fun>
+  <i6_p5_def>10</i6_p5_def>
+  <i6_p5_fun>ft1</i6_p5_fun>
+  <i6_p6_def>0</i6_p6_def>
+  <i6_p6_fun>aty</i6_p6_fun>
+  <i6_p7_def>0</i6_p7_def>
+  <i6_p7_fun>atk</i6_p7_fun>
+  <i6_p8_def>1</i6_p8_def>
+  <i6_p8_fun>rel</i6_p8_fun>
+  <i6_p9_def>1</i6_p9_def>
+  <i6_p9_fun>hd1</i6_p9_fun>
+  <i6_parnum>26</i6_parnum>
+  <i6_path>~/Csgrouper/ins/xpace-csg.in</i6_path>
+  <i6_type>ins</i6_type>
+  <i7_amp_type></i7_amp_type>
+  <i7_author>Cook-Mykelson</i7_author>
+  <i7_comment>Mykelson's flute instrument based on Perry Cook's slide flute.</i7_comment>
+  <i7_content>instr 7
+
+
+; parameters names
+; 1	2	3	4	5	6	7	8	9	10	11	12	
+; i	st	dur	amp	fq1	pre	bre	fb1	fb2	pa1	rv2	rvn
+
+aflute1 init  0 ;
+
+idur	= 	p3;
+iamp	=	ampdb(p4);
+ifq1    =       p5;
+ipress  =       p6;
+ibreath =       p7;
+ifeedbk1 =      p8;
+ifeedbk2 =      p9;
+ipan	=	p10;
+irvs	=	p11;
+irvn	=	p12;
+
+; FLOW SETUP
+kenv1   linseg  0, .06, 1.1*ipress, .2, ipress, p3-.16, ipress, .02, 0 
+kenv2   linseg  0, .01, 1, p3-.02, 1, .01, 0
+kenvibr linseg  0, .5, 0, .5, 1, p3-1, 1  ; Vibrato envelope
+
+; THE VALUES MUST BE APPROXIMATELY -1 TO 1 OR THE CUBIC WILL BLOW UP
+aflow1  rand    kenv1
+kvibr   oscil   .1*kenvibr, 5, 10
+
+; ibreath CAN BE USED TO ADJUST THE NOISE LEVEL
+asum1   =       ibreath*aflow1 + kenv1 + kvibr
+asum2   =       asum1 + aflute1*ifeedbk1
+
+afqc    =       1/ifq1 - asum1/20000 -9/sr + ifq1/12000000
+
+; EMBOUCHURE DELAY SHOULD BE 1/2 THE BORE DELAY
+; ax    delay   asum2, (1/ifq1-10/sr)/2
+atemp1  delayr  1/ifq1/2
+ax      deltapi afqc/2              ; - asum1/ifq1/10 + 1/1000
+        delayw  asum2
+                        
+apoly   =       ax - ax*ax*ax
+asum3   =       apoly + aflute1*ifeedbk2
+
+avalue  tone    asum3, 2000
+
+; BORE, THE BORE LENGTH DETERMINES PITCH.  SHORTER IS HIGHER PITCH
+atemp2  delayr  1/ifq1
+aflute1 deltapi afqc
+        delayw  avalue
+
+aout    =     avalue*iamp*kenv2
+
+;; ECHO:
+if (irvn == 0)	goto nocomb 
+if (irvn == 1)	goto comb1 
+if (irvn == 2)	goto comb2 
+if (irvn == 3)	goto comb3 
+if (irvn == 4)	goto comb4 
+
+comb1: ; normal reverb:
+gacmb1	=	gacmb1+(aout*irvs)	;
+goto nocomb 
+comb2: 
+gacmb2	=	gacmb2+(aout*irvs)	;
+goto nocomb 
+comb3: 
+gacmb3	=	gacmb3+(aout*irvs)	;
+goto nocomb 
+comb4: 
+gacmb4	=	gacmb4+(aout*irvs)	;
+nocomb: 
+
+outs	aout*(1-ipan), aout*ipan
+     
+endin</i7_content>
+  <i7_freq_type></i7_freq_type>
+  <i7_id>7</i7_id>
+  <i7_name>flute</i7_name>
+  <i7_oldid></i7_oldid>
+  <i7_p10_def>0.5.</i7_p10_def>
+  <i7_p10_fun>pa1</i7_p10_fun>
+  <i7_p11_def>0.1.</i7_p11_def>
+  <i7_p11_fun>rvs</i7_p11_fun>
+  <i7_p12_def>1.</i7_p12_def>
+  <i7_p12_fun>rvn</i7_p12_fun>
+  <i7_p3_def>1</i7_p3_def>
+  <i7_p3_fun>dur</i7_p3_fun>
+  <i7_p4_def>70</i7_p4_def>
+  <i7_p4_fun>amp</i7_p4_fun>
+  <i7_p5_def>440</i7_p5_def>
+  <i7_p5_fun>fq1</i7_p5_fun>
+  <i7_p6_def>0.8.</i7_p6_def>
+  <i7_p6_fun>prs</i7_p6_fun>
+  <i7_p7_def>0.07.</i7_p7_def>
+  <i7_p7_fun>bre</i7_p7_fun>
+  <i7_p8_def>0.4.</i7_p8_def>
+  <i7_p8_fun>fb1</i7_p8_fun>
+  <i7_p9_def>0.5.</i7_p9_def>
+  <i7_p9_fun>fb2</i7_p9_fun>
+  <i7_parnum>10</i7_parnum>
+  <i7_path>~/Csgrouper/ins/flute.in</i7_path>
+  <i7_type>ins</i7_type>
+  <ins_param_le>i1</ins_param_le>
+  <ins_path_pe>/home/er/Csgrouper/ins/</ins_path_pe>
+  <interface>Csgrouperinter</interface>
+  <midi_driver_mbw>ALSA</midi_driver_mbw>
+  <min_amp>0</min_amp>
+  <mod_series_le>0123456789AB</mod_series_le>
+  <oct_base>3</oct_base>
+  <oct_max>12</oct_max>
+  <oct_range>1</oct_range>
+  <ord_series_le>45BA19326780</ord_series_le>
+  <part_Rflag_le>0</part_Rflag_le>
+  <part_author_le>EB</part_author_le>
+  <part_com_le>Some comments.</part_com_le>
+  <part_comptype_mw>0</part_comptype_mw>
+  <part_durmax_le>12</part_durmax_le>
+  <part_durmin_le>0.125</part_durmin_le>
+  <part_durtype_mw>0</part_durtype_mw>
+  <part_intersil_le>2</part_intersil_le>
+  <part_octs_le>333333333333</part_octs_le>
+  <part_path_pe>/home/er/Csgrouper/part/</part_path_pe>
+  <part_randur_cb>0</part_randur_cb>
+  <part_rythmtype_mw>3</part_rythmtype_mw>
+  <part_sections_le>1,2;3</part_sections_le>
+  <part_select_le></part_select_le>
+  <part_selprnt_le>0</part_selprnt_le>
+  <part_sf2amp_le>0.2</part_sf2amp_le>
+  <part_signs_le>++++++++++++</part_signs_le>
+  <part_steps_le>1</part_steps_le>
+  <part_tempo_le>t 0 120</part_tempo_le>
+  <part_title_le>xpace-flute</part_title_le>
+  <part_xamp_le>1#</part_xamp_le>
+  <part_xatk_le>1#</part_xatk_le>
+  <part_xdur_le>1#</part_xdur_le>
+  <part_xgli_le>1#,2#</part_xgli_le>
+  <part_xhus_le>1#,2#</part_xhus_le>
+  <part_xpan_le>1#,2#</part_xpan_le>
+  <part_yens_le>2#B</part_yens_le>
+  <part_yryc_le>1#B,2#B</part_yryc_le>
+  <range_param_le>3</range_param_le>
+  <realtime_params_le>-o dac</realtime_params_le>
+  <render_path_pe>/home/er/Csgrouper/run/sndout/</render_path_pe>
+  <run_path_pe>/home/er/Csgrouper/run/</run_path_pe>
+  <saved>2012-03-16_10:07:12</saved>
+  <savenotes_enabled_cb>disabled</savenotes_enabled_cb>
+  <sel_sect>0</sel_sect>
+  <separator>:</separator>
+  <sign_param_le>+</sign_param_le>
+  <signs_series_le>++++++++++++</signs_series_le>
+  <sql_limit_le>12000</sql_limit_le>
+  <sql_max>1000000</sql_max>
+  <sql_query_en>select * from m6</sql_query_en>
+  <ton_series_le>0</ton_series_le>
+  <tone_param_le>0</tone_param_le></opt>

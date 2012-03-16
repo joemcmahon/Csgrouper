@@ -1,0 +1,77 @@
+instr 7
+
+; MYKELSON'S FLUTE INSTRUMENT BASED ON PERRY COOK'S SLIDE FLUTE
+
+; parameters names
+; 1 2  3   4   5   6   7   8    9   10  11  12
+; i st dur amp fq1 pre bre fb1 fb2  pa1 rv2 rvn
+
+aflute1 init    0
+idur	= 	p3;
+iamp	=	ampdb(p4);
+ifq1    =       p5;
+ipress  =       p6;
+ibreath =       p7;
+ifeedbk1 =      p8;
+ifeedbk2 =      p9;
+ipan	=	p10;
+irvs	=	p11;
+irvn	=	p12;
+
+; FLOW SETUP
+kenv1   linseg  0, .06, 1.1*ipress, .2, ipress, p3-.16, ipress, .02, 0 
+kenv2   linseg  0, .01, 1, p3-.02, 1, .01, 0
+kenvibr linseg  0, .5, 0, .5, 1, p3-1, 1  ; Vibrato envelope
+
+; THE VALUES MUST BE APPROXIMATELY -1 TO 1 OR THE CUBIC WILL BLOW UP
+aflow1  rand    kenv1
+kvibr   oscil   .1*kenvibr, 5, 10
+
+; ibreath CAN BE USED TO ADJUST THE NOISE LEVEL
+asum1   =       ibreath*aflow1 + kenv1 + kvibr
+asum2   =       asum1 + aflute1*ifeedbk1
+
+afqc    =       1/ifq1 - asum1/20000 -9/sr + ifq1/12000000
+
+; EMBOUCHURE DELAY SHOULD BE 1/2 THE BORE DELAY
+; ax    delay   asum2, (1/ifq1-10/sr)/2
+atemp1  delayr  1/ifq1/2
+ax      deltapi afqc/2              ; - asum1/ifq1/10 + 1/1000
+        delayw  asum2
+                        
+apoly   =       ax - ax*ax*ax
+asum3   =       apoly + aflute1*ifeedbk2
+
+avalue  tone    asum3, 2000
+
+; BORE, THE BORE LENGTH DETERMINES PITCH.  SHORTER IS HIGHER PITCH
+atemp2  delayr  1/ifq1
+aflute1 deltapi afqc
+        delayw  avalue
+
+aout    =     avalue*iamp*kenv2
+
+;; ECHO:
+if (irvn == 0)	goto nocomb 
+if (irvn == 1)	goto comb1 
+if (irvn == 2)	goto comb2 
+if (irvn == 3)	goto comb3 
+if (irvn == 4)	goto comb4 
+
+comb1: ; normal reverb:
+gacmb1	=	gacmb1+(aout*irvs)	;
+goto nocomb 
+comb2: 
+gacmb2	=	gacmb2+(aout*irvs)	;
+goto nocomb 
+comb3: 
+gacmb3	=	gacmb3+(aout*irvs)	;
+goto nocomb 
+comb4: 
+gacmb4	=	gacmb4+(aout*irvs)	;
+nocomb: 
+
+outs	aout*(1-ipan), aout*ipan
+     
+endin	#     
+

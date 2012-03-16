@@ -1,0 +1,45 @@
+
+
+
+Csgrouper was made on Linux Debian for Linux systems and could be run in other
+Unix-like systems.
+
+
+
+*** How to install Csgrouper?
+
+Once the required module and third party software are installed, the best thing
+to do is to unpack the tar file on top of the home directory, make it writable to leave it there for the first trials of the software. Once everything will be up and running it will be possible to install elsewhere by changing paths from the GUI (and probably also correcting some configuration files by hand [1]). These are typically the things that haven't been worked out a lot while programming.
+
+
+
+
+*** Required Cpan modules and third party software:
+
+
+--- Third party:
+
+	Csound (a package from standard distribution will do)
+
+
+--- Cpan Modules:
+
+	Cwd ;
+	Data::Dumper ;
+	Pod::Simple ;
+	Scalar::Util ;
+	Modern::Perl ;
+	Moose ;
+	namespace::autoclean ;
+	POSIX ;
+	Tk ;
+	XML::Simple . 
+
+	
+*** Notes:
+
+[1] Typically the 'use lib ("$ENV{HOME}/Csgrouper/lib");' code line in csgrouper.pl will have to be corrected manually when changing the software from standard location, as well as the 'our 	$INSTALLDIR = $ENV{HOME};' in Csgrouper.pm. 
+
+
+
+EOF

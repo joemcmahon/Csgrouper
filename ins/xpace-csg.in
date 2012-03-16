@@ -1,0 +1,147 @@
+instr 3
+
+;;parameters names
+; 1 2  3   4   5   6   7   8    9   10  11  12  13  14  15  16   17   18   19  20  21   22   23 24  25   26   27  28
+; i st dur amp ft1 aty atk rel hd1 hd2 gl1 gl2 fq1 fq2 fq3 pa1  pa2  del  car mod hm1  hm2  cro buz rvn  rvs  pcd ft2
+
+
+;;Csgrouper params.
+ipcd = p28 ;  precedence.
+
+;;reverb
+irvn = p25 ;  fxnmbr.
+irvs = p26 ;  fxsend.
+
+
+;;functions
+ifn1 = p5 ;	
+ifn2 = p27 ;
+
+;;enveloppe
+iamp	=	ampdb(p4);
+
+idur	= 	p3
+iaty	=	p6	; atk type 
+iatk	=	p7*idur
+irel	=	p8*idur
+ista	=	idur-iatk-irel
+
+if (iaty == 0) goto slowat
+kenv	linen	iamp,iatk, idur, irel ; 
+goto endat
+
+slowat:
+kenv	envlpx	iamp, iatk, idur, irel, ifn2, 1, .01 ;
+endat:
+
+;;frequences 
+ifq1	=	p13;
+ifq2	=	p14;
+ifq3	=	p15;
+
+;;glissandi
+ihd1	=	p9*idur  ; during the attack
+ihd2	=	p10*idur ; during the release
+igl1	=	p11*idur ; from freq1 to freq2
+igl2	=	p12*idur ; from freq2 to freq3
+
+itop	=	idur-ihd1-ihd2-igl1-igl2; 
+
+kfrq	linseg	ifq1, ihd1,  ifq1, igl1, ifq2, itop, ifq2, igl2, ifq3, ihd2, ifq3; 
+
+;;modulation
+kcar	= 	p19
+kmod	= 	p20
+ihm1	= 	p21
+ihm2	= 	p22 
+
+ibuz	=	p24
+
+kfqm	line    ihm1, idur, ihm2
+
+;;wave
+if (ihm1 < 0)  goto noharm
+;;buzz choice 1
+if (ibuz > 0) goto dobuzz
+;;Boulanger 114 :
+awv1	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn1
+goto endbuzz
+dobuzz:
+awv1	buzz  kenv, kfrq, kfqm, ifn1
+endbuzz:
+goto endwave
+
+noharm:
+
+kwv1    oscil   1000,   kfrq,  ifn1
+awv1    oscil   kenv,   kwv1,   ifn1
+
+endwave:
+awv2	=	awv1
+
+;;crossover
+kfad	=	1
+icro	=	p23
+if (icro == 0)  goto nofade ; >0<1
+
+if (ihm2 < 0)  goto noharm2
+
+;;buzz choice 3:
+if (ibuz > 1) goto dobuzz3
+awv2	foscil  kenv, kfrq, kcar, kmod, kfqm, ifn2
+goto endbuzz3
+dobuzz3:
+awv2	buzz  kenv, kfrq, kfqm, ifn2
+endbuzz3:
+goto endtable
+
+noharm2:	; (no h = no buzz)
+kwv1    oscil   1000,   kfrq,  ifn1
+awv2    oscil   kenv,   kwv1,   ifn2
+
+endtable:
+ifd1	= 	idur-(icro*idur)
+ifd2	=	idur-ifd1
+kfad	linseg	1, ifd1, 0, ifd2, 0; 
+
+nofade:	
+afn1 	= 	kfad*(awv1)
+afn2	=	(1-kfad)*(awv2)
+afun 	= 	afn1 + afn2
+
+;;pan : 0 < ipnx < 1 
+ipn1	=	abs(p16) ; starting balance: <.5 = R, >.5 = L
+ipn2	=	abs(p17) ; target   balance
+
+if (ipn1 < 1)	goto nextpn1
+	ipn1 = 1
+nextpn1:
+if (ipn2 < 1)	igoto nextpn2
+	ipn2 = 1
+nextpn2:
+idel	=	p18*idur ; >0<1
+ista	=	idur-idel
+
+kpan	linseg	ipn1, idel, ipn2, ista, ipn2 ;
+
+;;REVERB
+if (irvn == 0)	goto norev 
+if (irvn == 3)	goto rev3 
+if (irvn == 2)	goto rev2 
+gacmb1	=	gacmb1+(afun*irvs)	;
+goto norev 
+rev2: 
+garvb1	=	garvb1+(afun*irvs)	;
+goto norev 
+rev3: 
+gamet1	=	gamet1+(afun*irvs)	;
+norev: 
+
+;;OUT
+
+outs     afun*(1-kpan),afun*kpan
+
+;display		kenv,idur
+
+endin
+
