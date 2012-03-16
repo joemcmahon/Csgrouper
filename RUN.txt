@@ -32,6 +32,16 @@ would modify the structure of the part and its resulting output.
 
 
 
+*** In case of problem:
+
+In the beggining, it's easy to replace a valid setup by a setup that will not 
+complete evaluation. In this case one can come back to the default partition 
+provided with Csgrouper, that is located in folder "part" under the name 
+"xpace-flute.xml". Just copy that file onto Csgrouper/run/default.xml and relaunch
+the program to come back to the valid default partition.
+
+
+
 *** How to run in DEBUG mode?
 
 Csgrouper outputs a lot of description output on the terminal, prefixed by 
