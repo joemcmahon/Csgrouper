@@ -7,8 +7,8 @@ I'm pleased to announce the first release of the Csgrouper musical program.
 
 *** What is it?
 
-Csgrouper is a (badly written) Perl program that outputs partitions for Csound 
-music system.
+Csgrouper is a (badly written) Perl program that outputs score files for the 
+Csound music system.
 
 
 
