@@ -52,9 +52,9 @@ Csgrouper score tab is the csound .csd score file ready to import in Blue for ex
 
 =head4 Sets
 
-Precedence is achieved through the attribution of sequences to ordered sets of sequences. To reserve the possibility of adding easily introductory sequences to a part (without having to renumber sets), it is recommended to start numbering sets from 10 for example. 
+Precedence is achieved through the attribution of sequences to sets of sequences later ordered by section.
 
-As long as sets are not subject to grouping (see below) their content will be played simultaneously. For example, a set 10 containing sequences 22, 23, 24 can be the treated by meta function Xpan when the set number 11 will itself be subject to Xrep but not Xpan, and they finally will both be played together. If set 10 is sectionned through Xsec, it will still be executed at the same time as set 11 which has not been touched by the sectionning process. 
+As long as sets are not subject to grouping (see below) their content will be played simultaneously. For example, a set 10 containing sequences 22, 23, 24 can be the treated by meta function Xpan when the set number 11 will itself be subject to Xrep but not Xpan, and they finally will both be played together.
 
 =head4 Sections
 
