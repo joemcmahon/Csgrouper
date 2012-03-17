@@ -296,17 +296,6 @@ our %CSG; ## Without "our" the hash wouldn't be accessible from csgrouper.
 	$CSG{'part_tempo_le'} 		= "t 0 60"	; ## Base number of "seconds" per minute (Scorp).
 	$CSG{'part_title_le'} 		= "Default Title"; ## Part Tab
 
-## SQL Tab
-	$CSG{'db_encoding'} 			= "latin1"; # The db client_encoding; terminal settings must match this one.
-	$CSG{'db_name_le'} 				= "series"; 
-	$CSG{'db_type_mw'} 				= "Pg"; 
-	$CSG{'db_user_le'} 				= "er";
-	$CSG{'db_password_le'} 		= "er";
-	$CSG{'sql_limit_le'} 			= 100; 
-	$CSG{'sql_max'} 			  	= 1000000; 
-	$CSG{'sql_query_en'} 			= "select * from m8";
-	# $CSG{'sql_query_en'}		="select * from sc1 where typ = (select ord from tc where typ like '000300000000')";
-
 ## Csound Tab 
 	$CSG{'audio_driver_mbw'}	= "alsa"; 
 	$CSG{'csound_hbuffer_le'}	= "1024"; 
@@ -832,7 +821,7 @@ sub comp_tracks {
 
 =cut
 
-=head3 Little helpers
+=head3 Helpers
 
 =over
 
