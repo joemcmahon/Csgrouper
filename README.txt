@@ -1,5 +1,6 @@
 
 
+16 March 2012
 
 I'm pleased to announce the first release of the Csgrouper musical program.
 
