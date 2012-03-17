@@ -110,8 +110,7 @@ Feel free to sculpt on it!
 
 2: /Csgrouper/run/sndout/ contains a "xpace-flute_raw-csg.mp3" and a quickly
 transformed (sculpted) version of the same part named "ballad.mp3". 
-These sound files can also be heard from [http://www.wix.com/emilbarton/data]
-where I uploaded them for the ones lazy to wait for git downloads.
+These sound files can also be heard from http://www.wix.com/emilbarton/data.
 
 
 
