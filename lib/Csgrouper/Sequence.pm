@@ -187,10 +187,6 @@ around BUILDARGS => sub {
 		 &Csgrouper::Describe($subname, "n => $paramh{'n'} NOT NUM : FALLING BACK TO DEFAULTS");
 		 $paramh{'n'} = 0;	$test .= 'n '; 
 	 } ## END n.
-	 if  (not (&Csgrouper::Types::is_num($paramh{'n'}))) {
-		 &Csgrouper::Describe($subname, "n => $paramh{'n'} NOT VALID NUM : FALLING BACK TO DEFAULTS");
-		 $paramh{'n'} = 0;	$test .= 'n '; 
-	 } ## END n.
 	 if  (not (&Csgrouper::Types::is_num($paramh{'x'}))){
 		 &Csgrouper::Describe($subname, "x => $paramh{'x'} NOT NUM : FALLING BACK TO DEFAULTS");
 		 $paramh{'x'} = 0;	$test .= 'x '; 
