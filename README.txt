@@ -91,9 +91,8 @@ Csgrouper offers no test suite.
 
 I offer this piece of code for sharing on Github, and I'd like programmers 
 interessed by this project to invest their time in improving it. I'll be happy 
-to create new branches as needed and see the project become less redundant, 
-smarter, have a new and better GUI, and finally develop independantly, reaching 
-quality standard to help musicians do music.
+to see the project fork, become smarter, less redundant, have a new and better 
+GUI and finally reach quality standard to help musicians do music.
 
 
 emilbarton@ymail.com
