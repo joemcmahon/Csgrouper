@@ -36,7 +36,6 @@ First see some command lines:
 ## ###
 package Csgrouper::Series; 
 use Modern::Perl;
-use lib (	"~/Csgrouper/lib");
 use Moose;
 use Moose::Util::TypeConstraints;
 use namespace::autoclean;

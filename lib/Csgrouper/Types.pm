@@ -29,7 +29,6 @@
 ## ###
 package Csgrouper::Types; 
 use Modern::Perl;
-use lib (	"~/Csgrouper/lib");
 use Moose;
 use Moose::Util::TypeConstraints;
 use Csgrouper;

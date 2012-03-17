@@ -58,14 +58,13 @@ B<NOTE on  the difference between unic and base>
 
 The latter can't be reset by a class or routine. Thus the validate sub for mode at interface level must be strong.
 For any test the sub returns the tree. But analysis functions also feed an override @aoa.
-Analysis functions are listed under the same classes as other ones. Randond() does not show in the sequence menu in reason of its unpredictable output, moderated by a time limit.
+Analysis functions are listed under the same classes as other ones. Randcond() does not show in the sequence menu in reason of its unpredictable output, moderated by a time limit.
 
 =cut
 
 ## ###
 package Csgrouper::Sequence; 
 use Modern::Perl;
-use lib ("~/Csgrouper/lib");
 use Moose;
 use Moose::Util::TypeConstraints;
 use Csgrouper::Types;
@@ -116,7 +115,7 @@ has 'com'		=> (isa => 'Str', is => 'ro', required => 1, writer => 'set_com');
 ## Csgrouper.pm does offer some public analysis functions in order to be able to 
 ## obtain information in a wide variety of ways. The serial creation functions
 ## however are mostly private as they enter in the overall csgrouper object system.
-## Among them, only Randond will remain public as its incompleteness and
+## Among them, only Randcond will remain public as its incompleteness and
 ## time dependance doesn't allow to include it in the object system.
 
 ## Other properties created by subs:

@@ -47,7 +47,6 @@ Note that saving a part where the score has been written already will store this
 	
 package Csgrouper::Instrument; 
 use Modern::Perl;
-use lib ("~/Csgrouper/lib");
 use Moose;
 use Moose::Util::TypeConstraints;
 use Csgrouper::Types;
