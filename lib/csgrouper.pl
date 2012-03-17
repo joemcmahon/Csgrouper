@@ -701,26 +701,6 @@ $part_steps_le->form(
 
 &refer((split /=/, Dumper($part_steps_le))[0],'LabEntry',\$part_steps_le);  ## Refer: 5.
 
-## Steps:
-my $part_steps_le = $Part_frame->LabEntry(
-   -label => 'Steps: '
-  ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
-  ,-background => $COLOR{input_bgcolor}
-  ,-foreground => $COLOR{input_fgcolor}
-  ,-relief => 'ridge'
-  ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_steps_le'}
-  ,-width => 4
-  ,-validate => 'key'
-  ,-validatecommand => sub { &valid_entry($_[1],'digit') }
-);
-$part_steps_le->form(   
-   -top=>[$part_title_le,4]
-  ,-left=>[$part_intersil_le,4]
-);
-
-&refer((split /=/, Dumper($part_steps_le))[0],'LabEntry',\$part_steps_le);  ## Refer: 5.
-
 ## Durmin:
 my $part_durmin_le = $Part_frame->LabEntry(
    -label => 'Dur. min: '
@@ -4570,18 +4550,6 @@ sub menu_save {
   &Csgrouper::says($subname,"Project saved.");
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END menu_save().
-
-=item * menu_set_sql() : toggles db type.
-=cut
-
-sub menu_set_sql {
-  my $subname = 'menu_set_sql';
-  { no warnings; &Csgrouper::says($subname, "@_"); }
-  my $oldebflag = $Csgrouper::DEBFLAG; 
-  # $Csgrouper::DEBFLAG = 1;
-  &Csgrouper::says($subname,"DB type set to $Part->{'db_type_mw'}");
-  $Csgrouper::DEBFLAG =  $oldebflag;
-}  ## END menu_set_sql().
 
 =item * menu_setup() : raises setup tab.
 =cut
