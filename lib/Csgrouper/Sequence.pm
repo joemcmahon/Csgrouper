@@ -27,7 +27,7 @@
 
 =head2 TODO
 
-	Les octaves semblent trop basses lors de l'appel à random().
+ - Octaves seem too low when set at random().
 
 =head2 The Sequence construction scheme
 

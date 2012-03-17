@@ -1792,7 +1792,7 @@ sub Elacs { ## Revised 111008.
   my $subname = "Csgrouper::Elacs";
   { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
-	$DEBFLAG = 1;
+	# $DEBFLAG = 1;
   my ($res,$n,$cps);
   &Error($subname,"Invalid note: $note < 0") if ($note < 0);
   &Error($subname,"Invalid oct: $oct < 0") if ($oct < 0);

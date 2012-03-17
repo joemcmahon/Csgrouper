@@ -4,17 +4,17 @@
 
 Once installed Csgrouper can be run with the default part by running 
 
-~/Csgrouper/run/csgrouper from a terminal.
+	~/Csgrouper/run/csgrouper from a terminal.
 
 This command is equivalent to :
 
-~/Csgrouper/run/csgrouper ~/Csgrouper/run/default.xml
+	~/Csgrouper/lib/csgrouper.pl ~/Csgrouper/run/default.xml
 
 It can also take an argument which is the name of a part file as in:
 
-~/Csgrouper/run/csgrouper ~/Csgrouper/part/xpace-flute.xml
+	~/Csgrouper/run/csgrouper ~/Csgrouper/part/xpace-flute.xml
 
-(in the original package xpace-flute.xml and default.xml are identical).
+(in the original package xpace-flute.xml is a copy of default.xml).
 
 
 
@@ -52,9 +52,7 @@ for a group of them or for all.
 
 a) Debug All:
 
-From the "Series" tab:
-
---- type:
+From the "Series" tab, type:
 
 	~$Csgrouper::DEBFLAG = 1 
 
@@ -64,9 +62,7 @@ All commands prefixed with a '~' are Perl oneliners that can access the modules'
 
 	~$Csgrouper::DEBFLAG = 0 (to suppress debug output).
 
-b) Debug some subroutines:
-
---- type:
+b) Debug some subroutines, type:
 
 	~$Csgrouper::DEBSUBS = "Csgrouper::struct_ctl Csgrouper::comp_tracks"
 	
@@ -74,6 +70,6 @@ and only these subs (written with module name prefixe) will be debugged.
 
 c) Debug one subroutine all the time:
 
---- correct the sub's code by setting $DEBFLAG = 1 at the beggining.
+	correct the sub's code by setting $DEBFLAG = 1 at the beggining.
 
 EOF

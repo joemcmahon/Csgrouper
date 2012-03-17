@@ -38,12 +38,21 @@
 
 =head2 Todo/Questions
 
-			- problem with the instruments fields: sometimes recording unsupported utf8:
-			if a csg recorded part refuses to load it's that some unwanted utf8 has been inserted
-			at some stage by some keypress (an Emacs-like reflexe for instance). In this case
-			XML:Simple aborts. The solution is to find and destroy the bad charachter 
-			(showing some strange prefixe like ^) with an editor as nano or vi.
+ - From now on (120317) and for a while, most changes will concern the Manual 
+ pages that need to be completed and they will be mentionned on Github by a
+ "Minor comment fix." to distinguish them from possible minor code fixes. 
 
+ - Problem with the instruments fields: 
+ in spite of correct bindings sometimes unsupported utf8 are recorded.
+ If a .csg recorded part refuses to load it's that some unwanted multibyte char 
+ has been inserted at some stage by some keypress (e.g. from Emacs-like reflexes). 
+ In this case XML:Simple aborts. The solution is to find and destroy the bad char 
+ (showing some special prefixe like ^) with an editor as nano or vi.
+
+ - Can someone find a way to get the Manual text field in a correct bg color?
+ Perhaps the Podtext parameter disturbs proper Tk display here.
+ See : my $Man_top_tw = $Tabs{'man'}->Scrolled.
+ 
 		   
 =head2 Structure of this program
 
@@ -263,7 +272,7 @@ $Csgrouper::CSG{'interface'} = "Csgrouperinter";
 ## aliases can help in defining command lines for example:
 
 ## Resetall() variables:
-our	$Author				=	$Csgrouper::CSG{'part_author_le'} = "E.R."; ## Part Tab
+our	$Author				=	$Csgrouper::CSG{'part_author_le'} = "E.B."; ## Part Tab
 our $BasePath			= $Csgrouper::CSG{'csg_path_pe'};  ## Path Tab # Not user-configurable.
 our	$Comptype			=	$Csgrouper::CSG{'part_comptype_mw'}; 				# Comparison function suffixe.
 our	$Durtype			=	$Csgrouper::CSG{'part_durtype_mw'}; 				# Duration type 0=serial (normal).
@@ -280,9 +289,6 @@ our	$Title				=	$Csgrouper::CSG{'part_title_le'}; 					# Part Tab
 
 ## Notes Tab:
 $Csgrouper::CSG{'Notes_tw'} 					= 'Some notes.'; ## Notes Tab
-
-## Manual Tab:
-$Csgrouper::CSG{'html_manual'}				= "http://localhost/~er/local/csgrouper/csgrouper-manual.html";
 
 ## END %CSG Main Fixed container.
 
@@ -2286,11 +2292,13 @@ my $Typ_nam = "Types.pm";
 ## ### Special real scrolled syntax..
 my $Man_top_tw = $Tabs{'man'}->Scrolled (
   'PodText'
+  , -background=>$COLOR{input_bgcolor} # TK bug? Can't get these colors to be displayed..
+  , -foreground =>$COLOR{input_fgcolor}
   ,-file=> $Int_man
-  ,-scrollbars => "osoe",
+  ,-scrollbars => "se",
   ,-wrap => 'word' 
 )->form(-top=>[$Man_frame,8], -left=>['%1',0], -right=>['%99',0], -bottom=>['%98',0]);
-## my $Man_tw = $Man_top_tw->Subwidget("scrolled"); # get real widget
+# my $Man_tw = $Man_top_tw->Subwidget("scrolled"); # get real widget # unuseful here.
 
 my ($manvar,$tmanvar);
 my $man_select_omw = $Man_frame->Optionmenu(

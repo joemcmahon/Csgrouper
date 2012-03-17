@@ -24,7 +24,7 @@
 
 =head1 Manual for Instrument.pm
 
-At present this object only serves the purpose of providing a file to contain its manual. For instruments are centralized into the Csgrouper object. In the future however I might decide to make an objective mirror to the instrumental params, as I did for Tkrows with Sequences. 
+At present this object only serves the purpose of providing a file to contain its manual. For instruments are centralized into the Csgrouper object. In the future however we might decide to make an objective mirror to the instrumental params, as has been done for Tkrows with Sequences. 
 
 =head2 Instruments
 
@@ -36,7 +36,7 @@ The method for adding a Csgrouper defined instrument param to an instrument that
 
 Any instrument parameter greater than 2 (because 1,2 are unmodifiable id and start time) can see its value ovewritten by a special mention following the instrument name as in 
 
-	"i24,p5=f10,p6=0.5,p7=sub{ &myfunction($CsgObj->class->attr)" 
+	"i24,p5=f10,p6=0.5,p7=sub{&myfunction($CsgObj->class->attr)}" 
 	
 for example, where parameters overwriting strings will be parsed and evaluated by the subroutine Xfun(). These params however can in turn be overwritten by xfunctions set parameters (see csgrouper.pl manual: Parameter overwriting).
 
