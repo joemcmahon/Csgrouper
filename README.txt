@@ -101,13 +101,13 @@ emilbarton@ymail.com
 
 Notes:
 
-1: Cf. /Csgrouper/run/sndout/csg.20120316104420.csd : This raw Csgrouper audio
+1: Cf. ~/Csgrouper/run/sndout/xpace-flute_raw-csg.csd : This raw Csgrouper audio
 output is made on a 18 notes scale which means thirds of tones. The serial
 material used was chosen for its tonal properties which yield a harmonious
 aspect in spite of the lack of dominant position in the 18 notes scale. 
 Feel free to sculpt on it!
 
-2: /Csgrouper/run/sndout/ contains a "xpace-flute_raw-csg.mp3" and a quickly
+2: ~/Csgrouper/run/sndout/ contains an "xpace-flute_raw-csg.mp3" and a quickly
 transformed (sculpted) version of the same part named "ballad.mp3". 
 These sound files can also be heard from http://www.wix.com/emilbarton/data.
 
