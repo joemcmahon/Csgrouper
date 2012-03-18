@@ -22,6 +22,7 @@ These are the kind of things that haven't been worked out a lot while programmin
 --- Third party:
 
 	Csound (a package from standard distribution will do)
+	Xterm (located in /usr/bin : didn't optionalize this yet)
 
 
 --- Cpan Modules:
