@@ -102,7 +102,7 @@ emilbarton@ymail.com
 Notes:
 
 1: Cf. ~/Csgrouper/run/sndout/xpace-flute_raw-csg.csd : This raw Csgrouper score
-(and related audio) output is made on a 18 notes scale which means thirds of 
+(and related audio output) is made on a 18 notes scale which means thirds of 
 tones. The serial material used was chosen for its tonal properties which yield 
 a harmonious aspect in spite of the lack of dominant position in the 18 notes 
 scale. Feel free to sculpt on it!
