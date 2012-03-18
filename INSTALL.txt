@@ -21,22 +21,22 @@ These are the kind of things that haven't been worked out a lot while programmin
 
 --- Third party:
 
-	Csound (a package from standard distribution will do)
-	Xterm (located in /usr/bin : didn't optionalize this yet)
+	Csound  : a package from standard distribution will do.
+	Xterm   : located in /usr/bin (didn't optionalize this yet).
 
 
 --- Cpan Modules:
 
-	Cwd ;
-	Data::Dumper ;
-	Pod::Simple ;
-	Scalar::Util ;
-	Modern::Perl ;
-	Moose ;
-	namespace::autoclean ;
-	POSIX ;
-	Tk ;
-	XML::Simple . 
+	Cwd 
+	Data::Dumper 
+	Modern::Perl 
+	Moose 
+	namespace::autoclean 
+	Pod::Simple 
+	POSIX 
+	Scalar::Util 
+	Tk 
+	XML::Simple 
 
 	
 *** Notes:
