@@ -53,7 +53,7 @@ ensemble section that will proceed on selected sub-sequences determined by
 inter-sequences note relations, or choosing a rythmic model (binary, ternary, 
 mixed) etc..
 
-Finally Csgrouper evaluates the proposed structure and prints its Csound unified
+At last Csgrouper evaluates the proposed structure and prints its Csound unified
 score part in case the evaluation succeeds. The resulting sound file can be 
 played directly from the GUI or recorded on disk. The Csgrouper and 
 Csound parts and instruments are all saved into a Csgrouper .xml config file.
@@ -81,9 +81,9 @@ be run properly without looking at some additionnal output from the terminal.
 
 Csgrouper is processing slowly: count several dozens od seconds to load a short 
 piece of a few minutes and another similar time to evaluate it before it's 
-finally ready for audio output.
+ready for audio output.
 
-Csgrouper offers no test suite.
+Csgrouper provides no test suite.
 
 
 
@@ -92,7 +92,7 @@ Csgrouper offers no test suite.
 I offer this piece of code for sharing on Github, and I'd like programmers 
 interessed by this project to invest their time in improving it. I'll be happy 
 to see the project fork, become smarter, less redundant, have a new and better 
-GUI and finally reach quality standard to help musicians do music.
+GUI and reach quality standard to help musicians do music.
 
 
 emilbarton@ymail.com
