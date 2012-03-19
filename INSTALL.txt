@@ -1,7 +1,6 @@
 
 
-Csgrouper was made on Linux Debian for Linux systems and could be run in other
-Unix-like systems.
+Csgrouper was made on Linux Debian. It is compatible with Unix-like systems.
 
 
 
