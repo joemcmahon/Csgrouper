@@ -80,16 +80,16 @@ f10044 0  	8 -2  1 6 9 6 1 6 4			; Random series 3
 
 ;	END LOCAL F-TABLES
 ;****************************************************************</Ftb_tw>
-  <I1>2012-03-15_17:00:38</I1>
-  <I2>2012-03-15_17:00:38</I2>
-  <I3>2012-03-15_17:00:38</I3>
-  <I4>2012-03-15_17:00:38</I4>
-  <I5>2012-03-15_17:00:38</I5>
-  <I576>2012-03-15_17:00:38</I576>
-  <I6>2012-03-15_17:00:38</I6>
-  <I7>2012-03-15_17:00:38</I7>
+  <I1>2012-03-17_11:36:37</I1>
+  <I2>2012-03-17_11:36:37</I2>
+  <I3>2012-03-17_11:36:37</I3>
+  <I4>2012-03-17_11:36:37</I4>
+  <I5>2012-03-17_11:36:37</I5>
+  <I576>2012-03-17_11:36:37</I576>
+  <I6>2012-03-17_11:36:37</I6>
+  <I7>2012-03-17_11:36:37</I7>
   <N_param_le>1</N_param_le>
-  <Notes_tw>Some notes.</Notes_tw>
+  <Notes_tw>Some notes...</Notes_tw>
   <Orcini_tw>; global reverbs:
 
 garvbsig init 0 ;
@@ -126,7 +126,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_1_mode>0123456789ABCDEFGH</Tkrow_1_mode>
   <Tkrow_1_modo>0</Tkrow_1_modo>
   <Tkrow_1_n>1</Tkrow_1_n>
-  <Tkrow_1_name>R Basse</Tkrow_1_name>
+  <Tkrow_1_name>R Bass</Tkrow_1_name>
   <Tkrow_1_ord>0123456789ABCDEFGH</Tkrow_1_ord>
   <Tkrow_1_pre>1</Tkrow_1_pre>
   <Tkrow_1_rep>0</Tkrow_1_rep>
@@ -238,7 +238,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_5_mode>0123456789ABCDEFGH</Tkrow_5_mode>
   <Tkrow_5_modo>0</Tkrow_5_modo>
   <Tkrow_5_n>1</Tkrow_5_n>
-  <Tkrow_5_name>R Basse 2</Tkrow_5_name>
+  <Tkrow_5_name>R Bass 2</Tkrow_5_name>
   <Tkrow_5_ord>0123456789ABCDEFGH</Tkrow_5_ord>
   <Tkrow_5_pre>5</Tkrow_5_pre>
   <Tkrow_5_rep>0</Tkrow_5_rep>
@@ -322,7 +322,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_8_mode>0123456789ABCDEFGH</Tkrow_8_mode>
   <Tkrow_8_modo>0</Tkrow_8_modo>
   <Tkrow_8_n>1</Tkrow_8_n>
-  <Tkrow_8_name>Gamme chromatique.</Tkrow_8_name>
+  <Tkrow_8_name>Chromatic scale.</Tkrow_8_name>
   <Tkrow_8_ord>0123456789ABCDEFGH</Tkrow_8_ord>
   <Tkrow_8_pre>8</Tkrow_8_pre>
   <Tkrow_8_rep>0</Tkrow_8_rep>
@@ -344,7 +344,7 @@ garvb1 init 0 ;</Orcini_tw>
   <ana_sense_cb>1</ana_sense_cb>
   <audio_driver_mbw>JACK</audio_driver_mbw>
   <base_param_le>12</base_param_le>
-  <bkp_path_pe>~/Csgrouper/run/bkp/</bkp_path_pe>
+  <bkp_path_pe>/home/er/Csgrouper/run/bkp/</bkp_path_pe>
   <char_set>0123456789ABCDEFGHIJKLMN</char_set>
   <cline>$CsgObj-&gt;sequences-&gt;{Seq_1}-&gt;tree-&gt;notes-&gt;{0}-&gt;Shownote()</cline>
   <cs_after></cs_after>
@@ -354,8 +354,8 @@ garvb1 init 0 ;</Orcini_tw>
   <csg_file>~/Csgrouper/lib/csgrouper.pl</csg_file>
   <csg_key>2011-12-05_16:05:41</csg_key>
   <csg_label>2</csg_label>
-  <csg_part>~/Csgrouper/part/xpace-flute.xml</csg_part>
-  <csg_path_pe>~/Csgrouper/</csg_path_pe>
+  <csg_part>/home/er/Csgrouper/run/default.xml</csg_part>
+  <csg_path_pe>/home/er/Csgrouper/</csg_path_pe>
   <csg_status>reload : init</csg_status>
   <csg_version>2.0.1</csg_version>
   <csound_hbuffer_le>1024</csound_hbuffer_le>
@@ -365,7 +365,7 @@ garvb1 init 0 ;</Orcini_tw>
   <csound_path_pe>/usr/bin/csound</csound_path_pe>
   <csound_sample_mbw>SHORT</csound_sample_mbw>
   <csound_sbuffer_le>256</csound_sbuffer_le>
-  <csound_sf2path_pe>~/Csgrouper/ins/sf2</csound_sf2path_pe>
+  <csound_sf2path_pe>/home/er/Csgrouper/ins/sf2/</csound_sf2path_pe>
   <csound_sr_le>44100</csound_sr_le>
   <default_mode>0123456789AB</default_mode>
   <default_tone>0</default_tone>
@@ -583,7 +583,7 @@ endin</i1_content>
   <i1_path>~/Csgrouper/ins/xpace-csg.in</i1_path>
   <i1_type>ins</i1_type>
   <i2_amp_type>ampdb</i2_amp_type>
-  <i2_author>er</i2_author>
+  <i2_author>eb</i2_author>
   <i2_comment>Triangle wave.</i2_comment>
   <i2_content>instr 2
 
@@ -1752,7 +1752,7 @@ endin</i7_content>
   <i7_path>~/Csgrouper/ins/flute.in</i7_path>
   <i7_type>ins</i7_type>
   <ins_param_le>i1</ins_param_le>
-  <ins_path_pe>~/Csgrouper/ins/</ins_path_pe>
+  <ins_path_pe>/home/er/Csgrouper/ins/</ins_path_pe>
   <interface>Csgrouperinter</interface>
   <midi_driver_mbw>ALSA</midi_driver_mbw>
   <min_amp>0</min_amp>
@@ -1770,11 +1770,11 @@ endin</i7_content>
   <part_durtype_mw>0</part_durtype_mw>
   <part_intersil_le>2</part_intersil_le>
   <part_octs_le>333333333333</part_octs_le>
-  <part_path_pe>~/Csgrouper/part/</part_path_pe>
+  <part_path_pe>/home/er/Csgrouper/part/</part_path_pe>
   <part_randur_cb>0</part_randur_cb>
   <part_rythmtype_mw>3</part_rythmtype_mw>
   <part_sections_le>1,2;3</part_sections_le>
-  <part_select_le>4,5,6,7</part_select_le>
+  <part_select_le></part_select_le>
   <part_selprnt_le>0</part_selprnt_le>
   <part_sf2amp_le>0.2</part_sf2amp_le>
   <part_signs_le>++++++++++++</part_signs_le>
@@ -1791,9 +1791,9 @@ endin</i7_content>
   <part_yryc_le>1#B,2#B</part_yryc_le>
   <range_param_le>3</range_param_le>
   <realtime_params_le>-o dac</realtime_params_le>
-  <render_path_pe>~/Csgrouper/run/sndout/</render_path_pe>
-  <run_path_pe>~/Csgrouper/run/</run_path_pe>
-  <saved>2012-03-15_17:08:18</saved>
+  <render_path_pe>/home/er/Csgrouper/run/sndout/</render_path_pe>
+  <run_path_pe>/home/er/Csgrouper/run/</run_path_pe>
+  <saved>2012-03-17_11:37:50</saved>
   <savenotes_enabled_cb>disabled</savenotes_enabled_cb>
   <sel_sect>0</sel_sect>
   <separator>:</separator>
@@ -1801,3 +1801,37 @@ endin</i7_content>
   <signs_series_le>++++++++++++</signs_series_le>
   <ton_series_le>0</ton_series_le>
   <tone_param_le>0</tone_param_le></opt>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
