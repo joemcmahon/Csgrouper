@@ -40,6 +40,10 @@ provided with Csgrouper, that is located in folder "part" under the name
 "xpace-flute.xml". Just copy that file onto Csgrouper/run/default.xml and relaunch
 the program to come back to the valid default piece.
 
+If Csgrouper refuses to play a score in spite of proper Csound setup, it can
+be due to the mere absence of an empty folder Csgrouper/run/bkp where Csound 
+runtime process happens (see INSTALL.txt for more info on package files).
+
 
 
 *** How to run in DEBUG mode?

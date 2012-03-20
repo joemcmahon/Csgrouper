@@ -37,6 +37,39 @@ These are the kind of things that haven't been worked out a lot while programmin
 	Tk 
 	XML::Simple 
 
+
+	
+*** Csgrouper list of files and directories [2]:
+
+Csgrouper/
+Csgrouper/INSTALL.txt
+Csgrouper/README.txt
+Csgrouper/RUN.txt
+Csgrouper/ins/
+Csgrouper/ins/flute.in
+Csgrouper/ins/xpace-csg.in
+Csgrouper/lib/csg_Sets.pm
+Csgrouper/lib/Csgrouper.pm
+Csgrouper/lib/csgrouper.pl
+Csgrouper/lib/Csgrouper/
+Csgrouper/lib/Csgrouper/Instrument.pm
+Csgrouper/lib/Csgrouper/Note.pm
+Csgrouper/lib/Csgrouper/Sequence.pm
+Csgrouper/lib/Csgrouper/Series.pm
+Csgrouper/lib/Csgrouper/Types.pm
+Csgrouper/part/
+Csgrouper/part/xpace-flute.xml
+Csgrouper/run/
+Csgrouper/run/csgrouper -> ../lib/csgrouper.pl
+Csgrouper/run/default.xml
+Csgrouper/run/bkp/
+Csgrouper/run/sndout/
+Csgrouper/run/sndout/ballad.csd
+Csgrouper/run/sndout/ballad.mp3
+Csgrouper/run/sndout/xpace-flute_raw-csg.csd
+Csgrouper/run/sndout/xpace-flute_raw-csg.mp3
+
+
 	
 *** Notes:
 
@@ -44,6 +77,8 @@ These are the kind of things that haven't been worked out a lot while programmin
 will have to be corrected manually when changing the software from standard location, 
 as well as the 'our 	$INSTALLDIR = $ENV{HOME};' in Csgrouper.pm. 
 
-
+[2] Csgrouper can run into problem due to a specificity in Github that destroys 
+unused folders (like Csgrouper/run/bkp) when their presence is required for the
+application to play a score.
 
 EOF
