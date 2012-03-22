@@ -32,7 +32,7 @@ would modify the structure of the part and its resulting output.
 
 
 
-*** The most important field:
+*** The most important field: 
 
 The user should be aware that the "mode " is the most important field in any 
 Csgrouper setup - either in the Sequences table or in the Series tab - if this 
