@@ -49,10 +49,6 @@
  In this case XML:Simple aborts. The solution is to find and destroy the bad char 
  (showing some special prefixe like ^) with an editor as nano or vi.
 
- - Can someone find a way to get the Manual text field in a correct bg color?
- Perhaps the Podtext parameter disturbs proper Tk display here.
- See : my $Man_top_tw = $Tabs{'man'}->Scrolled.
- 
 		   
 =head2 Structure of this program
 
@@ -200,6 +196,7 @@ use lib ( "$ENV{HOME}/Csgrouper/lib");
 ##use Pod::Simple;
 use Scalar::Util qw(blessed);
 use Tk;
+require Tk::CmdLine;
 require Tk::Dialog;
 require Tk::DialogBox;
 require Tk::FileSelect;
@@ -216,6 +213,7 @@ use Csgrouper::Sequence;
 use Csgrouper::Series; 
 use Csgrouper::Types; 
 use csg_Sets; ## A temporary outsider.
+
 
 ## END USE.
 
@@ -390,6 +388,10 @@ $COLOR{'window_fgcolor'}		= $ColorSet[15];
 
 $COLOR{'set_bgcolor'}	= $ColorSet[5];
 $COLOR{'set_fgcolor'}	= $ColorSet[15];
+
+# A way to override Tk Podtext bug:
+Tk::CmdLine::SetResources("*mantab*background: $COLOR{input_bgcolor}"); 
+
 
 ## END Global Display Vars.
 
@@ -2272,13 +2274,15 @@ my $Typ_nam = "Types.pm";
 ## ### Special real scrolled syntax..
 my $Man_top_tw = $Tabs{'man'}->Scrolled (
   'PodText'
-  , -background=>$COLOR{input_bgcolor} # TK bug? Can't get these colors to be displayed..
-  , -foreground =>$COLOR{input_fgcolor}
+  ,-background=>$COLOR{input_bgcolor} # TK bug? Can't get these colors to be displayed..
+  ,-foreground =>$COLOR{input_fgcolor}
+	,'Name' => 'mantab' ## This name will be used to override the previous bug.
   ,-file=> $Int_man
   ,-scrollbars => "se",
   ,-wrap => 'word' 
 )->form(-top=>[$Man_frame,8], -left=>['%1',0], -right=>['%99',0], -bottom=>['%98',0]);
 # my $Man_tw = $Man_top_tw->Subwidget("scrolled"); # get real widget # unuseful here.
+
 
 my ($manvar,$tmanvar);
 my $man_select_omw = $Man_frame->Optionmenu(
@@ -7138,9 +7142,16 @@ __DATA__
 	$DEBUG = 1; $DEBUG = 0;
 	print &Csgrouper::Map(&Csgrouper::Oppose("089AB2145673"),"089AB2145673"); ## (=289A14365B70).
 	print &Csgrouper::Omap("089AB2145673"); ## (=289A14365B70).
-	print &Csgrouper::Compstr4("302415")
-	print &Csgrouper::Imap("22013") 
-	
+	print &Csgrouper::Compstr4("302415");
+	print &Csgrouper::Imap("22013"); 
+	print $Man_top_tw->PathName;
+  print $Man_top_tw->optionGet('foreground', ref $Man_top_tw); # Nice ref syntax!
+  print $Man_top_tw->optionGet('background', ref $Man_top_tw); # Prints bisque default: #ffe4c4.
+  print $Man_top_tw->optionGet('background', 'Csgrouper.pl'); # Class name for this program is file name capitalized.
+  print $Man_top_tw->optionGet('background', 'Csgrouper'); # Suffixe can be ommited.  # Prints bisque default: #ffe4c4.
+  print $mw->Frame(-class => 'the_frames');
+  print $mw->optionGet('foreground', 'the_frames');
+  
 =head2 Coding notes
 
 - Reminder about pack: 
@@ -7162,6 +7173,8 @@ The Tk original colorpalette is grey but black text isn't too readable then and 
 
 =head3 Tk Bugs
 
+The Tk::Notebook -Podtext problem: the Podtext parameter disturbs proper Tk display here. See : my $Man_top_tw = $Tabs{'man'}->Scrolled. Perlmonks 120323 fix: use Tk::option (actually Tk::Cmdline) to override default color. 
+ 
 The Tk::Text control chars bug: see our workaround from Perlmonks.org.
 
 The Tk::Pod::Text bug: overwrites the main window title with the head1 entry.
