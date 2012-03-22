@@ -32,6 +32,31 @@ would modify the structure of the part and its resulting output.
 
 
 
+*** The most important field:
+
+The user should be aware that the "mode " is the most important field in any 
+Csgrouper setup - either in the Sequences table or in the Series tab - if this 
+field is not correctly filled Csgrouper will fail at some point. The idea is 
+simple: whatever you want to do with some suite of notes located in any field, 
+the "mode" field must contain the list of signs that you authorize in your 
+output - and the same number of signs  that define your intervals (e.g. 12 for 
+dodecaphonism or chromatism). So even if you filled properly the "base" field 
+with 14, Csgrouper won't be able to work in base 14 unless you enter the first 
+14 signs into the "mode" field. (It is the case in the default "Series" tab 
+where the suite "A" contains 18 notes but mode 12 only: an invalid setup that 
+will produce failures in several functions calls). 
+
+Later if you want to work in a particular musical mode, you will be able to do 
+so by replacing some of the distinct signs in the "mode" field with some indistinct
+signs, keeping the same number of signs which is the "base" of the sequences. 
+For example "0123456789AB" is the normal western chromatic mode, however one can
+work in the classic "Dorian" mode by replacing all the other notes in the same 
+mode string, and that gives: "00224557799B". Csgrouper will then proceed to its 
+normal computation except that at the time of output it will replace each "1" by 
+a "0", each "3" by a "2" etc., so producing a modulation.
+
+
+
 *** In case of problem:
 
 In the beggining, it's easy to replace a valid setup by a setup that will not 
@@ -43,8 +68,6 @@ the program to come back to the valid default piece.
 If Csgrouper refuses to play a score in spite of proper Csound setup, it can
 be due to the mere absence of an empty folder Csgrouper/run/bkp where Csound 
 runtime process happens (see INSTALL.txt for more info on package files).
-
-
 
 *** How to run in DEBUG mode?
 
