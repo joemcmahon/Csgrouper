@@ -28,7 +28,7 @@
 ## Explanations and informations: ##..
 ## Section Start: 								## ###..
 ## Section End: 									## END..
-## Commented out line: 						#..
+## Commented out line: 						#.. 
  
 ## General task list:
 ## TODO: use the ternary conditional operator: my $truthiness = $value ? 'true' : 'false';
