@@ -288,7 +288,7 @@ $Csgrouper::CSG{'interface'} = "Csgrouperinter";
 ## aliases can help in defining command lines for example:
 
 ## Resetall() variables:
-our	$Author				=	$Csgrouper::CSG{'part_author_le'} = "E.B."; ## Part Tab
+our	$Author				=	$Csgrouper::CSG{'part_author_le'}; ## Part Tab
 our $BasePath			= $Csgrouper::CSG{'csg_path_pe'};  ## Path Tab # Not user-configurable.
 our	$Comptype			=	$Csgrouper::CSG{'part_comptype_mw'}; 				# Comparison function suffixe.
 our	$Durtype			=	$Csgrouper::CSG{'part_durtype_mw'}; 				# Duration type 0=serial (normal).
