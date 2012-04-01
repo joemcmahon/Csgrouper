@@ -41,7 +41,7 @@ On the other hand Csgrouper can reduce the number of intervals in the selected
 sequence tonality so as to produce a mode. Classic modes are available as well 
 as invented ones.
 
-These basic tools together with a developable set of a dozen of serial sequence 
+These basic tools together with a developable set of a dozen serial sequence 
 production functions permit the creation a list of sequence definitions, each of
 them having its proper number of intervals and/or mode and its own instrument, 
 size, tempo, development rules etc... 
@@ -102,13 +102,13 @@ emilbarton@ymail.com
 Notes:
 
 1: Cf. ~/Csgrouper/run/sndout/xpace-flute_raw-csg.csd : This raw Csgrouper score
-(and related audio output) is made on a 18 notes scale which means thirds of 
-tones. The serial material used was chosen for its tonal properties which yield 
-a harmonious aspect in spite of the lack of dominant position in the 18 notes 
-scale. Feel free to sculpt on it!
+(and related audio output on the Csgrouper download page) is made on a 18 notes 
+scale which means thirds of tones. The serial material used was chosen for its 
+tonal properties which yield a harmonious aspect in spite of the lack of dominant 
+position in the 18 notes scale. Feel free to sculpt on it!
 
-2: ~/Csgrouper/run/sndout/ contains an "xpace-flute_raw-csg.mp3" and a quickly
-transformed (sculpted) version of the same part named "ballad.mp3". 
+2: http://www.emilbarton.net76.net/data/ contains an "xpace-flute_raw-csg.mp3" 
+and a quickly transformed (sculpted) version of the same part named "ballad.mp3". 
 These sound files can also be heard from http://www.wix.com/emilbarton/data.
 
 
