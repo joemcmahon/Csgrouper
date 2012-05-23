@@ -58,7 +58,7 @@ As long as sets are not subject to grouping (see below) their content will be pl
 
 =head4 Sections
 
-Now sets can be grouped so as to beggin only when previous ones have been played. To achieve this we group sets with parentheses in the "Sections" field of the Part Tab. To pursue our example, a second section could beggin after sets 10 and 11 have finished. To do this we create 2 sections in the Sections field this way: 10,11;12,13. Now whatever happens to sets in the first section (10,11) will not concern sets in the second (12,13) and these will follow the first section as if it was a new composition. This is the manner we found to achieve non automated sections. A sequence can pertain to several sets but it will be repeated only when these sets do not pertain to the same section.
+Now sets can be grouped so as to beggin only when previous ones have been played. To achieve this we group sets in the "Sections" field of the Part Tab. To pursue our example, a second section could beggin after sets 10 and 11 have finished. To do this we create 2 sections in the Sections field this way: 10,11;12,13. Now whatever happens to sets in the first section (10,11) will not concern sets in the second (12,13) and these will follow the first section as if it was a new composition. This is the manner we found to achieve non automated sections. A sequence can pertain to several sets but it will be repeated only when these sets do not pertain to the same section.
 
 =head4 Preliminary sequences
 

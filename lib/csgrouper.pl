@@ -4111,6 +4111,7 @@ sub ins_open {
 } ## END ins_open().
 
 =item * ins_parnum($text) : extract parameter names of a Csound instrument text.
+120426: There are some problems to fix here: (exclude comments from regex matching etc.).
 =cut
 
 sub ins_parnum {

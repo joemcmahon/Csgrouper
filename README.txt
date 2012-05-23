@@ -2,7 +2,8 @@
 
 16 March 2012
 
-I'm pleased to announce the first release of the Csgrouper musical program.
+I'm pleased to announce the first release of Csgrouper, a musical program that 
+stands at the intersection of polytonality, polymodality and serialism.
 
 
 
@@ -26,7 +27,7 @@ that Csgrouper wants to grasp.
 
 *** What are the means?
 
-There are two related paths followed by Csgrouper.
+Within a strict serial context there are two related paths followed by Csgrouper.
 
 Polytonality (meant in a special way):
 On one hand, Csgrouper allows to produce musical sequences with a different 
@@ -54,7 +55,7 @@ inter-sequences note relations, or choosing a rythmic model (binary, ternary,
 mixed) etc..
 
 At last Csgrouper evaluates the proposed structure and prints its Csound unified
-score part in case the evaluation succeeds. The resulting sound file can be 
+score in case the evaluation succeeds. The resulting sound file can be 
 played directly from the GUI or recorded on disk. The Csgrouper and 
 Csound parts and instruments are all saved into a Csgrouper .xml config file.
 
@@ -107,9 +108,9 @@ scale which means thirds of tones. The serial material used was chosen for its
 tonal properties which yield a harmonious aspect in spite of the lack of dominant 
 position in the 18 notes scale. Feel free to sculpt on it!
 
-2: http://www.emilbarton.net76.net/data/ contains an "xpace-flute_raw-csg.mp3" 
-and a quickly transformed (sculpted) version of the same part named "ballad.mp3". 
-These sound files can also be heard from http://www.wix.com/emilbarton/data.
+2: http://www.emilbarton.net76.net contains an "xpace-flute_raw-csg.mp3" 
+and a quickly transformed (sculpted) version of the same part named "ballad.mp3"
+as well as their corresponding score files. 
 
 
 

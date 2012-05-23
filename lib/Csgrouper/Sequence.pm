@@ -57,8 +57,8 @@ Some trees are too long to be displayed in a Series tab Tk table entry. In such 
 B<NOTE on  the difference between unic and base>
 
 The latter can't be reset by a class or routine. Thus the validate sub for mode at interface level must be strong.
-For any test the sub returns the tree. But analysis functions also feed an override @aoa.
-Analysis functions are listed under the same classes as other ones. Randcond() does not show in the sequence menu in reason of its unpredictable output, moderated by a time limit.
+For any test the sub returns the tree. But analysis functions also feed @aoa.
+Analysis functions are listed under the same classes as other ones. Randcond() does not show in the sequence menu in reason of its unpredicted output, moderated by a time limit.
 
 =cut
 
