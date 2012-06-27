@@ -664,17 +664,17 @@ sub struct_ctl {
 
 sub track_origin { ## Recursive.
   my ($self, $prevrow, $rcnt, $sectionref) = @_;
-  my $subname = "Csgrouper::track_origin";
-  { no warnings; &says($subname, "@_"); }
+  # my $subname = "Csgrouper::track_origin";
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
   # $DEBFLAG = 1;
-  &Debug($subname,"0. @{$sectionref} rec=$rcnt");
+  #&Debug($subname,"0. @{$sectionref} rec=$rcnt");
   return 0 if (!($prevrow ~~ @{$sectionref}));
   foreach (@{$sectionref}) {
-		&Debug($subname,"1. section $_ rec=$rcnt");
+		# &Debug($subname,"1. section $_ rec=$rcnt");
 		if ($prevrow == $_) {
 			my $newprevrow = $self->sequences->{"Seq_".$self->sequences->{"Tkrow_$prevrow\_pre"}."\_tid"};
-			&Debug($subname,"2. newprev=$newprevrow for Tkrow=$prevrow rec=$rcnt");
+			# &Debug($subname,"2. newprev=$newprevrow for Tkrow=$prevrow rec=$rcnt");
 			if ($self->sequences->{"Tkrow_$newprevrow\_sel"} == 0) { return(-$newprevrow) } ## A failure (negative).
 			elsif ($prevrow != $newprevrow) { 
 				return(&track_origin($self, $newprevrow,++$rcnt,$sectionref)) 
@@ -756,47 +756,47 @@ sub comp_tracks {
 									## A. Internal comparisons:
 									## idcmp0 : Does the value of this note equal the value of its tone?
 									{ no warnings; ## Comparisons between non numeric values.
-										&Csgrouper::Debug($subname, "***** note $n");
+										# &Csgrouper::Debug($subname, "***** note $n");
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp0 == $self->sequences->{$spref}->tone) {
 											$self->sequences->{$spref}->tree->notes->{$n}->idcmp0(1) ;
 											## These values deserve to be printed for more than debugging purposes.
-											&Csgrouper::Debug($subname, "idcmp0=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp0);
+											# &Csgrouper::Debug($subname, "idcmp0=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp0);
 										}
 										## idcmp1 : Does the value of transformation 1 of this note equal the value of its index?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp1 == $self->sequences->{$spref}->tone) {
 											$self->sequences->{$spref}->tree->notes->{$n}->idcmp1(1); 
-											&Csgrouper::Debug($subname, "idcmp1=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp1);
+											# &Csgrouper::Debug($subname, "idcmp1=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp1);
 										}
 										## idcmp2 : Does the value of transformation 2 this note equal the value of its index?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp2 == $self->sequences->{$spref}->tone) {
 											$self->sequences->{$spref}->tree->notes->{$n}->idcmp2(1); 
-											&Csgrouper::Debug($subname, "idcmp2=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp2);
+											# &Csgrouper::Debug($subname, "idcmp2=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp2);
 										}
 										## idcmp3 : Does the value of transformation 3 this note equal the value of its index?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp3 == $self->sequences->{$spref}->tone) {
 											$self->sequences->{$spref}->tree->notes->{$n}->idcmp3(1);
-											&Csgrouper::Debug($subname, "idcmp3=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp3);
+											# &Csgrouper::Debug($subname, "idcmp3=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp3);
 										}
 										## B. External comparisons:
 										## eqcmp0 : Does the value of this note equal the value of its corresponding note in the compared sequence?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp0 == $self->sequences->{$subspref}->tree->notes->{$n}->scmp0) {
 											$self->sequences->{$spref}->tree->notes->{$n}->set_eqcmp0($subsnbr);
-											&Csgrouper::Debug($subname, "eqcmp0=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp0);
+											# &Csgrouper::Debug($subname, "eqcmp0=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp0);
 										}
 										## eqcmp1 : Does the value of transformation 1 of this note equal the value of its corresponding note in the compared sequence?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp1 == $self->sequences->{$subspref}->tree->notes->{$n}->scmp1) {
 											$self->sequences->{$spref}->tree->notes->{$n}->set_eqcmp1($subsnbr) ;
-											&Csgrouper::Debug($subname, "eqcmp1=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp1);
+											# &Csgrouper::Debug($subname, "eqcmp1=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp1);
 										}
 										## eqcmp2 : Does the value of transformation 2 of this note equal the value of its corresponding note in the compared sequence?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp2 == $self->sequences->{$subspref}->tree->notes->{$n}->scmp2) {
 											$self->sequences->{$spref}->tree->notes->{$n}->set_eqcmp2($subsnbr) ;
-											&Csgrouper::Debug($subname, "eqcmp2=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp2);
+											# &Csgrouper::Debug($subname, "eqcmp2=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp2);
 										}
 										## eqcmp3 : Does the value of transformation 3 of this note equal the value of its corresponding note in the compared sequence?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp3 == $self->sequences->{$subspref}->tree->notes->{$n}->scmp3) {
 											$self->sequences->{$spref}->tree->notes->{$n}->set_eqcmp3($subsnbr) ;
-											&Csgrouper::Debug($subname, "eqcmp3=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp3);
+											# &Csgrouper::Debug($subname, "eqcmp3=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp3);
 										}
 									} ## END no warnings.
 								} ## END for (my $n..).

@@ -149,7 +149,7 @@ around BUILDARGS => sub {
 	 for (my $n = 0; $n < scalar(@params); $n = $n+2) {
 	 	 my ($key, $val) = ($params[$n],$params[$n+1]);
 	 	 $paramh{$key} = $val; 
-	 	 &Csgrouper::Debug($subname, "$key => $val");
+	 	 # &Csgrouper::Debug($subname, "$key => $val");
 	 } ## END foreach param.
    my @param2; my $test = 0;
 	 if (not (&Csgrouper::Types::is_fun($paramh{'fun'}))){
@@ -237,7 +237,7 @@ around BUILDARGS => sub {
 	 }
 	 $paramh{'base'} = length($paramh{'mode'});
  	 while (my ($key,$val) = each (%paramh)){ push @param2, ($key , $val) }
- 	 &Csgrouper::Debug($subname, "@params");
+ 	 # &Csgrouper::Debug($subname, "@params");
  	 &Csgrouper::Debug($subname, "@param2");
 	$Csgrouper::DEBFLAG = $oldebflag;
 	return $class->$orig(@param2);
@@ -353,7 +353,7 @@ sub random { ## Adapted 110905.
 			} ## END until test.
 		} ## END for my cols.
 		++$n;
-		&Csgrouper::Describe($subname,"$new $octs");
+		# &Csgrouper::Describe($subname,"$new $octs");
 		$series .= $new; $octaves .= $octs;
 	} ## END until rows.
 	$Csgrouper::DEBFLAG =	$oldebflag;
@@ -386,7 +386,7 @@ sub Build_tree {
 	my $oldsteps = $Csgrouper::CSG{'steps_le'};
 	my $oldobase = $Csgrouper::CSG{'oct_base'};
 	# $Csgrouper::DEBFLAG = 1;
-	&Csgrouper::Debug($subname,$self->name);
+	# &Csgrouper::Debug($subname,$self->name);
 	my $fun = $self->fun;
 	my @aoargs; push @aoargs, $fun;
 	my $argclass = $Csgrouper::Types::Funx{$fun}{arg_class};

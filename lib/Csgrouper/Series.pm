@@ -109,7 +109,7 @@ sub is_unic { ## The real state of uniqueness (not a wish like 'unic' attribute)
 sub BUILD { ## Internal Moose method called after the object has been created.
   my ($self) = @_;  
  	my $subname = 'Series::BUILD';
-  { no warnings; &Csgrouper::says($subname, "@_"); }
+  # { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   my $notes = $self->tune; $notes =~ s/\ //g; $self->set_tune($notes); 
@@ -123,12 +123,12 @@ sub BUILD { ## Internal Moose method called after the object has been created.
   ## Base takes a fatal precedence over each note:
   foreach (@notes) { 	&Csgrouper::Error($subname, "not a proper base for @notes : $base\n") if (&Csgrouper::Dodecad($_,$subname) >= $base) }
   ## Here we are going to correct the data when needed:
-  { no warnings; 
-  	&Csgrouper::Debug($subname, "ori: ".$self->orig." tune: ");
-		&Csgrouper::Debug($subname, "octs: ".$self->octs);
-		&Csgrouper::Debug($subname, "unic: ".$self->unic);
-		&Csgrouper::Debug($subname, "base: ".$self->paro->base);
-	}
+  # { no warnings; 
+  	# &Csgrouper::Debug($subname, "ori: ".$self->orig." tune: ");
+		# &Csgrouper::Debug($subname, "octs: ".$self->octs);
+		# &Csgrouper::Debug($subname, "unic: ".$self->unic);
+		# &Csgrouper::Debug($subname, "base: ".$self->paro->base);
+	# }
   if ($self->is_unic) { 
     if ($self->unic ne 1) { 
     	# &Csgrouper::Describe($subname, $self->tune." unic changed to 1.") 
@@ -185,11 +185,11 @@ sub BUILD { ## Internal Moose method called after the object has been created.
   	&Csgrouper::Debug($subname, $self->octs.": reduced to $newocts.");
   	$self->set_octs($newocts);
   }
-  { no warnings; 
-  	&Csgrouper::Debug($subname, "new: ".$self->orig." tune: ");
-		&Csgrouper::Debug($subname, "octs: ".$self->octs);
-		&Csgrouper::Debug($subname, "unic: ".$self->unic);
-  }
+  # { no warnings; 
+  	# &Csgrouper::Debug($subname, "new: ".$self->orig." tune: ");
+		# &Csgrouper::Debug($subname, "octs: ".$self->octs);
+		# &Csgrouper::Debug($subname, "unic: ".$self->unic);
+  # }
   ## Now we can construct the real object properties:
   ## reverse, inverse, opposite, etc. are made FOR EACH of the serial components.
   { no strict 'refs';

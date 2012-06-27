@@ -3645,7 +3645,7 @@ sub menu_about {
   $mw->messageBox(-icon => 'info', -message=>"Csgrouper ".$Csgrouper::CSG{'csg_version'}.
   	"\n(2011-2012)\n\nA music composition software at the intersection of polytonality, polymodality and serialism.\n".
   	"\nemilbarton\@ymail.com\n".
-  	"\nCsgrouper's aim is not to tell musicians how to compose, but to provide a permutationnal framework with scalable settings.");
+  	"\nCsgrouper's aim is not to tell musicians how to compose, but to provide a permutational framework with scalable settings.");
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END menu_about().
 
@@ -3687,6 +3687,8 @@ sub menu_balloff {
   $widget = $Seq_tblw->get(0,26); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,26); $Balloon->detach($widget);
   $widget = $Seq_tblw->get(0,27); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,27); $Balloon->detach($widget);
   $widget = $Seq_tblw->get(0,28); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,28); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,29); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,28); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,30); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,28); $Balloon->detach($widget);
   
   $Balloon->detach($Project_frame); 
   $Balloon->detach($add_seq_bw);
@@ -3712,11 +3714,6 @@ sub menu_balloff {
 } ## END menu_balloon().
 
 =item * menu_balloon() : shows balloon help.
-
-  my $tmp_label = $Seq_tblw->Label(-text =>"sel", -relief =>'groove', -justify => 'center');
-  $Seq_tblw->put(0, 0,  $tmp_label); 
-
-  
 =cut
 
 sub menu_balloon {
@@ -3726,9 +3723,9 @@ sub menu_balloon {
   # $Csgrouper::DEBFLAG = 1;
   # Sequences Table:
   my $widget = $Seq_tblw->get(0,0);
-  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
+  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence (a complex validation process) can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
   $widget = $Seq_tblw->get(1,0);
-  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
+  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence (a complex validation process) can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
   
   $widget = $Seq_tblw->get(0,1);
   $Balloon->attach($widget,-balloonmsg => "The Tk row id is not the Sequence id, but its position in the table.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0} ] ");
@@ -3851,24 +3848,34 @@ sub menu_balloon {
   $Balloon->attach($widget,-balloonmsg => "Mode is mandatory. The normal mode is the chromatic scale of the chosen base.\nIn base 12 00224557799B is a Dorian mode.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_mode} ] ");
 
   $widget = $Seq_tblw->get(0,25); 
-  $Balloon->attach($widget,-balloonmsg => "Include some comments to this sequence in the Csound score.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_com} ] ");
+  $Balloon->attach($widget,-balloonmsg => "Tone is a transposition value applied to each note in the sequence. \nIf tone = 2 then final notes are transposed 2 steps up (semitones in base 12).",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_tone} ] ");
   $widget = $Seq_tblw->get(1,25);
+  $Balloon->attach($widget,-balloonmsg => "Tone is a transposition value applied to each note in the sequence. \nIf tone = 2 then final notes are transposed 2 steps up (semitones in base 12).",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_tone} ] ");
+
+  $widget = $Seq_tblw->get(0,26); 
+  $Balloon->attach($widget,-balloonmsg => "Include some comments to this sequence in the Csound score.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_com} ] ");
+  $widget = $Seq_tblw->get(1,26);
   $Balloon->attach($widget,-balloonmsg => "Include some comments to this sequence in the Csound score.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_com} ] ");
 
-  $widget = $Seq_tblw->get(0,26);
-  $Balloon->attach($widget,-balloonmsg => "Update the recorded Sequence without having to deselect and reselect it.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0} ] ");
-  $widget = $Seq_tblw->get(1,26);
-  $Balloon->attach($widget,-balloonmsg => "Update the recorded Sequence without having to deselect and reselect it. ",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1} ] ");
-
   $widget = $Seq_tblw->get(0,27);
-  $Balloon->attach($widget,-balloonmsg => "The Tk row id is not the Sequence id, but its position in the table.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0} ] ");
+  $Balloon->attach($widget,-balloonmsg => "The Sequence base is the number of signs of the mode.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_base} ] ");
   $widget = $Seq_tblw->get(1,27);
-  $Balloon->attach($widget,-balloonmsg => "The Tk row id is not the Sequence id, but its position in the table. ",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1} ] ");
+  $Balloon->attach($widget,-balloonmsg => "The Sequence base is the number of signs of the mode.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_base} ] ");
 
   $widget = $Seq_tblw->get(0,28);
-  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
+  $Balloon->attach($widget,-balloonmsg => "Update the recorded Sequence without having to deselect and reselect it.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0} ] ");
   $widget = $Seq_tblw->get(1,28);
-  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
+  $Balloon->attach($widget,-balloonmsg => "Update the recorded Sequence without having to deselect and reselect it. ",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1} ] ");
+
+  $widget = $Seq_tblw->get(0,29);
+  $Balloon->attach($widget,-balloonmsg => "The Tk row id is not the Sequence id, but its position in the table.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0} ] ");
+  $widget = $Seq_tblw->get(1,29);
+  $Balloon->attach($widget,-balloonmsg => "The Tk row id is not the Sequence id, but its position in the table. ",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1} ] ");
+
+  $widget = $Seq_tblw->get(0,30);
+  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence (a complex validation process) can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
+  $widget = $Seq_tblw->get(1,30);
+  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence (a complex validation process) can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
   
 
   $Balloon->attach(
@@ -3889,13 +3896,7 @@ sub menu_balloon {
   		"can be modified in the interface package Csgrouperinter (csgrouper.pl).", 
   	-statusmsg => "Serial Comparison Type [ \$Project->{comptype_mw} default: \$Csgrouper::CSG{comptype_mw} ]"
   );
-  # $Balloon->attach(
-  #	$debug_bw, 
-  #	-balloonmsg => "Turn all debug messages on/off by switching their variable to 1/0.\n".
-  #		"Debug can also be set for some subroutines by setting\n".
-  #		"\$Csgrouper::DEBSUBS to their comma separated list of names.", 
-  #	-statusmsg => "Debug Button [ \$Csgrouper::DEBFLAG ]"
-  # );
+
   $Balloon->attach(
   	$del_seq_bw, 
   	-balloonmsg => "Delete the selected rows from the sequence table.", 
@@ -3924,12 +3925,7 @@ sub menu_balloon {
   	-balloonmsg => "Duration of the silence between sections (in seconds).",
   	-statusmsg => "Inter Sections Silence [ \$Project->{intersil_le} default: \$Csgrouper::CSG{intersil_le} ]"
   );
-  # $Balloon->attach(
-  	# $reset_bw, 
-  	# -balloonmsg => "Resetting Project Frame boxes to their default values.\n".
-  		# "These are set in Csgrouper.pm.", 
-  	# -statusmsg => "Reset Button [ &reset() ]"
-  # ); 
+
   $Balloon->attach(
   	$rythmtype_mw, 
   	-balloonmsg => "Rhythms can either be ternary, binary or mixed.\n".
@@ -4040,7 +4036,7 @@ sub menu_bar {
 		['command', '~New', -accelerator, 'Ctrl-n', -command => \&menu_new], 
 		'', 
 		['command', '~Open', -command => \&menu_open], 
-		['command', 'Reload', -command => \&reload], 
+		['command', 'Reload saved project', -command => \&reload], 
 		'', 
 		['command', 'Backup', -command => \&menu_bkp], 
 		['command', '~Save', -command => \&menu_save], 
@@ -4052,9 +4048,9 @@ sub menu_bar {
 	], 
 	['~Edit', 
 	  [ 
-		['command', 'Clear output ...', -accelerator, 'Ctrl-o', -command =>sub {$Output_tw->Contents('')}], 
+		['command', 'Clear log ...', -accelerator, 'Ctrl-o', -command =>sub {$Output_tw->Contents('')}], 
 		['command', 'Command line...', -accelerator, 'Ctrl-k', -command => \&cline], 
-		['command', 'Debug messages on ...', -command => sub { $Csgrouper::DEBFLAG = eval($Csgrouper::DEBFLAG == 0); say "deb=".$Csgrouper::DEBFLAG } ], 
+		['command', 'Debug messages on/off ...', -command => sub { $Csgrouper::DEBFLAG = eval($Csgrouper::DEBFLAG == 0); say "deb=".$Csgrouper::DEBFLAG } ], 
 		'', 
 		['command', 'Setup ...', -command => \&menu_setup], 
 		['command', 'Reset Project defaults ...', -command => \&reset ], 
@@ -5321,6 +5317,8 @@ sub seq_obj {
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
+  my $oldcursor = $mw->cget('-cursor');
+	$mw->configure(-cursor => 'watch'); 
   my $date = &Csgrouper::Datem('n');
 	my @params;
 	my $seqid = "Seq_".$CsgObj->sequences->{$pref.'_id'};
@@ -5403,6 +5401,7 @@ sub seq_obj {
   	$CsgObj->sequences->{$seqid} = "";
   }
   $Csgrouper::DEBFLAG =  $oldebflag;
+	$mw->configure(-cursor => $oldcursor); 
 } ## END seq_obj().
 
 =item * seq_proc() : processes an individual sequence.
@@ -5416,6 +5415,8 @@ sub seq_proc {
   # $Csgrouper::DEBFLAG = 1;
   my $req = "$pref Sequence object";
   my $state = 0;
+  my $oldcursor = $mw->cget('-cursor');
+	$mw->configure(-cursor => 'watch'); 
  	&set_ready(0); ## As a modification might have occured.
 	my $seqid = "Seq_".$CsgObj->sequences->{$pref.'_id'};
 	## At present "update" and "record" do the same thing through different means.
@@ -5469,6 +5470,7 @@ sub seq_proc {
 			  $CsgObj->sequences->{$seqid}->tree->octs."\n"
 		)			
 	}
+	$mw->configure(-cursor => $oldcursor); 
   &Csgrouper::says($subname,$req,1);
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END seq_proc().

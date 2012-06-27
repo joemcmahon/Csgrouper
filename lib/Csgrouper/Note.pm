@@ -165,11 +165,11 @@ has 'ens'	=> (isa => 'Csgrouper::Types::num',is => 'rw', required => 1, default 
 ## Build subs:
 sub BUILD { ## 
   my ($self) = @_;  
- 	my $subname = 'Note::BUILD';
-  &Csgrouper::Debug($subname, "@_");
+ 	# my $subname = 'Note::BUILD';
+  # &Csgrouper::Debug($subname, "@_");
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
- 	&Csgrouper::Debug($subname, $self->gind);
+ 	# &Csgrouper::Debug($subname, $self->gind);
  	## A place to override defaults and param values with some post-computation.
 	# $self->sta();
 	# $self->dur();
@@ -228,9 +228,9 @@ sub freqset {
 	my ($self) = @_;
 	## Init:
 	my $subname = 'Note::freqset';
-  &Csgrouper::Debug($subname, "@_");
 	my $oldebflag = $Csgrouper::DEBFLAG; 
 	# $Csgrouper::DEBFLAG = 1;
+  # &Csgrouper::Debug($subname, "@_");
 	&Csgrouper::Error($subname,"Private method called.",1) 
     unless (caller)[0]->isa( ref($self) );
 	my $octs = &Csgrouper::Dodecad($self->voc,$subname); $octs//=  8;
