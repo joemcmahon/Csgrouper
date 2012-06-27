@@ -66,11 +66,11 @@ Besides section groupings, preliminary sequences represent another means for tem
 
 =head3 Tracks
 
-When struct_ctl has filtered out what could possibly result in a pertinent part writing, this function records a global hash called %TracksH representing the time branches in the various sections. These tracks are the last step before CSD production, however they do not yet represent real sound tracks in the sense that they show repeated, some content that later will only be played once. For instance, a section 1 could contain a first track written _1_2_ in %TracksH and meaning that sequence 1 is followed by sequence 2, but the same section can contain a second track written _1_3_ and meaning that sequence 1 is also followed by sequence 3. In the final csound file though, sequence 1 will only be played once. In %TracksH, the repetition of a preliminary only indicates a time position. 
+When struct_ctl has filtered out what could possibly result in a pertinent project writing, this function records a global hash called %TracksH representing the time branches in the various sections. These tracks are the last step before CSD production, however they do not yet represent real sound tracks in the sense that they show repeated, some content that later will only be played once. For instance, a section 1 could contain a first track written _1_2_ in %TracksH and meaning that sequence 1 is followed by sequence 2, but the same section can contain a second track written _1_3_ and meaning that sequence 1 is also followed by sequence 3. In the final csound file though, sequence 1 will only be played once. In %TracksH, the repetition of a preliminary only indicates a time position. 
 
 B<NOTE on tracks:> 
 
-As no more change can be made to the part at struct_ctl stage, the sequences in %TracksH are defined by row numbers not sequence ids (which were the original row numbers). This helps make things simpler in the following treatment, however when attributing a preliminary to a sequence one must refer to the sequence id because a later sequence addition or deletion will change whole bunches of row numbers but no sequence id.  
+As no more change can be made to the project at struct_ctl stage, the sequences in %TracksH are defined by row numbers not sequence ids (which were the original row numbers). This helps make things simpler in the following treatment, however when attributing a preliminary to a sequence one must refer to the sequence id because a later sequence addition or deletion will change whole bunches of row numbers but no sequence id.  
 
 =head3 Information gathered by struct_ctl
 
@@ -215,9 +215,9 @@ our %CSG; ## Without "our" the hash wouldn't be accessible from csgrouper.
 ## Csgrouperinter Variables:  Revised 111122.
 ## An interface package made in order to overwrite some Csgrouper functions.;
 	$CSG{'interface'}						=	"Csgrouperinter"; 
-	$CSG{'part_comptype_mw'} 		= 0; ## Comparison function suffixe. Default = 0. Set it to 4 to get randomness in comparisons or define new functions and name them "CompstrN" with N>4;
-	$CSG{'part_durtype_mw'} 		= 0; ## Duration type. Default = 0 = serial;
-	$CSG{'part_rythmtype_mw'} 	= 1; ## Rythm type. Default = 1 = mixed;
+	$CSG{'comptype_mw'} 		= 0; ## Comparison function suffixe. Default = 0. Set it to 4 to get randomness in comparisons or define new functions and name them "CompstrN" with N>4;
+	$CSG{'durtype_mw'} 		= 0; ## Duration type. Default = 0 = serial;
+	$CSG{'rythmtype_mw'} 	= 1; ## Rythm type. Default = 1 = mixed;
 
 ## Setup Tabs:
 	$CSG{'csg_path_pe'}				= "$INSTALLDIR/Csgrouper/";  ## Base path 
@@ -225,7 +225,7 @@ our %CSG; ## Without "our" the hash wouldn't be accessible from csgrouper.
 	$CSG{'render_path_pe'}		= "$INSTALLDIR/Csgrouper/run/sndout/";  
 	$CSG{'bkp_path_pe'}				= "$INSTALLDIR/Csgrouper/run/bkp/";  
 	$CSG{'ins_path_pe'}				= "$INSTALLDIR/Csgrouper/ins/"; 
-	$CSG{'part_path_pe'}			= "$INSTALLDIR/Csgrouper/part/"; 
+	$CSG{'path_pe'}			= "$INSTALLDIR/Csgrouper/proj/"; 
 	$CSG{'csound_sf2path_pe'}	= "$INSTALLDIR/Csgrouper/ins/sf2/"; 
 
 
@@ -236,19 +236,20 @@ our %CSG; ## Without "our" the hash wouldn't be accessible from csgrouper.
 	
 	$CSG{'csg_appl'} 					= "csgrouper"; ## Rarely used.
 	$CSG{'csg_status'} 				= ""; ## Not used enough..
-	$CSG{'csg_version'} 			= '2.0.1'; ## Versioning: unused yet. 
-	$CSG{'csg_label'} 				= 2 ; ## Versioning: unused yet. 
+	# versioning: V.R.r : Version, Release, revision.
+	$CSG{'csg_version'} 			= '2.0.2'; # 2.0.1 111122; 2.0.2 : 120625 (first important revision).
+	$CSG{'csg_label'} 				= 2 ; ## Version
 	$CSG{'cline'}							= '$CsgObj->sequences->{Seq_1}->tree->notes->{0}->Shownote()';
 	$CSG{'char_set'} 					= '0123456789ABCDEFGHIJKLMN';
-	$CSG{'default_mode'} 			= "0123456789AB"; ## Default mode for a whole part.
-	$CSG{'default_tone'} 			= "0"; ## Default tone for a whole part.
-	$CSG{'part_durmin_le'} 		= '0.125'; ## The minimal duration that will be multiplied by 1, 2 or 3 (depending on the binary, ternary or mixed rythm setup).
-	$CSG{'part_durmax_le'} 		= '12'; ## A factor of dur_norm.
-	## The normal minimal duration: result of part_durmin_le*rythm_type.
+	$CSG{'default_mode'} 			= "0123456789AB"; ## Default mode for a whole project.
+	$CSG{'default_tone'} 			= "0"; ## Default tone for a whole project.
+	$CSG{'durmin_le'} 		= '0.125'; ## The minimal duration that will be multiplied by 1, 2 or 3 (depending on the binary, ternary or mixed rythm setup).
+	$CSG{'durfac_le'} 		= '12'; ## A factor of dur_norm.
+	## The normal minimal duration: result of durmin_le*rythm_type.
 	$CSG{'ft_base'} 					= '10' ; ## The default ftable (a sine).
 	$CSG{'ftb_ran'} 					= 90000; ## Randomness: Pseudo random f-tables ids start at this value.
 	$CSG{'fractail'} 					= 4		 ; ## Floating tail length.
-	$CSG{'min_amp'} 					=	'0'  ; ## Minimal amplitude under xhush.
+	$CSG{'min_amp'} 					=	'0'  ; ## Minimal amplitude under xsil.
 	$CSG{'oct_max'} 					= '12'  ;
 	$CSG{'oct_base'} 					= '7'  ; ## The native octave location from 0 to $CSG{'oct_max'}
 	$CSG{'oct_range'}					= '1'  ; ## The native octave variation range.
@@ -259,9 +260,9 @@ our %CSG; ## Without "our" the hash wouldn't be accessible from csgrouper.
 ## CSD Tab:
 	$CSG{'sel_sect'}					= "0"  ; ## Unused yet. 0=Select all sections. 
 
-## Series/Part Tab:
+## Series/Project Tab:
 ## Unfortunately the naming is not always rational here.
-## In principle, part_ params refer to the Part tab, and the others
+## In principle,  params refer to the Project tab, and the others
 ## to the Series tab, but not always. A suffixe denoting the type of
 ## Tk widget containing the value should be present, but is not always..,
 ## nor always the unique Tk container for the value.
@@ -286,15 +287,15 @@ our %CSG; ## Without "our" the hash wouldn't be accessible from csgrouper.
 	$CSG{'ana_sense_cb'}			= 1    ;
 	$CSG{'base_param_le'}			= 12    ;
 	$CSG{'range_param_le'}		= 3    ;
-	$CSG{'part_signs_le'} 		= "++++++++++++"; # Default signs.
-	$CSG{'part_octs_le'} 			= "777888777888"; # Default octs.
-	$CSG{'part_com_le'} 			= "Some comments."; # Default com.
-	$CSG{'part_author_le'}		= "Author Name";  ## Part Tab
-	$CSG{'part_intersil_le'} 	= 2		; ## Silence between sections.
-	$CSG{'part_Rflag_le'} 		= 0		; ## OK Random octaves flag (Octset mode).
-	$CSG{'part_steps_le'} 		= 1		; ## Number of steps for trains.
-	$CSG{'part_tempo_le'} 		= "t 0 60"	; ## Base number of "seconds" per minute (Scorp).
-	$CSG{'part_title_le'} 		= "Default Title"; ## Part Tab
+	$CSG{'signs_le'} 		= "++++++++++++"; # Default signs.
+	$CSG{'octs_le'} 			= "777888777888"; # Default octs.
+	$CSG{'com_le'} 			= "Some comments."; # Default com.
+	$CSG{'author_le'}		= "Author Name";  ## Project Tab
+	$CSG{'intersil_le'} 	= 2		; ## Silence between sections.
+	$CSG{'Rflag_le'} 		= 0		; ## OK Random octaves flag (Octset mode).
+	$CSG{'steps_le'} 		= 1		; ## Number of steps for trains.
+	$CSG{'tempo_le'} 		= "t 0 60"	; ## Base number of "seconds" per minute (Scorp).
+	$CSG{'title_le'} 		= "Default Title"; ## Project Tab
 
 ## Csound Tab 
 	$CSG{'audio_driver_mbw'}	= "alsa"; 
@@ -324,7 +325,7 @@ our @Internals							= (
 		['Render path', $CSG{'render_path_pe'}, ""],
 		['Bkp path', $CSG{'bkp_path_pe'}, ""],
 		['Inst path', $CSG{'ins_path_pe'}, ""],
-		['Part path', $CSG{'part_path_pe'}, ""],
+		['Project path', $CSG{'path_pe'}, ""],
 		['Sf2 path', $CSG{'csound_sf2path_pe'}, ""],
 		['char. set', $CSG{'char_set'}, ""],
 		['separator (sep.)', $CSG{'separator'}, ""],
@@ -336,17 +337,17 @@ our @Internals							= (
 		['Random Ft range', $CSG{'ftb_ran'}, "Pseudo random f-tables ids start at this value."],
 		['Default mode', $CSG{'default_mode'}, ""],
 		['Default tone', $CSG{'default_tone'}, ""],
-		['Minimal duration', $CSG{'part_durmin_le'}, "Minimal duration (multiplied by rythm setup)."],
-		['Maximal duration', $CSG{'part_durmax_le'}, "A factor for the minimal duration."],
+		['Minimal duration', $CSG{'durmin_le'}, "Minimal duration (multiplied by rythm setup)."],
+		['Maximal duration', $CSG{'durfac_le'}, "A factor for the minimal duration."],
 		['Fractional length', $CSG{'fractail'}, "Tail length for floats."],
 		['Octave max', $CSG{'oct_max'}, "The maximal octave value for cpspch."],
 		['Octave base', $CSG{'oct_base'}, "The default octave location from 0 to oct_max."],
 		['Octave range', $CSG{'oct_range'}, "The default octave variation range."],
-		['Minimal amplitude', $CSG{'min_amp'}, "Minimal amplitude under xhush."],
+		['Minimal amplitude', $CSG{'min_amp'}, "Minimal amplitude under xsil."],
 		['Sflag', $CSG{'Sflag'}, "Flag for train printings."],
-		['Rflag', $CSG{'part_Rflag_le'}, "Random octaves flag (Octset mode)."],
-		['Steps', $CSG{'part_steps_le'}, "Number of steps for trains."],
-		['Tempo', $CSG{'part_tempo_le'}, "Default number of 'seconds' per 'minute'."],
+		['Rflag', $CSG{'Rflag_le'}, "Random octaves flag (Octset mode)."],
+		['Steps', $CSG{'steps_le'}, "Number of steps for trains."],
+		['Tempo', $CSG{'tempo_le'}, "Default number of 'seconds' per 'minute'."],
 );
 		
 		## END Globals
@@ -393,7 +394,7 @@ Remainder: apart from sequences, there are several time objects that more or les
 
 Sets are attributed to the original sequences in order to enable some particular post-treatment (Xamp, Xatk etc.) for them.
 
-Sections are unions of sets that correspond to general sections in the part: sets of sequences 1,3,4 e.g. can pertain to the first section and will be played first.
+Sections are unions of sets that correspond to general sections in the score: sets of sequences 1,3,4 e.g. can pertain to the first section and will be played first.
 when a set pertains to 2 different sections, its sequences will be played twice.
 
 Tracks are suites of sequences established by means of the 'pre' sequence parameter.
@@ -755,47 +756,47 @@ sub comp_tracks {
 									## A. Internal comparisons:
 									## idcmp0 : Does the value of this note equal the value of its tone?
 									{ no warnings; ## Comparisons between non numeric values.
-										&Csgrouper::Describe($subname, "***** note $n");
+										&Csgrouper::Debug($subname, "***** note $n");
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp0 == $self->sequences->{$spref}->tone) {
 											$self->sequences->{$spref}->tree->notes->{$n}->idcmp0(1) ;
 											## These values deserve to be printed for more than debugging purposes.
-											&Csgrouper::Describe($subname, "idcmp0=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp0);
+											&Csgrouper::Debug($subname, "idcmp0=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp0);
 										}
 										## idcmp1 : Does the value of transformation 1 of this note equal the value of its index?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp1 == $self->sequences->{$spref}->tone) {
 											$self->sequences->{$spref}->tree->notes->{$n}->idcmp1(1); 
-											&Csgrouper::Describe($subname, "idcmp1=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp1);
+											&Csgrouper::Debug($subname, "idcmp1=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp1);
 										}
 										## idcmp2 : Does the value of transformation 2 this note equal the value of its index?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp2 == $self->sequences->{$spref}->tone) {
 											$self->sequences->{$spref}->tree->notes->{$n}->idcmp2(1); 
-											&Csgrouper::Describe($subname, "idcmp2=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp2);
+											&Csgrouper::Debug($subname, "idcmp2=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp2);
 										}
 										## idcmp3 : Does the value of transformation 3 this note equal the value of its index?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp3 == $self->sequences->{$spref}->tone) {
 											$self->sequences->{$spref}->tree->notes->{$n}->idcmp3(1);
-											&Csgrouper::Describe($subname, "idcmp3=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp3);
+											&Csgrouper::Debug($subname, "idcmp3=".$self->sequences->{$spref}->tree->notes->{$n}->idcmp3);
 										}
 										## B. External comparisons:
 										## eqcmp0 : Does the value of this note equal the value of its corresponding note in the compared sequence?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp0 == $self->sequences->{$subspref}->tree->notes->{$n}->scmp0) {
 											$self->sequences->{$spref}->tree->notes->{$n}->set_eqcmp0($subsnbr);
-											&Csgrouper::Describe($subname, "eqcmp0=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp0);
+											&Csgrouper::Debug($subname, "eqcmp0=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp0);
 										}
 										## eqcmp1 : Does the value of transformation 1 of this note equal the value of its corresponding note in the compared sequence?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp1 == $self->sequences->{$subspref}->tree->notes->{$n}->scmp1) {
 											$self->sequences->{$spref}->tree->notes->{$n}->set_eqcmp1($subsnbr) ;
-											&Csgrouper::Describe($subname, "eqcmp1=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp1);
+											&Csgrouper::Debug($subname, "eqcmp1=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp1);
 										}
 										## eqcmp2 : Does the value of transformation 2 of this note equal the value of its corresponding note in the compared sequence?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp2 == $self->sequences->{$subspref}->tree->notes->{$n}->scmp2) {
 											$self->sequences->{$spref}->tree->notes->{$n}->set_eqcmp2($subsnbr) ;
-											&Csgrouper::Describe($subname, "eqcmp2=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp2);
+											&Csgrouper::Debug($subname, "eqcmp2=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp2);
 										}
 										## eqcmp3 : Does the value of transformation 3 of this note equal the value of its corresponding note in the compared sequence?
 										if ($self->sequences->{$spref}->tree->notes->{$n}->scmp3 == $self->sequences->{$subspref}->tree->notes->{$n}->scmp3) {
 											$self->sequences->{$spref}->tree->notes->{$n}->set_eqcmp3($subsnbr) ;
-											&Csgrouper::Describe($subname, "eqcmp3=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp3);
+											&Csgrouper::Debug($subname, "eqcmp3=".$self->sequences->{$spref}->tree->notes->{$n}->eqcmp3);
 										}
 									} ## END no warnings.
 								} ## END for (my $n..).
@@ -1339,17 +1340,17 @@ sub Dynatrain { ## Revised 111008.
   my @newkeys = split //, $keys;
   my @kocts = split //, $kocts;
   my @ord = split //, $ord;
-  $CSG{'part_steps_le'} = 1 if ($CSG{'part_steps_le'} !~ /.+/);
+  $CSG{'steps_le'} = 1 if ($CSG{'steps_le'} !~ /.+/);
   my $oldsflag = $CSG{'Sflag'}; $CSG{'Sflag'} = 0 if ($CSG{'Sflag'} !~ /.+/);
   ## Control:
   die("Length of order should not exceed length of series.\n",$subname)  if ((@ord) > (@row));
-  die("Step should be a divisor of series length.\n",$subname) if ((@row)/$CSG{'part_steps_le'} != int((@row)/$CSG{'part_steps_le'}));
+  die("Step should be a divisor of series length.\n",$subname) if ((@row)/$CSG{'steps_le'} != int((@row)/$CSG{'steps_le'}));
   my ($newkeys,$newsigns) = Dynana($row,$keys,$ord);
   &Describe($subname, "key: $newkeys signs:$newsigns");
   my @keys = split //, $newkeys; my @signs = split //, $newsigns;
-  my @suite; my $n = 0; my $m = $CSG{'part_steps_le'};
+  my @suite; my $n = 0; my $m = $CSG{'steps_le'};
   ## Steps:
-  for (my $s = 0; $s < $CSG{'part_steps_le'}; $s++) { push @suite, &Dodecad($ord[$s],$subname) }
+  for (my $s = 0; $s < $CSG{'steps_le'}; $s++) { push @suite, &Dodecad($ord[$s],$subname) }
   my $i = (@suite)-1;
   my (@outrows, @outocts);
 	my @new = @row; # The series modifies itself not the base model.
@@ -1371,7 +1372,7 @@ sub Dynatrain { ## Revised 111008.
 		push @suite, &Dodecad($ord[++$n],$subname);
 		$i = (@suite)-1;
 		if ($n == $m){
-			$m = $m+$CSG{'part_steps_le'};	
+			$m = $m+$CSG{'steps_le'};	
 			if ($CSG{'Sflag'} != 1) { &Express(\@new,\@oct,$n-1) } ## Express resets $CSG{'Sflag'} to 33.
 			else  { &Printcs(\@new,\@oct,$n-1) }
 			my $news = join '',@new;
@@ -1448,7 +1449,7 @@ sub Gradomap { ## Revised 111008.
   for (my $n = 0; $n < (@msuite); $n++) {
   	$row = &Unmap($msuite[$n],$perm);
   	push @per, $row;
-    $octrow = &Octset($len,$CSG{'part_Rflag_le'}); 
+    $octrow = &Octset($len,$CSG{'Rflag_le'}); 
     push @octs, $octrow;
   }   
   $DEBFLAG =  $oldebflag;
@@ -1463,7 +1464,7 @@ sub Gradomap { ## Revised 111008.
 sub Gradual { ## Revised 110708. cf sdeg().
   my ($row,$opt) = @_;
   my $subname = "Csgrouper::Gradual";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG; 
   # $DEBFLAG = 1;
   $opt //= "";
@@ -1472,12 +1473,12 @@ sub Gradual { ## Revised 110708. cf sdeg().
   my $deg = 1;
   my (@per,@octs,$octrow);
   my $len = length($row);
-  push @per, $row; # CSG{'part_Rflag_le'} decides wether to use random octs or not:
-  $octrow = &Octset($len,$CSG{'part_Rflag_le'}); push @octs, $octrow;
+  push @per, $row; # CSG{'Rflag_le'} decides wether to use random octs or not:
+  $octrow = &Octset($len,$CSG{'Rflag_le'}); push @octs, $octrow;
   goto SDEGEND if ($ind =~ /$row/);
   while (++$deg){
     $targ = &Composind($targ,$row);
-    $octrow = &Octset($len,$CSG{'part_Rflag_le'}); 
+    $octrow = &Octset($len,$CSG{'Rflag_le'}); 
     last if ($ind =~ /$targ/);
     push @per, $targ; push @octs, $octrow;
   }
@@ -1573,7 +1574,7 @@ sub Intone {
   my @row = split //, $seq;
   my @mode = split //, $modus;
   my $subname = "Csgrouper::Intone";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   my $new; 
@@ -1593,7 +1594,7 @@ sub Intone {
     	);
     $new .= $newmode;
   }
-  &Describe($subname,"$seq => $new");
+  # &Describe($subname,"$seq => $new");
   $Csgrouper::DEBFLAG =  $oldebflag;
   return $new;
 } ## END Intone().
@@ -1612,16 +1613,16 @@ sub Intrain { ## Revised 111008.
   my @oldoct = split //, $octs;
   my @kocts = split //, $kocts;
   my @ord = split //, $ord;
-  $CSG{'part_steps_le'} = 1 if ($CSG{'part_steps_le'} !~ /.+/);
+  $CSG{'steps_le'} = 1 if ($CSG{'steps_le'} !~ /.+/);
   my $oldsflag = $CSG{'Sflag'}; $CSG{'Sflag'} = 0 if ($CSG{'Sflag'} !~ /.+/);
   ## Control:
   die("Length of order should not exceed length of series.\n",$subname)  if ((@ord) > (@row));
-  die("Step should be a divisor of series length.\n",$subname) if ((@row)/$CSG{'part_steps_le'} != int((@row)/$CSG{'part_steps_le'}));
+  die("Step should be a divisor of series length.\n",$subname) if ((@row)/$CSG{'steps_le'} != int((@row)/$CSG{'steps_le'}));
   my ($newkeys,$newsigns) = Inana($row,$keys,$ord,'0'); # $mod = 0: no print.
   my @keys = split //, $newkeys; my @signs = split //, $newsigns;
-  my @suite; my $n = 0; my $m = $CSG{'part_steps_le'};
+  my @suite; my $n = 0; my $m = $CSG{'steps_le'};
   ## Steps:
-  for (my $s = 0; $s < $CSG{'part_steps_le'}; $s++) { push @suite, &Dodecad($ord[$s],$subname) }
+  for (my $s = 0; $s < $CSG{'steps_le'}; $s++) { push @suite, &Dodecad($ord[$s],$subname) }
   my $i =  (@suite)-1; my (@outrows, @outocts);
   until ($n >= (@keys)){
     my @new = @row;
@@ -1642,7 +1643,7 @@ sub Intrain { ## Revised 111008.
     push @suite, &Dodecad($ord[++$n],$subname);
     $i = (@suite)-1;
 		if ($n == $m){
-			$m = $m+$CSG{'part_steps_le'};	
+			$m = $m+$CSG{'steps_le'};	
 			if ($CSG{'Sflag'} != 1) { &Express(\@new,\@oct,$n-1) } ## Express resets $CSG{'Sflag'} to 33.
 			else  { &Printcs(\@new,\@oct,$n-1) }
 			my $news = join '',@new; my $octs = join '',@oct; 
@@ -1660,7 +1661,7 @@ sub Intrain { ## Revised 111008.
 sub Invert { ## Revised 111002.
   my ($notes, $octaves, $base, $axis, $opt) = @_; 
   my $subname = "Csgrouper::Invert";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG; 
   # $DEBFLAG = 1; 
   my @seq = split //,$notes; 
@@ -1733,7 +1734,7 @@ sub Map { ## Revised 111008.
 sub Midi { ## Revised 111008.
   my ($cps) = @_;
   my $subname = "Csgrouper::Midi";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
   # $DEBFLAG = 1;
   my ($y); 
@@ -1758,7 +1759,7 @@ sub Midi { ## Revised 111008.
 sub Scale { ## Revised 111008.
   my ($cps,$base) = @_;
   my $subname = "Csgrouper::Scale";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
   # $DEBFLAG = 1;
   my ($res,$oct,$soc);
@@ -1779,7 +1780,7 @@ sub Scale { ## Revised 111008.
 sub Elacs { ## Revised 111008.
   my ($note,$oct,$base) = @_;
   my $subname = "Csgrouper::Elacs";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
 	# $DEBFLAG = 1;
   my ($res,$n,$cps);
@@ -1864,7 +1865,7 @@ sub Num { $a <=> $b } ## END Num()
 sub Numchop {
   my ($fract) = @_;
   my $subname = "Csgrouper::Numchop";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   return $fract if ($fract !~ /\./);
   my $oldebflag = $DEBFLAG; 
   # $DEBFLAG = 1;
@@ -1906,7 +1907,7 @@ sub Omap { ## Revised 111008.
   ## Indistinct signs not allowed (this would yield a string containing a 'C').
   my ($row) = @_;
   my $subname = "Csgrouper::Omap";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
   # $DEBFLAG = 1;
   my @perm = split //,&Oppose($row); 
@@ -1928,7 +1929,7 @@ sub Omap { ## Revised 111008.
 sub Oppose { ## Revised 111007.
   my ($notes, $octs, $base, $axis, $opt) = @_;
   my $subname = 'Csgrouper::Oppose';
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
   # $DEBFLAG = 1;
   $base //= length($notes);
@@ -1953,20 +1954,20 @@ sub Oppose { ## Revised 111007.
 sub Oppgrad { # Revised 111008.
   my ($row,$opt) = @_;
   my $subname = 'Csgrouper::Oppgrad';
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
   # $DEBFLAG = 1;
   my $ind = $row;
   $opt //= "";
   $row = &Oppose($row);
   my $targ = $row; my $deg = 1; my $len = length($row);
-  my $octrow = &Octset($len,$CSG{'part_Rflag_le'});
+  my $octrow = &Octset($len,$CSG{'Rflag_le'});
   my (@per,@octs); 
   push @per, $row; push @octs, $octrow;
   goto OPPDEGEND if ($ind =~ /$row/);
   while (++$deg){
     $targ = &Oppose($targ);
-    $octrow = &Octset($len,$CSG{'part_Rflag_le'});
+    $octrow = &Octset($len,$CSG{'Rflag_le'});
     push @per, $targ ;
     push @octs, $octrow;
     last if ($ind =~ /$targ/);
@@ -1987,7 +1988,7 @@ sub Oppgrad { # Revised 111008.
 sub Partel { ## Revised 110519.
   my ($row,$mode) = @_;
   my $subname = "Csgrouper::Partel";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG; 
   # $DEBFLAG = 1;
   $mode = 0 if ($mode !~ /.+/);
@@ -2029,12 +2030,12 @@ sub Powerp { ## Revised 111003.
   return &Powerp($target,$agent,(&Gradual($agent)+$pow),$opt) if ($pow < 0);
   if ($pow == 0) {
 		$target = &Natural($target);
-		$octrow = &Octset($len,$CSG{'part_Rflag_le'});
+		$octrow = &Octset($len,$CSG{'Rflag_le'});
   }
   else {
 		for (my $n = 1; $n <= abs($pow); $n++){
 			$target = Composind($target,$agent);
-			$octrow = &Octset($len,$CSG{'part_Rflag_le'});
+			$octrow = &Octset($len,$CSG{'Rflag_le'});
 			push @rslt, $target;
 			push @octs, $octrow;
 		}
@@ -2052,7 +2053,7 @@ sub Powerp { ## Revised 111003.
 sub Printcs {
   my ($newref,$octref,$index) = @_;
   my $subname = "Csgrouper::Printcs";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
   # $DEBFLAG = 1;
   print STDOUT "\n\nseries $index:\n" if ($index =~/.+/);
@@ -2070,7 +2071,7 @@ sub Printcs {
 sub Ptype { ## Revised 110519.
   my ($str) = @_;
   my $subname = "Csgrouper::Ptype";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG; 
   # $DEBFLAG = 1;
   my @partel = &Partel($str,"0");
@@ -2094,7 +2095,7 @@ sub Randcond { ## Revised 111003.
   # Example: &Randcond(12,"ICT=0231100 CYC=0111210000100 DEG=10 TYP=01220130000 MOD=15 LIM=1000")
   my ($cols,$par) = @_;
   my $subname = "Csgrouper::Randcond";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG; 
   # $DEBFLAG = 1;
   ## length control
@@ -2173,7 +2174,7 @@ sub Randcond { ## Revised 111003.
 sub Revert { ## Revised 111007.
   my ($notes, $octaves, $base, $opt) = @_;
   my $subname = "Csgrouper::Revert";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG;
   # $DEBFLAG = 1;
   $base //= length($notes);
@@ -2276,7 +2277,7 @@ sub Supergrad { ## Revised 111003.
   my $len = length($row);
   while ($map = &Omap($row)) {
     ++$deg; $row = $map;
-    $octrow = &Octset($len,$CSG{'part_Rflag_le'});
+    $octrow = &Octset($len,$CSG{'Rflag_le'});
     push @rslt, $map ; push @octs, $octrow ;
     &Debug($subname,"deg: $deg: $map");
     if (defined($subset{$map})) {
@@ -2323,14 +2324,14 @@ sub Train { ## Revised 111003.
   my @row = split //, $row;
   my @ord = split //, $ord;
   my @keys = split //, $keys;
-  $CSG{'part_steps_le'} = 1 if ($CSG{'part_steps_le'} !~ /.+/);
+  $CSG{'steps_le'} = 1 if ($CSG{'steps_le'} !~ /.+/);
   my $oldsflag = $CSG{'Sflag'}; $CSG{'Sflag'} = 0 if ($CSG{'Sflag'} !~ /.+/);
   ## Control:
   die("Length of order should not exceed length of series.\n",$subname)  if ((@ord) > (@row));
-  die("Step should be a divisor of series length.\n",$subname) if ((@row)/$CSG{'part_steps_le'} != int((@row)/$CSG{'part_steps_le'}));
+  die("Step should be a divisor of series length.\n",$subname) if ((@row)/$CSG{'steps_le'} != int((@row)/$CSG{'steps_le'}));
   my @oldoct = split //, $octs; my @kocts = split //, $kocts;
-  my @suite;  my $n = 0;  my $m = $CSG{'part_steps_le'};
-  for (my $s = 0; $s < $CSG{'part_steps_le'}; $s++) { push @suite, &Dodecad($ord[$s],$subname) }
+  my @suite;  my $n = 0;  my $m = $CSG{'steps_le'};
+  for (my $s = 0; $s < $CSG{'steps_le'}; $s++) { push @suite, &Dodecad($ord[$s],$subname) }
   my $i =  scalar(@suite)-1; my (@outrows, @outocts, @oct);
   until ($n == scalar(@keys)){
     my @new = @row; my $j = 0; 
@@ -2345,7 +2346,7 @@ sub Train { ## Revised 111003.
     push @suite, &Dodecad($ord[++$n],$subname);
     $i = scalar(@suite)-1;
     if ($n == $m){
-      $m = $m+$CSG{'part_steps_le'};  
+      $m = $m+$CSG{'steps_le'};  
       if ($CSG{'Sflag'} != 1) {&Express(\@new,\@oct,$n-1)} 
 			else  { &Printcs(\@new,\@oct,$n-1) } ## A little csound test.
       my $news = join '',@new;
@@ -2373,17 +2374,17 @@ sub Trainspose { ## Revised 111008.
   my @ord = split //, $ord;
   my @signs = split //, $signs;
   &Debug($subname, "Trainsposition:");
-  $CSG{'part_steps_le'} = 1 if ($CSG{'part_steps_le'} !~ /.+/);
+  $CSG{'steps_le'} = 1 if ($CSG{'steps_le'} !~ /.+/);
   my $oldsflag = $CSG{'Sflag'}; $CSG{'Sflag'} = 0 if ($CSG{'Sflag'} !~ /.+/);
   ## Control:
   die("Length of order should not exceed length of series.\n",$subname)  if ((@ord) > (@row));
-  die("Step should be a divisor of series length.\n",$subname) if ((@row)/$CSG{'part_steps_le'} != int((@row)/$CSG{'part_steps_le'}));
+  die("Step should be a divisor of series length.\n",$subname) if ((@row)/$CSG{'steps_le'} != int((@row)/$CSG{'steps_le'}));
   my @oct = @oldoct; my @last = @row; my @new ;
-  my $n = my $s = 0;  my $m = $CSG{'part_steps_le'};
+  my $n = my $s = 0;  my $m = $CSG{'steps_le'};
   my (@outrows, @outocts);
   until ($n == (@keys)){
     @new = @last;
-    for ($s = $n; $s < $n+$CSG{'part_steps_le'}; $s++) {
+    for ($s = $n; $s < $n+$CSG{'steps_le'}; $s++) {
       my $place = &Dodecad($ord[$s],$subname);
       my $note = &Dodecad($new[$place],$subname);
       my $interval = &Dodecad($keys[$s],$subname);
@@ -2396,7 +2397,7 @@ sub Trainspose { ## Revised 111008.
     @last = @new;
     ++$n;
     if ($n == $m){
-      $m = $m+$CSG{'part_steps_le'};  
+      $m = $m+$CSG{'steps_le'};  
       if ($CSG{'Sflag'} != 1) {&Express(\@new,\@oct,$n-1)} 
       else { &Printcs(\@new,\@oct,$n-1) } ## A little csound test.
 	  my $newrow = "@new"; $newrow =~ s/ //g;
@@ -2556,7 +2557,7 @@ sub Typeset { ## Revised 110519.
 sub Unmap { ## Revised 111008.
   my ($perm,$map) = @_;
   my $subname = "Csgrouper::Unmap";
-  { no warnings; &says($subname, "@_"); }
+  # { no warnings; &says($subname, "@_"); }
   my $oldebflag = $DEBFLAG; 
   # $DEBFLAG = 1;
   my @perm = split //, $perm; 

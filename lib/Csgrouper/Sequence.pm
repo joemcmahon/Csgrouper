@@ -42,8 +42,6 @@ Modes appear more and more like the main mandatory fields and we have to trust t
 
 There is no question wether or not to apply a mode. Modes are always applied but as natural series, however necessary, their effect is simply null.
 
-Thus, the checkbox called 'mod' or param 'modo' does not relate to modes and should be used freely as required in different other situations.
-
 B<NOTE on Sequence failure>
 
 in case of failure, the Sequence object is not created. A message is printed in stderr and the Tkrow sel checkbox is not checkable, but this last behaviour depends on csgrouper.pl only.
@@ -99,7 +97,7 @@ has 'rep'		=> (isa => 'Int', is => 'ro', required => 0, default => 0, writer => 
 has 'funt'	=> (isa => 'Str', is => 'ro', required => 0, writer => 'set_funt'); ## Useful?
 has 'fun'		=> (isa => 'Csgrouper::Types::fun', is => 'ro', required => 1, writer => 'set_fun');
 has 'exp'		=> (isa => 'Bool', is => 'ro', required => 1, writer => 'set_exp');
-has 'modo'	=> (isa => 'Bool', is => 'ro', required => 1, writer => 'set_modo');
+has 'opt'	=> (isa => 'Bool', is => 'ro', required => 1, writer => 'set_opt');
 has 'A'			=> (isa => 'Csgrouper::Types::serial', is => 'ro', required => 1, writer => 'set_A', default => '0123456789AB');
 has 'Aoct'	=> (isa => 'Csgrouper::Types::serial', is => 'ro', required => 1, writer => 'set_Aoct');
 has 'Aroc'	=> (isa => 'Bool', is => 'ro', required => 1, writer => 'set_Aroc');
@@ -146,7 +144,7 @@ around BUILDARGS => sub {
 	 my $oldebflag = $Csgrouper::DEBFLAG; 
    # $Csgrouper::DEBFLAG = 1;
 	 my $subname = 'Sequence::BUILDARGS';
-   { no warnings; &Csgrouper::says($subname, "@_"); }
+   &Csgrouper::Debug($subname, "@_");
 	 my @params = @_; my %paramh;
 	 for (my $n = 0; $n < scalar(@params); $n = $n+2) {
 	 	 my ($key, $val) = ($params[$n],$params[$n+1]);
@@ -214,10 +212,10 @@ around BUILDARGS => sub {
 		 &Csgrouper::Describe($subname, "exp => $paramh{'exp'} NOT BOOL : FALLING BACK TO DEFAULTS");
 		 $paramh{'exp'} = 0;	$test .= 'exp '; 
 	 } ## END exp.
-	 if  (not ($paramh{'modo'} =~ /^([01]{1})$/)){ 
-		 &Csgrouper::Describe($subname, "modo => $paramh{'modo'} NOT BOOL : FALLING BACK TO DEFAULTS");
-		 $paramh{'modo'} = 0;	$test .= 'modo '; 
-	 } ## END modo.
+	 if  (not ($paramh{'opt'} =~ /^([01]{1})$/)){ 
+		 &Csgrouper::Describe($subname, "opt => $paramh{'opt'} NOT BOOL : FALLING BACK TO DEFAULTS");
+		 $paramh{'opt'} = 0;	$test .= 'opt '; 
+	 } ## END opt.
 	 if  (not ($paramh{'Aroc'} =~ /^([01]{1})$/)){ 
 		 &Csgrouper::Describe($subname, "Aroc => $paramh{'Aroc'} NOT BOOL : FALLING BACK TO DEFAULTS");
 		 $paramh{'Aroc'} = 0;	$test .= 'Aroc '; 
@@ -248,13 +246,13 @@ around BUILDARGS => sub {
 sub BUILD {
 	my ($self) = @_;
 	my $subname = 'Sequence::BUILD';
-  { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
  	## Create the iparam array:
  	my @a = split(/\,/,$self->ins);
 	$self->set_instr(shift(@a));
 	if (scalar(@a)>0){
-	 	 &Csgrouper::Describe($subname, "Seq_".$self->sid." ipars: @a");
-	 	 &Csgrouper::Describe($subname, "Seq_".$self->sid." instr: ".$self->instr);
+	 	 &Csgrouper::Debug($subname, "Seq_".$self->sid." ipars: @a");
+	 	 #&Csgrouper::Describe($subname, "Seq_".$self->sid." instr: ".$self->instr);
 	 	 my %ah;
 	 	 foreach (@a){
 	 	 	 my ($key,$val) = split(/=/,$_);
@@ -271,7 +269,7 @@ sub BUILD {
 sub out_mode{
 	my ($self) = @_;
 	my $subname = 'Sequence::out_mode';
-  { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
 	my $oldebflag = $Csgrouper::DEBFLAG; 
 	# $Csgrouper::DEBFLAG = 1;
 	&Csgrouper::Error($subname,"Private method called.",1) 
@@ -295,7 +293,7 @@ sub out_mode{
 
 =item * random($self) : returns random permutation(s) in a particular mode.
 
-The checkbox 'mod' has to be checked in order to reproduce the random choice each time the part is reloaded.
+The checkbox 'opt' has to be checked in order to reproduce the random choice each time the project is reloaded.
 Otherwise random() will be run only once and replaced afterwards by a neutral AUTORECONF Suite() function and param 'A' will display the random output previously obtained.
 
 =cut
@@ -374,7 +372,7 @@ sub random { ## Adapted 110905.
 sub Build_tree { 
 	my ($self) = @_;
 	my $subname = 'Sequence::Build_tree';
-  { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
 	## Preliminary tests:
 	my $seqid = $self->seqid;
 	$self->set_ready(0); ## Set it to "not ready" first.
@@ -383,9 +381,9 @@ sub Build_tree {
 		return;
 	}
 	my $oldebflag = $Csgrouper::DEBFLAG; 
-	my $oldRflag = $Csgrouper::CSG{'part_Rflag_le'};
+	my $oldRflag = $Csgrouper::CSG{'Rflag_le'};
 	my $oldSflag = $Csgrouper::CSG{'Sflag'};
-	my $oldsteps = $Csgrouper::CSG{'part_steps_le'};
+	my $oldsteps = $Csgrouper::CSG{'steps_le'};
 	my $oldobase = $Csgrouper::CSG{'oct_base'};
 	# $Csgrouper::DEBFLAG = 1;
 	&Csgrouper::Debug($subname,$self->name);
@@ -399,7 +397,7 @@ sub Build_tree {
 	## 1. Create the long tune according to arg class:
 	if ($argclass =~ /^0/) { 
 		if ($fun eq "random") { ## RANDOM : the sole function in this class at present.
-			push @aoargs, ("mod=".$self->mode,"row=".$self->x,"boc=".$self->y,"orn=".$self->z,"dyn=".$self->modo);
+			push @aoargs, ("mod=".$self->mode,"row=".$self->x,"boc=".$self->y,"orn=".$self->z,"dyn=".$self->opt);
 			($tune,$octs,$unic) = &random($self); ## random() manages possible repetitions.
 			$self->set_root(
 				Csgrouper::Series->new(
@@ -411,8 +409,8 @@ sub Build_tree {
 				)
 			);
 			&Csgrouper::Debug($subname, "tune: ".$self->root->tune);
-			if ($self->modo != 1){ 
-				## Then we don't want to change this sequence each time the part gets reloaded so:
+			if ($self->opt != 1){ 
+				## Then we don't want to change this sequence each time the project gets reloaded so:
 				$self->set_fun('Suite');
 				## This will show in the interface that fun has been changed:
 				$self->set_funt($Csgrouper::Types::Funx{'Suite'}{menutext}.$Csgrouper::Types::FUNOUT);
@@ -468,8 +466,8 @@ sub Build_tree {
 	} ## END argclass == 1.
 	elsif ($argclass =~ /^2/) { ## Series is (or will be reduced to) a unique row.
 		if  ($fun eq "Intrain") { 
-		  $Csgrouper::CSG{'part_steps_le'} = $self->n unless (($self->n < 1) || ($self->n > $base/2) || ($base/$self->n != int($base/$self->n)));
-		  $Csgrouper::CSG{'part_Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
+		  $Csgrouper::CSG{'steps_le'} = $self->n unless (($self->n < 1) || ($self->n > $base/2) || ($base/$self->n != int($base/$self->n)));
+		  $Csgrouper::CSG{'Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
 		  $Csgrouper::CSG{'Sflag'} = 0; ## Express()
 			push @aoargs, ("ori=".$self->A,"oct=".$self->Aoct,"key=".$self->B,"oct=".$self->Boct,"ord=".$self->ord);
 			@aoa = &Csgrouper::Intrain($self->A,$self->Aoct,$self->B,$self->Boct,$self->ord);
@@ -478,8 +476,8 @@ sub Build_tree {
 			push @aoargs, "len=".scalar(@{$aoa[0]});
 		}
 		elsif  ($fun eq "Dynatrain") { 
-		  $Csgrouper::CSG{'part_steps_le'} = $self->n unless (($self->n < 1) || ($self->n > $base/2) || ($base/$self->n != int($base/$self->n)));
-		  $Csgrouper::CSG{'part_Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
+		  $Csgrouper::CSG{'steps_le'} = $self->n unless (($self->n < 1) || ($self->n > $base/2) || ($base/$self->n != int($base/$self->n)));
+		  $Csgrouper::CSG{'Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
 		  $Csgrouper::CSG{'Sflag'} = 0; ## Express()
 			push @aoargs, ("ori=".$self->A,"oct=".$self->Aoct,"key=".$self->B,"oct=".$self->Boct,"ord=".$self->ord);
 			@aoa = &Csgrouper::Dynatrain($self->A,$self->Aoct,$self->B,$self->Boct,$self->ord);
@@ -488,7 +486,7 @@ sub Build_tree {
 			push @aoargs, "len=".scalar(@{$aoa[0]});
 		}
 		elsif  ($fun eq "Oppgrad") { 
-		  $Csgrouper::CSG{'part_Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
+		  $Csgrouper::CSG{'Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
 			push @aoargs, ("ori=".$self->A);
 			if ($self->exp == 1){
 				@aoa = &Csgrouper::Oppgrad($self->A,'p');
@@ -503,8 +501,8 @@ sub Build_tree {
 			}
 		}
 		elsif  ($fun eq "Train") { 
-		  $Csgrouper::CSG{'part_steps_le'} = $self->n unless (($self->n < 1) || ($self->n > $base/2) || ($base/$self->n != int($base/$self->n)));
-		  $Csgrouper::CSG{'part_Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
+		  $Csgrouper::CSG{'steps_le'} = $self->n unless (($self->n < 1) || ($self->n > $base/2) || ($base/$self->n != int($base/$self->n)));
+		  $Csgrouper::CSG{'Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
 		  $Csgrouper::CSG{'Sflag'} = 0; ## Express()
 			push @aoargs, ("ori=".$self->A,"oct=".$self->Aoct,"key=".$self->B,"oct=".$self->Boct,"ord=".$self->ord);
 			@aoa = &Csgrouper::Train($self->A,$self->Aoct,$self->B,$self->Boct,$self->ord);
@@ -513,8 +511,8 @@ sub Build_tree {
 			push @aoargs, "len=".scalar(@{$aoa[0]});
 		}
 		elsif  ($fun eq "Trainspose") { 
-		  $Csgrouper::CSG{'part_steps_le'} = $self->n unless (($self->n < 1) || ($self->n > $base/2) || ($base/$self->n != int($base/$self->n)));
-		  $Csgrouper::CSG{'part_Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
+		  $Csgrouper::CSG{'steps_le'} = $self->n unless (($self->n < 1) || ($self->n > $base/2) || ($base/$self->n != int($base/$self->n)));
+		  $Csgrouper::CSG{'Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
 		  $Csgrouper::CSG{'Sflag'} = 0; ## Express()
 			push @aoargs, ("ori=".$self->A,"oct=".$self->Aoct,"key=".$self->B,"oct=".$self->Boct,"ord=".$self->ord,"sig=".$self->sign);
 			@aoa = &Csgrouper::Trainspose($self->A,$self->Aoct,$self->B,$self->Boct,$self->ord,$self->sign);
@@ -583,7 +581,7 @@ sub Build_tree {
 		elsif  ($fun eq "Gradomap") { 
 			## Random octs? Here they are treated directly by Gradomap.
 			my $newobase = $self->Aoct; $newobase =~ s/(.{1})(.*)/$1/; $Csgrouper::CSG{'oct_base'} = $newobase;
-		  $Csgrouper::CSG{'part_Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
+		  $Csgrouper::CSG{'Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
 			push @aoargs, ("ori=".$self->A);
 			## (erase $longtune to get rid of it).
 			if ($self->exp == 1){
@@ -600,7 +598,7 @@ sub Build_tree {
 		}
 		elsif  ($fun eq "Gradual") { 
 			my $newobase = $self->Aoct; $newobase =~ s/(.{1})(.*)/$1/; $Csgrouper::CSG{'oct_base'} = $newobase;
-		  $Csgrouper::CSG{'part_Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
+		  $Csgrouper::CSG{'Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
 			push @aoargs, ("ori=".$self->A);
 			if ($self->exp == 1){
 				
@@ -629,7 +627,7 @@ sub Build_tree {
 		elsif  ($fun eq "Powerp") { 
 			## Random octs? Here they are treated directly by Powerp.
 			my $newobase = $self->Aoct; $newobase =~ s/(.{1})(.*)/$1/; $Csgrouper::CSG{'oct_base'} = $newobase;
-		  $Csgrouper::CSG{'part_Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
+		  $Csgrouper::CSG{'Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
 			push @aoargs, ("ori=".$self->A,"per=".$self->B,"pow=".$self->n,"exp=".$self->exp);
 			if ($self->exp == 1){
 				## This way the original A series is included at start:
@@ -642,11 +640,11 @@ sub Build_tree {
 				($longtune,$longocts) = &Csgrouper::Powerp($self->A,$self->B,$self->n,'p');
 				$longtune = &Csgrouper::Intone($longtune,$self->mode,$self->tone,$base);
 			}
-			$Csgrouper::CSG{'part_Rflag_le'} = $oldRflag;
+			$Csgrouper::CSG{'Rflag_le'} = $oldRflag;
 		}
 		elsif  ($fun eq "Supergrad") { 
 			my $newobase = $self->Aoct; $newobase =~ s/(.{1})(.*)/$1/; $Csgrouper::CSG{'oct_base'} = $newobase;
-		  $Csgrouper::CSG{'part_Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
+		  $Csgrouper::CSG{'Rflag_le'} = $self->Aroc unless ($self->Aroc !~ /1|0/);
 			push @aoargs, ("ori=".$self->A);
 			if ($self->exp == 1){
 				@aoa = &Csgrouper::Supergrad($self->A,'p');
@@ -659,7 +657,7 @@ sub Build_tree {
 				$longtune = $row;
 				$longocts = $octs;
 			}
-			$Csgrouper::CSG{'part_Rflag_le'} = $oldRflag;
+			$Csgrouper::CSG{'Rflag_le'} = $oldRflag;
 		}
 		elsif  ($fun eq "Unmap") { 
 			my $newobase = $self->Aoct; $newobase =~ s/(.{1})(.*)/$1/; $Csgrouper::CSG{'oct_base'} = $newobase;
@@ -702,9 +700,9 @@ sub Build_tree {
 	## (A,A_oct,fun,funt,etc..). This must not be done here in order to leave our
 	## classes independant vis-à-vis the interface.
 	$self->set_ready(1); ## If we're not dead yet, then we're ready..
-	&Csgrouper::Describe($subname, "ready: ".$self->ready); 
-	$Csgrouper::CSG{'part_steps_le'} = $oldsteps;
-	$Csgrouper::CSG{'part_Rflag_le'} = $oldRflag;
+	&Csgrouper::Debug($subname, "ready: ".$self->ready); 
+	$Csgrouper::CSG{'steps_le'} = $oldsteps;
+	$Csgrouper::CSG{'Rflag_le'} = $oldRflag;
 	$Csgrouper::CSG{'Sflag'} = $oldSflag;
 	$Csgrouper::CSG{'oct_base'} = $oldobase;
 	$Csgrouper::DEBFLAG =  $oldebflag;
@@ -739,7 +737,7 @@ Params:
 	push @params, 'funt' =>$CsgObj ->sequences->{$pref.'_funt'};
 	push @params, 'fun' =>$CsgObj ->sequences->{$pref.'_fun'};
 	push @params, 'exp' =>$CsgObj ->sequences->{$pref.'_exp'};
-	push @params, 'modo' =>$CsgObj ->sequences->{$pref.'_modo'};
+	push @params, 'opt' =>$CsgObj ->sequences->{$pref.'_opt'};
 	push @params, 'A' =>$CsgObj ->sequences->{$pref.'_A'};
 	push @params, 'Aoct' =>$CsgObj ->sequences->{$pref.'_Aoct'};
 	push @params, 'Aroc' =>$CsgObj ->sequences->{$pref.'_Aroc'};

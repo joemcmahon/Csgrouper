@@ -124,7 +124,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_1_ind>1</Tkrow_1_ind>
   <Tkrow_1_ins>i1</Tkrow_1_ins>
   <Tkrow_1_mode>0123456789ABCDEFGH</Tkrow_1_mode>
-  <Tkrow_1_modo>0</Tkrow_1_modo>
+  <Tkrow_1_opt>0</Tkrow_1_opt>
   <Tkrow_1_n>1</Tkrow_1_n>
   <Tkrow_1_name>R Basse</Tkrow_1_name>
   <Tkrow_1_ord>0123456789ABCDEFGH</Tkrow_1_ord>
@@ -152,7 +152,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_2_ind>2</Tkrow_2_ind>
   <Tkrow_2_ins>i2</Tkrow_2_ins>
   <Tkrow_2_mode>0123456789ABCDEFGH</Tkrow_2_mode>
-  <Tkrow_2_modo>0</Tkrow_2_modo>
+  <Tkrow_2_opt>0</Tkrow_2_opt>
   <Tkrow_2_n>1</Tkrow_2_n>
   <Tkrow_2_name>I Alto</Tkrow_2_name>
   <Tkrow_2_ord>0123456789ABCDEFGH</Tkrow_2_ord>
@@ -180,7 +180,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_3_ind>3</Tkrow_3_ind>
   <Tkrow_3_ins>i3</Tkrow_3_ins>
   <Tkrow_3_mode>0123456789ABCDEFGH</Tkrow_3_mode>
-  <Tkrow_3_modo>0</Tkrow_3_modo>
+  <Tkrow_3_opt>0</Tkrow_3_opt>
   <Tkrow_3_n>1</Tkrow_3_n>
   <Tkrow_3_name>O Soprano</Tkrow_3_name>
   <Tkrow_3_ord>0123456789ABCDEFGH</Tkrow_3_ord>
@@ -208,7 +208,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_4_ind>4</Tkrow_4_ind>
   <Tkrow_4_ins>i7,sta=16</Tkrow_4_ins>
   <Tkrow_4_mode>0123456789ABCDEFGH</Tkrow_4_mode>
-  <Tkrow_4_modo>0</Tkrow_4_modo>
+  <Tkrow_4_opt>0</Tkrow_4_opt>
   <Tkrow_4_n>1</Tkrow_4_n>
   <Tkrow_4_name>S Flute</Tkrow_4_name>
   <Tkrow_4_ord>0123456789ABCDEFGH</Tkrow_4_ord>
@@ -236,7 +236,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_5_ind>5</Tkrow_5_ind>
   <Tkrow_5_ins>i4</Tkrow_5_ins>
   <Tkrow_5_mode>0123456789ABCDEFGH</Tkrow_5_mode>
-  <Tkrow_5_modo>0</Tkrow_5_modo>
+  <Tkrow_5_opt>0</Tkrow_5_opt>
   <Tkrow_5_n>1</Tkrow_5_n>
   <Tkrow_5_name>R Basse 2</Tkrow_5_name>
   <Tkrow_5_ord>0123456789ABCDEFGH</Tkrow_5_ord>
@@ -264,7 +264,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_6_ind>6</Tkrow_6_ind>
   <Tkrow_6_ins>i5</Tkrow_6_ins>
   <Tkrow_6_mode>0123456789ABCDEFGH</Tkrow_6_mode>
-  <Tkrow_6_modo>0</Tkrow_6_modo>
+  <Tkrow_6_opt>0</Tkrow_6_opt>
   <Tkrow_6_n>1</Tkrow_6_n>
   <Tkrow_6_name>I Alto 2</Tkrow_6_name>
   <Tkrow_6_ord>0123456789ABCDEFGH</Tkrow_6_ord>
@@ -292,7 +292,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_7_ind>7</Tkrow_7_ind>
   <Tkrow_7_ins>i6</Tkrow_7_ins>
   <Tkrow_7_mode>0123456789ABCDEFGH</Tkrow_7_mode>
-  <Tkrow_7_modo>0</Tkrow_7_modo>
+  <Tkrow_7_opt>0</Tkrow_7_opt>
   <Tkrow_7_n>1</Tkrow_7_n>
   <Tkrow_7_name>O Soprano 2</Tkrow_7_name>
   <Tkrow_7_ord>0123456789ABCDEFGH</Tkrow_7_ord>
@@ -320,7 +320,7 @@ garvb1 init 0 ;</Orcini_tw>
   <Tkrow_8_ind>8</Tkrow_8_ind>
   <Tkrow_8_ins>i7</Tkrow_8_ins>
   <Tkrow_8_mode>0123456789ABCDEFGH</Tkrow_8_mode>
-  <Tkrow_8_modo>0</Tkrow_8_modo>
+  <Tkrow_8_opt>0</Tkrow_8_opt>
   <Tkrow_8_n>1</Tkrow_8_n>
   <Tkrow_8_name>Chromatic scale.</Tkrow_8_name>
   <Tkrow_8_ord>0123456789ABCDEFGH</Tkrow_8_ord>
@@ -354,7 +354,7 @@ garvb1 init 0 ;</Orcini_tw>
   <csg_file>~/Csgrouper/lib/csgrouper.pl</csg_file>
   <csg_key>2011-12-05_16:05:41</csg_key>
   <csg_label>2</csg_label>
-  <csg_part>~/Csgrouper/part/xpace-flute.xml</csg_part>
+  <csg_file>~/Csgrouper/proj/xpace-flute.xml</csg_file>
   <csg_path_pe>~/Csgrouper/</csg_path_pe>
   <csg_status>reload : init</csg_status>
   <csg_version>2.0.1</csg_version>
@@ -583,7 +583,7 @@ endin</i1_content>
   <i1_path>~/Csgrouper/ins/xpace-csg.in</i1_path>
   <i1_type>ins</i1_type>
   <i2_amp_type>ampdb</i2_amp_type>
-  <i2_author>er</i2_author>
+  <i2_author>eb</i2_author>
   <i2_comment>Triangle wave.</i2_comment>
   <i2_content>instr 2
 
@@ -1761,34 +1761,34 @@ endin</i7_content>
   <oct_max>12</oct_max>
   <oct_range>1</oct_range>
   <ord_series_le>45BA19326780</ord_series_le>
-  <part_Rflag_le>0</part_Rflag_le>
-  <part_author_le>eb</part_author_le>
-  <part_com_le>Some comments.</part_com_le>
-  <part_comptype_mw>0</part_comptype_mw>
-  <part_durmax_le>12</part_durmax_le>
-  <part_durmin_le>0.125</part_durmin_le>
-  <part_durtype_mw>0</part_durtype_mw>
-  <part_intersil_le>2</part_intersil_le>
-  <part_octs_le>333333333333</part_octs_le>
-  <part_path_pe>~/Csgrouper/part/</part_path_pe>
-  <part_randur_cb>0</part_randur_cb>
-  <part_rythmtype_mw>3</part_rythmtype_mw>
-  <part_sections_le>1,2;3</part_sections_le>
-  <part_select_le>4,5,6,7</part_select_le>
-  <part_selprnt_le>0</part_selprnt_le>
-  <part_sf2amp_le>0.2</part_sf2amp_le>
-  <part_signs_le>++++++++++++</part_signs_le>
-  <part_steps_le>1</part_steps_le>
-  <part_tempo_le>t 0 120</part_tempo_le>
-  <part_title_le>xpace-flute</part_title_le>
-  <part_xamp_le>1#</part_xamp_le>
-  <part_xatk_le>1#</part_xatk_le>
-  <part_xdur_le>1#</part_xdur_le>
-  <part_xgli_le>1#,2#</part_xgli_le>
-  <part_xhus_le>1#,2#</part_xhus_le>
-  <part_xpan_le>1#,2#</part_xpan_le>
-  <part_yens_le>2#B</part_yens_le>
-  <part_yryc_le>1#B,2#B</part_yryc_le>
+  <Rflag_le>0</Rflag_le>
+  <author_le>eb</author_le>
+  <com_le>Some comments.</com_le>
+  <comptype_mw>0</comptype_mw>
+  <durfac_le>12</durfac_le>
+  <durmin_le>0.125</durmin_le>
+  <durtype_mw>0</durtype_mw>
+  <intersil_le>2</intersil_le>
+  <octs_le>333333333333</octs_le>
+  <path_pe>~/Csgrouper/proj/</path_pe>
+  <randur_cb>0</randur_cb>
+  <rythmtype_mw>3</rythmtype_mw>
+  <sections_le>1,2;3</sections_le>
+  <select_le>4,5,6,7</select_le>
+  <selprnt_le>0</selprnt_le>
+  <sf2amp_le>0.2</sf2amp_le>
+  <signs_le>++++++++++++</signs_le>
+  <steps_le>1</steps_le>
+  <tempo_le>t 0 120</tempo_le>
+  <title_le>xpace-flute</title_le>
+  <xamp_le>1#</xamp_le>
+  <xatk_le>1#</xatk_le>
+  <xdur_le>1#</xdur_le>
+  <xgli_le>1#,2#</xgli_le>
+  <xsil_le>1#,2#</xsil_le>
+  <xpan_le>1#,2#</xpan_le>
+  <yens_le>2#B</yens_le>
+  <yryc_le>1#B,2#B</yryc_le>
   <range_param_le>3</range_param_le>
   <realtime_params_le>-o dac</realtime_params_le>
   <render_path_pe>~/Csgrouper/run/sndout/</render_path_pe>
@@ -1801,13 +1801,3 @@ endin</i7_content>
   <signs_series_le>++++++++++++</signs_series_le>
   <ton_series_le>0</ton_series_le>
   <tone_param_le>0</tone_param_le></opt>
-
-
-
-
-
-
-
-
-
-

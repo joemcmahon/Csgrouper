@@ -34,7 +34,7 @@ On one hand, Csgrouper allows to produce musical sequences with a different
 number of intervals (from 2 to 24 against 12 in the traditionnal system). These 
 sequences are generated from permutationnal functions that work on pure 
 frequencies. The user must provide his or her code of compatible Csound 
-instruments that are then integrated into the part managed by Csgrouper (some 
+instruments that are then integrated into the score managed by Csgrouper (some 
 test instruments are provided in the package for a quick start).  
 
 Polymodality:
@@ -57,7 +57,7 @@ mixed) etc..
 At last Csgrouper evaluates the proposed structure and prints its Csound unified
 score in case the evaluation succeeds. The resulting sound file can be 
 played directly from the GUI or recorded on disk. The Csgrouper and 
-Csound parts and instruments are all saved into a Csgrouper .xml config file.
+Csound scores and instruments are all saved into a Csgrouper .xml config file.
 
 But this output (hear the 7 voices/18 tones raw example from note 2) is not yet 
 music, it's just a computer aided inspiration that can serve to escape a 
@@ -109,7 +109,7 @@ tonal properties which yield a harmonious aspect in spite of the lack of dominan
 position in the 18 notes scale. Feel free to sculpt on it!
 
 2: http://www.emilbarton.net76.net contains an "xpace-flute_raw-csg.mp3" 
-and a quickly transformed (sculpted) version of the same part named "ballad.mp3"
+and a quickly transformed (sculpted) version of the same project renamed "ballad.mp3"
 as well as their corresponding score files. 
 
 

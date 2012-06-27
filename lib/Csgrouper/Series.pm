@@ -80,7 +80,7 @@ some additionnal properties:
 sub is_arow {
   my ($self) = @_;
  	my $subname = 'Series::is_arow';
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
 	&Csgrouper::Error($subname,"Private method called.",1) 
     unless (caller)[0]->isa( ref($self) );
   my $str = ""; 
@@ -97,7 +97,7 @@ sub is_arow {
 sub is_unic { ## The real state of uniqueness (not a wish like 'unic' attribute).
   my ($self) = @_;
  	my $subname = 'Series::is_unic';
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
 	&Csgrouper::Error($subname,"Private method called.",1) 
     unless (caller)[0]->isa( ref($self) );
   return 0 if (length($self->tune) != $self->paro->base);
@@ -124,13 +124,15 @@ sub BUILD { ## Internal Moose method called after the object has been created.
   foreach (@notes) { 	&Csgrouper::Error($subname, "not a proper base for @notes : $base\n") if (&Csgrouper::Dodecad($_,$subname) >= $base) }
   ## Here we are going to correct the data when needed:
   { no warnings; 
-  	&Csgrouper::Describe($subname, "ori: ".$self->orig." tune: ");
-		&Csgrouper::Describe($subname, "octs: ".$self->octs);
-		&Csgrouper::Describe($subname, "unic: ".$self->unic);
-		&Csgrouper::Describe($subname, "base: ".$self->paro->base);
+  	&Csgrouper::Debug($subname, "ori: ".$self->orig." tune: ");
+		&Csgrouper::Debug($subname, "octs: ".$self->octs);
+		&Csgrouper::Debug($subname, "unic: ".$self->unic);
+		&Csgrouper::Debug($subname, "base: ".$self->paro->base);
 	}
   if ($self->is_unic) { 
-    if ($self->unic ne 1) { &Csgrouper::Describe($subname, $self->tune." unic changed to 1.") } ; 
+    if ($self->unic ne 1) { 
+    	# &Csgrouper::Describe($subname, $self->tune." unic changed to 1.") 
+    } ; 
     $self->unic(1); 
   } ## No choice. The original params were not valid nor fatal.
   ## Series length/base mismatches entail modifications only:
@@ -139,7 +141,7 @@ sub BUILD { ## Internal Moose method called after the object has been created.
   	for (my $i = $tlen; $i < $base; $i++){		
   		 $newtune .= "0"; ## Neutral base tone.
   	}
-   	&Csgrouper::Describe($subname, $self->tune.": augmented to $newtune, unic set to 1.");
+   	&Csgrouper::Debug($subname, $self->tune.": augmented to $newtune, unic set to 1.");
   	$self->set_tune($newtune);
   	$self->unic(1); ## Again: no choice.
   	$tlen = $base;
@@ -152,7 +154,7 @@ sub BUILD { ## Internal Moose method called after the object has been created.
     		$newtune .= "0"; ## Neutral base tone.
     		$tlen++;
   	  }
-  	  &Csgrouper::Describe($subname, $self->tune.": augmented to $newtune.");
+  	  &Csgrouper::Debug($subname, $self->tune.": augmented to $newtune.");
   	  $self->set_tune($newtune);
   	} ## END unic=0.
   	## Attribute 'unic' has consequences on the normalization process unless 
@@ -163,7 +165,7 @@ sub BUILD { ## Internal Moose method called after the object has been created.
   	  my @newtune = split //, $self->tune;
   	  splice @newtune, $base;
   	  $newtune = join('',@newtune);
-  	  &Csgrouper::Describe($subname, $self->tune.": augmented to $newtune.");
+  	  &Csgrouper::Debug($subname, $self->tune.": augmented to $newtune.");
   	  $self->set_tune($newtune);
   	  $tlen = $base;
   	}
@@ -173,20 +175,20 @@ sub BUILD { ## Internal Moose method called after the object has been created.
   	for (my $i = $olen; $i < $tlen; $i++){		
   		 $newocts .= $Csgrouper::CSG{'oct_base'};
   	}
-  	&Csgrouper::Describe($subname, $self->octs.": augmented to $newocts.");
+  	&Csgrouper::Debug($subname, $self->octs.": augmented to $newocts.");
   	$self->set_octs($newocts);
   }
   elsif ($tlen < $olen) { ## Diminish it:
   	my @octs = split //,$self->octs;
   	splice (@octs,$tlen);
   	foreach (@octs) { $newocts .= $_ };
-  	&Csgrouper::Describe($subname, $self->octs.": reduced to $newocts.");
+  	&Csgrouper::Debug($subname, $self->octs.": reduced to $newocts.");
   	$self->set_octs($newocts);
   }
   { no warnings; 
-  	&Csgrouper::Describe($subname, "new: ".$self->orig." tune: ");
-		&Csgrouper::Describe($subname, "octs: ".$self->octs);
-		&Csgrouper::Describe($subname, "unic: ".$self->unic);
+  	&Csgrouper::Debug($subname, "new: ".$self->orig." tune: ");
+		&Csgrouper::Debug($subname, "octs: ".$self->octs);
+		&Csgrouper::Debug($subname, "unic: ".$self->unic);
   }
   ## Now we can construct the real object properties:
   ## reverse, inverse, opposite, etc. are made FOR EACH of the serial components.
@@ -214,7 +216,7 @@ sub BUILD { ## Internal Moose method called after the object has been created.
 				push (@octo,split(//,$oppocts));
 				my $fun;
 				## A choice at interface level allows to change the comparison func:
-				$fun = $Csgrouper::CSG{interface}."::Compstr".$Csgrouper::CSG{part_comptype_mw};
+				$fun = $Csgrouper::CSG{interface}."::Compstr".$Csgrouper::CSG{comptype_mw};
 				push (@scmp0,split(//,&$fun($series)));
 				push (@icmp0,split(//,&$fun($invser)));
 				push (@rcmp0,split(//,&$fun($revser)));
@@ -238,10 +240,10 @@ sub BUILD { ## Internal Moose method called after the object has been created.
 		}
 		my @tune = split //,$self->tune; ## Long arrays:
 		my @octs = split //,$self->octs;
-		&Csgrouper::Describe($subname, "cmp0: ".join('',@scmp0));
-		&Csgrouper::Describe($subname, "cmp1: ".join('',@scmp1));
-		&Csgrouper::Describe($subname, "cmp2: ".join('',@scmp2));
-		&Csgrouper::Describe($subname, "cmp3: ".join('',@scmp3));
+		# &Csgrouper::Describe($subname, "cmp0: ".join('',@scmp0));
+		# &Csgrouper::Describe($subname, "cmp1: ".join('',@scmp1));
+		# &Csgrouper::Describe($subname, "cmp2: ".join('',@scmp2));
+		# &Csgrouper::Describe($subname, "cmp3: ".join('',@scmp3));
 		
 		$self->set_size(length($self->tune));
 		my %noteh;  $self->set_notes(\%noteh);
@@ -286,10 +288,10 @@ sub BUILD { ## Internal Moose method called after the object has been created.
 				,ocmp3 => $ocmp3[$n]
 			);
 		}
-		&Csgrouper::Describe($subname, "tune: ".$self->tune);
-		&Csgrouper::Describe($subname, "octs: ".$self->octs);
-		&Csgrouper::Describe($subname, "len: ".length($self->tune));
-		&Csgrouper::Describe($subname, "series: ".($serialindex+1));
+		&Csgrouper::Debug($subname, "tune: ".$self->tune);
+		&Csgrouper::Debug($subname, "octs: ".$self->octs);
+		# &Csgrouper::Describe($subname, "len: ".length($self->tune));
+		# &Csgrouper::Describe($subname, "series: ".($serialindex+1));
   } ## END no strict refs.
   $self->set_ready(1);
   $Csgrouper::DEBFLAG = $oldebflag;
@@ -301,7 +303,7 @@ sub BUILD { ## Internal Moose method called after the object has been created.
 sub invert { ## Private method. Requires monadic series.
   my ($self,$series,$octs) = @_;
   my $subname = "Series::invert";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
 	&Csgrouper::Error($subname,"Private method called.",1) 
     unless (caller)[0]->isa( ref($self) );
   my $oldebflag = $Csgrouper::DEBFLAG; 
@@ -333,7 +335,7 @@ sub invert { ## Private method. Requires monadic series.
 sub revert { ## Private method. Requires monadic series.
   my ($self,$series,$octs) = @_;
   my $subname = "Series::revert";
-  { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
 	&Csgrouper::Error($subname,"Private method called.",1) 
     unless (caller)[0]->isa( ref($self) );
   my $oldebflag = $Csgrouper::DEBFLAG; 

@@ -10,9 +10,9 @@ This command is equivalent to :
 
 	~/Csgrouper/lib/csgrouper.pl ~/Csgrouper/run/default.xml
 
-It can also take an argument which is the name of a part file as in:
+It can also take an argument which is the name of a project file as in:
 
-	~/Csgrouper/run/csgrouper ~/Csgrouper/part/xpace-flute.xml
+	~/Csgrouper/run/csgrouper ~/Csgrouper/proj/xpace-flute.xml
 
 (in the original package xpace-flute.xml is a copy of default.xml).
 
@@ -28,7 +28,7 @@ and then only it can be heard through the button "Play" from the "CSD" tab.
 When producing output some sequences can be easily commented out but this must be 
 done from the "CSD" tab by mentionning their coma-separated ids list into the proper 
 field instead of deselecting them from the "Sequences" tab, because this last action 
-would modify the structure of the part and its resulting output. 
+would modify the structure of the project and its resulting output. 
 
 
 
@@ -60,8 +60,8 @@ a "0", each "3" by a "2" etc., so producing a modulation.
 *** In case of problem:
 
 In the beggining, it's easy to replace a valid setup by a setup that will not 
-complete evaluation. In this case one can come back to the default part 
-provided with Csgrouper, that is located in folder "part" under the name 
+complete evaluation. In this case one can come back to the default project 
+provided with Csgrouper, that is located in folder "proj" under the name 
 "xpace-flute.xml". Just copy that file onto Csgrouper/run/default.xml and relaunch
 the program to come back to the valid default piece.
 

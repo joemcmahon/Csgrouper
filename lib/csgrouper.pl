@@ -36,27 +36,13 @@
 
 =head1 Manual for csgrouper.pl 
 
-=head2 Todo/Questions
-
- - From now on (120317) and for a while, most changes will concern the Manual 
- pages that need to be completed and they will be mentionned on Github by a
- "Minor comment fix." to distinguish them from possible minor code fixes. 
-
- - Problem with the instruments fields: 
- in spite of correct bindings sometimes unsupported utf8 are recorded.
- If a .csg recorded part refuses to load it's that some unwanted multibyte char 
- has been inserted at some stage by some keypress (e.g. from Emacs-like reflexes). 
- In this case XML:Simple aborts. The solution is to find and destroy the bad char 
- (showing some special prefixe like ^) with an editor as nano or vi.
-
-		   
 =head2 General Introduction and quick start
 
 The aim of this program is to offer at the same time a way to produce musical sequences with interesting mathematical properties and to experiment various tonal, modal and serial settings. Thus everything depends primarily on the serial notation: if you want to work on dodecaphonic series you will be using the dodecaphonic row whose natural expression (the chromatic scale) is "0123456789AB". And every input you will enter will have to contain signs taken within this set. For instance you could choose to ask Csgrouper to produce the sequence corresponding to the gradual suite of one series, say "769801AB3254" (which is the row used by Webern in his Quartet  op. 28) so you would have to create a new row, enter this series into the main field which is named "A", choose "Gradual suite" from the row menu, most of all set the "mode" field to the chromatic scale in base 12, i.e. "0123456789AB", and choose "exp" in order to see the expanded content, otherwise only the final state of the suite would be printed and it would equal its origin in this particular case (this is a bug because the final state of a gradual suite is not its origin but the chromatic scale, being understood that the gradual suite reproduces the same permutation on its output until it reaches the first row on which the permutation was applied that is always the chromatic scale - but we don't care since nobody wants to output the chromatic scale using the non-expanded mode of a Gradual suite). 
 
 As things can reveal difficult to control while working on the "Sequences" tab, there is an analytic tab called "Series" that shows clearly the result of intended actions on serial content. So before creating a sequence it's always a good idea to check there (with help of the menu and button "Apply") that the transformation you are asking makes sense, and some most of the time do not. This is the case with static and dynamic "train" functions for which you need to input a key and a list of signs as well as a serial content. For them you will have the opportunity  to introduce the two series that you want to interleaf into fields "A" and "B" of the "Series" tab and ask for "Dynana" (dynamic analysis) or "Inana" (static analysis) and these routines will output the choices of keys and signs you should input in the appropriate fields in order to obtain correct sequential "trains". Just putting any random content won't do and Csgrouper will fail, generally with some more or less instructive complaint.
 
-The various transformation routines proposed refer to dodecaphonic content but applied to various non dodecaphonic bases. The default part for example works in base 18. These routines which will be explained soon, do things like taking the schoenbergian opposite of a row (always relatively to the chosen base) and redo the same on the output till some cycle is attained (because permutations are cyclic) : this is Gradual(Opposite). There are several other variants of such routines, and ways to transpose and mix rows together. If you want to simply introduce your own melody, use Suite(): its content will be respected but some additionnal (neutral) filling may be added at the end, so as to respect the serial structure too.  
+The various transformation routines proposed refer to dodecaphonic content but applied to various non dodecaphonic bases. The default project for example works in base 18. These routines which will be explained soon, do things like taking the schoenbergian opposite of a row (always relatively to the chosen base) and redo the same on the output till some cycle is attained (because permutations are cyclic) : this is Gradual(Opposite). There are several other variants of such routines, and ways to transpose and mix rows together. If you want to simply introduce your own melody, use Suite(): its content will be respected but some additionnal (neutral) filling may be added at the end, so as to respect the serial structure too.  
 
 Once several sequences are created, you might want to either put some of them together, or to concatenate them. This last job is done by the "Pre" field, that allows to choose a "previous" sequence for the one that is treated. The "Set" field permits the grouping of various sequences inside a ... set. This set can then be included into one or the other Xfun fields, and the concerned sequences will receive a postreatment (on duration, amplitude, attack etc.). Sets can also be placed into Yfun fields (Rythmic-canon and Ensemble) and that will produce a structural relation between sequences. Sets can also be grouped into sections.
 
@@ -89,7 +75,7 @@ It'd be easier to reference our object as $CsgObj->sequences->{n} but XML.pm doe
   
 =head2 Final structure
 
-Before writing the Csound file, some important parameters, like note duration, have to be set up as well as the whole list of other possible instrument parameters. This is the job for Xfun() and other subroutines dedicated to the relations between objects. These functions are called by a required "Eval" step which evaluates consistency of the desired layout. In case this layout is not appropriate, the part will bot be writable unless corrections are made at set and section levels (second frame in the Sequences tab).
+Before writing the Csound file, some important parameters, like note duration, have to be set up as well as the whole list of other possible instrument parameters. This is the job for Xfun() and other subroutines dedicated to the relations between objects. These functions are called by a required "Eval" step which evaluates consistency of the desired layout. In case this layout is not appropriate, the project will not be writable unless corrections are made at set and section levels (second frame in the Sequences tab).
 
 This control process takes the following path:
 
@@ -114,7 +100,7 @@ First, the default value set in the instrument is applied.
 
 This value is a factor in the following cases:
 
-- duration : then $CSG{part_durmin_le} and $CSG{part_durmax_le} will limit variation.
+- duration : then $CSG{durmin_le} and $CSG{durfac_le} will limit variation.
 
 In all other cases default values are directly expressed in the concerned unit (seconds in most of them).
 
@@ -188,7 +174,7 @@ durations in this set will be recreated randomly to not exceed duration of the a
 
 =head2 Csound score writing
 
-Any csd file will contain at the end a copy of the csgrouper part that produced it.
+Should a csd file contain at the end a copy of the csgrouper project file that produced it?
 
 
 
@@ -208,12 +194,13 @@ no warnings; ## Uncomment this in case of problem only (stdout pollution).
 
 use Cwd;
 use lib ( "$ENV{HOME}/Csgrouper/lib");
-# use Data::Dumper; # E.g.:  &Csgrouper::says($subname, Dumper($Part));
+# use Data::Dumper; # E.g.:  &Csgrouper::says($subname, Dumper($Project));
 # use Data::Dumper::Simple; # Cf. Tk Design Section only.
 
 ##use Pod::Simple;
 use Scalar::Util qw(blessed);
 use Tk;
+require Tk::Balloon;
 require Tk::CmdLine;
 require Tk::Dialog;
 require Tk::DialogBox;
@@ -224,7 +211,7 @@ require Tk::PathEntry;
 require Tk::Pod::Text;
 require Tk::Table;
 require Tk::TextUndo;
-use XML::Simple; ## E.g.:  my $part = XMLin('csgdef.xml'); &Csgrouper::says($subname, $part->{logdir}); etc.
+use XML::Simple; ## E.g.:  my $project = XMLin('csgdef.xml'); &Csgrouper::says($subname, $project->{logdir}); etc.
 
 use Csgrouper; ## Our Moose class tree.
 use Csgrouper::Sequence; 
@@ -241,36 +228,36 @@ use csg_Sets; ## A temporary outsider.
 
 =head3 The saving process: 
 
-Tk objects variables are first saved by &refer() to the $Part global hash, but with a special naming that impedes these values to be saved later into the xml part file. Actually, any hash name in $Part, that beggins with a hyphen will be skipped in the saving process. 
+Tk objects variables are first saved by &refer() to the $Project global hash, but with a special naming that impedes these values to be saved later into the xml project file. Actually, any hash name in $Project, that beggins with a hyphen will be skipped in the saving process. 
 
-Each other hash key-value pair (whose name does not beggining with a hyphen sign) is saved into the xml part file. 
+Each other hash key-value pair (whose name does not beggining with a hyphen sign) is saved into the xml project file. 
 
-Default values for many of the $Part object keys do exist in another global hash: the %CSG object, defined in Csgrouper.pm.
+Default values for many of the $Project object keys do exist in another global hash: the %CSG object, defined in Csgrouper.pm.
 
 =cut
 ## ### Constants: a new C style way: 
 sub MAXOBJ { $Csgrouper::Types::MAXOBJ }  ## We dont deal with more than 576 Sequences, instruments, data arrays and flags.
 
 ## ### Generic Params:
-## There is a recognition key for part files 'csg_key' and it is not included  
+## There is a recognition key for project files 'csg_key' and it is not included  
 ## here so as not to be saved by default.
 
 ## ### Csgrouper.pm globals:
 ## Csgrouper CSG values can be overriden here:
 
-$Csgrouper::ERROR 	= ""; ## Should always be empty.
-$Csgrouper::DEBFLAG	=	0; 	# Variable to test for bugs.
-$Csgrouper::DEBSUBS	=	'';	# Variable to test for bugs by subnames.
+$Csgrouper::ERROR//= ""; ## Should always be empty.
+$Csgrouper::DEBFLAG//=	0; 	# Variable to test for bugs.
+$Csgrouper::DEBSUBS//=	'';	# Variable to test for bugs by subnames.
 
 =head3 Warning on csg containers: 
 
-%CSG is the main fixed container co-related to the XML $Part object (hash keys here == xml keys there), and sometimes correlated to non Tk csg globals.
+%CSG is the main fixed container co-related to the XML $Project object (hash keys here == xml keys there), and sometimes correlated to non Tk csg globals.
 
-Hash keys with a hyphen in front will impede XML::Simple from storing them directly and help save their new values acquired through UI. This process require that CSG variables hash keys, $Part object keys, and Tk widgets have the same names spellings. So no matter which is the depth of the widgets in terms of parent-child inheritance, since the widget variable name has to be unique anyway. Thus XML process remains truly simple with only a few levels of intrication. See record(), refer(), reload().
+Hash keys with a hyphen in front will impede XML::Simple from storing them directly and help save their new values acquired through UI. This process require that CSG variables hash keys, $Project object keys, and Tk widgets have the same names spellings. So no matter which is the depth of the widgets in terms of parent-child inheritance, since the widget variable name has to be unique anyway. Thus XML process remains truly simple with only a few levels of intrication. See record(), refer(), reload().
 
-The corresponding $Part XML object contains values displayed by the widgets as modified (or not) during the running process. The values are stored under hash keys displaying the same name as ther corresponding widget. This way we can take advantage of a Dumper function to extract the name of a $variable without knowing it. The names given to the widgets must be as explicit as possible and we choose to include a mention of the widget type in order to be able to reset the widget content just by knowing its variable name (since different widgets do not share the same functions for getting and setting their contents). So a text widget name will end with "_tw" for instance; the widget will also often indicate the tab it is located in, as in 'part_title_le'.
+The corresponding $Project XML object contains values displayed by the widgets as modified (or not) during the running process. The values are stored under hash keys displaying the same name as ther corresponding widget. This way we can take advantage of a Dumper function to extract the name of a $variable without knowing it. The names given to the widgets must be as explicit as possible and we choose to include a mention of the widget type in order to be able to reset the widget content just by knowing its variable name (since different widgets do not share the same functions for getting and setting their contents). So a text widget name will end with "_tw" for instance; the widget will also often indicate the tab it is located in, as in 'title_le'.
 
-Widgets with purely graphic goal will not have their widget type at the end but more internally, as in 'part_lw_title' where '_lw' stands for 'label widget'; this helps fixing attention on the right objects.
+Widgets with purely graphic goal will not have their widget type at the end but more internally, as in 'lw_title' where '_lw' stands for 'label widget'; this helps fixing attention on the right objects.
 =cut
 
 # $Csgrouper::CSG{'cline'} = '$CsgObj->struct_ctl()';  ## Command Menu
@@ -280,7 +267,12 @@ my $subname = "csgrouper";
 ## Internals Tab:
 $Csgrouper::CSG{'csg_file'} = $0;  
 $Csgrouper::CSG{'interface'} = "Csgrouperinter";
-&Csgrouper::Describe($subname,"Csg interface: ".$Csgrouper::CSG{'interface'});
+# Ready-made command:
+$Csgrouper::CSG{'cline'} = '$Csgrouper::DEBSUBS="seq_add seq_obj"';
+# Ready-made setting:
+# $Csgrouper::DEBSUBS="seq_add seq_obj";
+my $Date = &Csgrouper::Datem('n');
+&Csgrouper::Describe($subname,"$Date : Csg interface: ".$Csgrouper::CSG{'interface'});
 
 ## ### Our Globals can be set to other values temporarily and reset by &Resetall().
 ## Here is the place to override default values given by Csgrouper.pm with our new
@@ -288,19 +280,19 @@ $Csgrouper::CSG{'interface'} = "Csgrouperinter";
 ## aliases can help in defining command lines for example:
 
 ## Resetall() variables:
-our	$Author				=	$Csgrouper::CSG{'part_author_le'}; ## Part Tab
+our	$Author				=	$Csgrouper::CSG{'author_le'}; ## Proj Tab
 our $BasePath			= $Csgrouper::CSG{'csg_path_pe'};  ## Path Tab # Not user-configurable.
-our	$Comptype			=	$Csgrouper::CSG{'part_comptype_mw'}; 				# Comparison function suffixe.
-our	$Durtype			=	$Csgrouper::CSG{'part_durtype_mw'}; 				# Duration type 0=serial (normal).
-our	$Durmin				=	$Csgrouper::CSG{'part_durmin_le'}; 				   	## The minimal duration that will be multiplied by 1, 2 or 3 (depending on the binary, ternary or mixed rythm setup).
-our	$Durmax				=	$Csgrouper::CSG{'part_durmax_le'}; 				  	## A factor of dur_norm.
-our	$Intersil			=	$Csgrouper::CSG{'part_intersil_le'};				# Silence between sections.
-our	$Rythmtype		=	$Csgrouper::CSG{'part_rythmtype_mw'};				 # Rythm type 0=mixed (normal).
+our	$Comptype			=	$Csgrouper::CSG{'comptype_mw'}; 				# Comparison function suffixe.
+our	$Durtype			=	$Csgrouper::CSG{'durtype_mw'}; 				# Duration type 0=serial (normal).
+our	$Durmin				=	$Csgrouper::CSG{'durmin_le'}; 				   	## The minimal duration that will be multiplied by 1, 2 or 3 (depending on the binary, ternary or mixed rythm setup).
+our	$Durfac				=	$Csgrouper::CSG{'durfac_le'}; 				  	## A factor of dur_norm.
+our	$Intersil			=	$Csgrouper::CSG{'intersil_le'};				# Silence between sections.
+our	$Rythmtype		=	$Csgrouper::CSG{'rythmtype_mw'};				 # Rythm type 0=mixed (normal).
 our	$SEPA					=	$Csgrouper::CSG{'separator'}; 							# 
 our	$Sf2Path			=	$Csgrouper::CSG{'csound_sf2path_pe'}; 
-our	$Steps				=	$Csgrouper::CSG{'part_steps_le'}; 					# Number of steps for trains.
-our	$Tempo				=	$Csgrouper::CSG{'part_tempo_le'}; 					# Base number of "seconds" per minute (Scorp).
-our	$Title				=	$Csgrouper::CSG{'part_title_le'}; 					# Part Tab
+our	$Steps				=	$Csgrouper::CSG{'steps_le'}; 					# Number of steps for trains.
+our	$Tempo				=	$Csgrouper::CSG{'tempo_le'}; 					# Base number of "seconds" per minute (Scorp).
+our	$Title				=	$Csgrouper::CSG{'title_le'}; 					# Proj Tab
 ## END Resetall() variables.
 
 ## Notes Tab:
@@ -309,8 +301,7 @@ $Csgrouper::CSG{'Notes_tw'} 					= 'Some notes.'; ## Notes Tab
 ## END %CSG Main Fixed container.
 
 ## ### Global Display Vars:
-my $Date = &Csgrouper::Datem();
-my $CsgObj = Csgrouper->new(); ## A required empty Part object.
+my $CsgObj = Csgrouper->new(); ## A required empty Proj object.
 my $STARTEXEC = 1; ## A simple test for launch time..
 
 ## Test:
@@ -422,7 +413,7 @@ our 	$CONST				; 	# A constant;
 
 	## Arrays: 
 our ($TMP); 
-our @XYfun = qw/xamp xatk xdur xgli xhus xpan xrep yens yryc/;
+our @XYfun = qw/xamp xatk xdur xgli xsil xpan xrep yens yryc/;
 
 ## END Global Non Tk Vars.
 ## END GENERAL VARIABLES.
@@ -431,41 +422,41 @@ our @XYfun = qw/xamp xatk xdur xgli xhus xpan xrep yens yryc/;
 ## ### PARSE AND CONFIG:
 ###############################################################################
 ## The -s option passed to perl allows variables to be set. 
-## Use ./csgrouper mypart.xml to load mypart.
+## Use ./csgrouper myproj.xml to load myproj.
 ## File Check 1:
 my $Csgdef = $Csgrouper::CSG{'run_path_pe'}.'default.xml';
-my $Partfile;
+my $Projectfile;
 $ARGV[0] = "default.xml" if (!(defined ($ARGV[0])));
 $ARGV[0] .= ".xml" if ($ARGV[0] !~ /^(.+\.xml)$/);
 if (!(-d $Csgrouper::CSG{'ins_path_pe'}) || !(&check_wdir($Csgrouper::CSG{'ins_path_pe'})==0)) { die("No writable ins path ($Csgrouper::CSG{'ins_path_pe'}): Aborting.") }
-if (!(-d $Csgrouper::CSG{'part_path_pe'}) || !(&check_wdir($Csgrouper::CSG{'part_path_pe'})==0)) { die("No writable part path ($Csgrouper::CSG{'part_path_pe'}): Aborting.") }
+if (!(-d $Csgrouper::CSG{'path_pe'}) || !(&check_wdir($Csgrouper::CSG{'path_pe'})==0)) { die("No writable project path ($Csgrouper::CSG{'path_pe'}): Aborting.") }
 if (!(-d $Csgrouper::CSG{'run_path_pe'}) || !(&check_wdir($Csgrouper::CSG{'run_path_pe'})==0)) { die("No writable run path ($Csgrouper::CSG{'run_path_pe'}): Aborting.") }
 if (!(&check_wfile($Csgdef)==0)) { die("No writable run path ($Csgrouper::CSG{'run_path_pe'}): Aborting.") }
 ## Now the file must exist somewhere..
-if (!(-f $Csgrouper::CSG{'run_path_pe'}.$ARGV[0]) && !(-f $Csgrouper::CSG{'part_path_pe'}.$ARGV[0]) && !(-f $ARGV[0])) { # File doesn't seem to exist...
+if (!(-f $Csgrouper::CSG{'run_path_pe'}.$ARGV[0]) && !(-f $Csgrouper::CSG{'path_pe'}.$ARGV[0]) && !(-f $ARGV[0])) { # File doesn't seem to exist...
   &Csgrouper::Debug($subname, "Not in working directories : $ARGV[0]..", 1);
   &Csgrouper::Debug($subname, "Trying with $Csgdef..", 1);
-  $Partfile = $Csgdef;
+  $Projectfile = $Csgdef;
   if (check_csgfile($Csgdef)==0) {
 		$Csgdef = $Csgrouper::CSG{'run_path_pe'}.'default.xml';
-		&part_default;
+		&def_project;
   }
 }
-else { ## This will impede user to modify manually certain path variables in partfiles:
+else { ## This will impede user to modify manually certain path variables in projfiles:
 	my $com = "";
-	if (-f $ARGV[0]) { if (&check_wfile($ARGV[0]) == 0) { $Partfile = $ARGV[0]; $com = "(valid ".$ARGV[0]." in working directory  [precedence 1])" } } ## Wdir has precedence over part path for the same file (a way to allow overcoming precedence2).
-  elsif (-f $Csgrouper::CSG{'part_path_pe'}.$ARGV[0] ) { if (&check_wfile($Csgrouper::CSG{'part_path_pe'}.$ARGV[0])==0) { $Partfile = $Csgrouper::CSG{'part_path_pe'}.$ARGV[0] ; $com = "(valid ".$ARGV[0]." in part_path [precedence 2])" } } ## Part path has precedence over run path for the same file.
-  elsif (-f $Csgrouper::CSG{'run_path_pe'}.$ARGV[0]) { if (&check_wfile($Csgrouper::CSG{'run_path_pe'}.$ARGV[0])==0) { $Partfile = $Csgrouper::CSG{'run_path_pe'}.$ARGV[0]; $com = "(valid ".$ARGV[0]." in run_path)"  } }
-  else { $Partfile = $Csgdef && &Csgrouper::Debug($subname, "Not a valid file ($ARGV[0]), falling back to default.",1) }
+	if (-f $ARGV[0]) { if (&check_wfile($ARGV[0]) == 0) { $Projectfile = $ARGV[0]; $com = "(valid ".$ARGV[0]." in working directory  [precedence 1])" } } ## Wdir has precedence over project path for the same file (a way to allow overcoming precedence2).
+  elsif (-f $Csgrouper::CSG{'path_pe'}.$ARGV[0] ) { if (&check_wfile($Csgrouper::CSG{'path_pe'}.$ARGV[0])==0) { $Projectfile = $Csgrouper::CSG{'path_pe'}.$ARGV[0] ; $com = "(valid ".$ARGV[0]." in path [precedence 2])" } } ## Proj path has precedence over run path for the same file.
+  elsif (-f $Csgrouper::CSG{'run_path_pe'}.$ARGV[0]) { if (&check_wfile($Csgrouper::CSG{'run_path_pe'}.$ARGV[0])==0) { $Projectfile = $Csgrouper::CSG{'run_path_pe'}.$ARGV[0]; $com = "(valid ".$ARGV[0]." in run_path)"  } }
+  else { $Projectfile = $Csgdef && &Csgrouper::Debug($subname, "Not a valid file ($ARGV[0]), falling back to default.",1) }
   my $wdir = cwd(); my $wtyp = "called from anywhere";
-	$wtyp = "called from part_path" if ($Csgrouper::CSG{'part_path_pe'} =~ /^($wdir\/?)$/);
+	$wtyp = "called from path" if ($Csgrouper::CSG{'path_pe'} =~ /^($wdir\/?)$/);
 	$wtyp = "called from run_path" if ($Csgrouper::CSG{'run_path_pe'} =~ /^($wdir\/?)$/);
-	&Csgrouper::Describe($subname, "partfile: $Partfile $com");
+	&Csgrouper::Describe($subname, "projfile: $Projectfile $com");
 	&Csgrouper::Describe($subname, "$wtyp");
 	&Csgrouper::Describe($subname, "working directory: $wdir");
-  if (check_csgfile($Partfile)==0) {
+  if (check_csgfile($Projectfile)==0) {
 		$Csgdef = $Csgrouper::CSG{'run_path_pe'}.'default.xml';
-		&part_default;
+		&def_project;
   }
 }
 ## END PARSE AND CONFIG.
@@ -473,11 +464,11 @@ else { ## This will impede user to modify manually certain path variables in par
 ###############################################################################
 ## ### LOAD AND CONNECT:
 ###############################################################################
-## $Part: Main csg runtime XML object (correlated to %CSG).
+## $Project: Main csg runtime XML object (correlated to %CSG).
 
 NEWSTART:
 
-my $Part = ();
+my $Project = ();
 ## This is the first of two starter calls to reload(),
 ## here param 'init' impedes still inexistent Tk objects to be scoped:
 &reload('init');
@@ -499,20 +490,26 @@ my %Tabs;
 
 ## my $mw = tkinit; # or 
 my $mw = MainWindow->new; # $mw is the only global to remain lc for compat with code samples.
-$mw->minsize(qw(1000 800)); #$mw->maxsize(qw(800 600));
-$mw->geometry('1000x900'); # Let the pane define the size.
+$mw->minsize(qw(980 400)); #$mw->maxsize(qw(800 600));
+$mw->geometry('980x600'); # Let the pane define the size.
 $mw->bisque;
-$Csgrouper::CSG{'csg_status'} = "Started at ".localtime;
+$Csgrouper::CSG{'csg_status'} = "csgrouper: ".$Date.": loading $Projectfile..";
 $mw->configure(
     -menu => my $menubar = $mw->Menu(-menuitems => &menu_bar)
+    ,-cursor => 'watch'
 ); 
 
 my $Statusbar = $mw->Label(
 	 -textvariable=>\$Csgrouper::CSG{'csg_status'}
+	,-background => $COLOR{'input_bgcolor'}
 )->pack(
 	 -side=>'bottom'
-	,-anchor =>'nw'
+	,-anchor =>'sw'
+	,-expand => 'no'
 );
+
+my $Balloon = $mw->Balloon(-statusbar => $Statusbar, -background => $COLOR{'input_bgcolor'});
+
 
 ## ### NOTEBOOK WIDGET:
 my $Book = $mw->NoteBook(
@@ -525,423 +522,465 @@ my $Book = $mw->NoteBook(
 	,-expand=>1 
 );
 
-## ### Part Tab:
-$Tabs{'part'} = $Book->add("Part", -label=>"Sequences", -raisecmd=>\&book_open);
-my $Part_frame = $Tabs{'part'}->Frame(-borderwidth=>4, -relief=>'groove');
-$Part_frame->form(-top=>['%1',4], -left=>['%1',0], -right=>['%99',0]);
+## ### Proj Tab:
+$Tabs{'proj'} = $Book->add("Proj", -label=>"Sequences", -raisecmd=>\&book_open);
+my $Project_frame = $Tabs{'proj'}->Frame(-borderwidth=>4, -relief=>'groove');
+$Project_frame->form(-top=>['%1',4], -left=>['%1',0], -right=>['%99',0]);
 
-## $Part_frame:
+## $Project_frame:
 
 ## Line 1:
 
-my $part_title_le = $Part_frame->LabEntry(
-   -label => 'Part title: '
+my $title_le = $Project_frame->LabEntry(
+   -label => 'Project title: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   #,-labelFont => '9x15bold'
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_title_le'}
+  ,-textvariable =>\$Project->{'title_le'}
   ,-width => 128
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'spalnumin') }
   # ,-invalidcommand => sub { }
 );
-$part_title_le->form(   
-  -left=>['%1',0]
-  ,-right=>['%36',4]
+$title_le->form(   
+  -left=>['%0',4]
+  ,-right=>['%32',4]
   ,-top=>['%1',4]
 );
 
 ## XXX WARNING: A special way of getting the spelling of '$var' : 
 ## ($var_spelling) = split /=/, Dumper($var);  ## Enable file saving:
-&refer((split /=/, Dumper($part_title_le))[0],'LabEntry',\$part_title_le); ## Refer: 1.
+&refer((split /=/, Dumper($title_le))[0],'LabEntry',\$title_le); 
 
-## Part author:
-my $part_author_le = $Part_frame->LabEntry(
+## Proj author:
+my $author_le = $Project_frame->LabEntry(
    -label => 'Author: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_author_le'}
+  ,-textvariable =>\$Project->{'author_le'}
   ,-width => 128
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'spalnumin') }
 );
-$part_author_le->form(   
-  -left=>[$part_title_le,0]
-  ,-right=>['%72',4]
+$author_le->form(   
+  -left=>[$title_le,4]
+  ,-right=>['%60',4]
   ,-top=>['%1',4]
 );
 
-&refer((split /=/, Dumper($part_author_le))[0],'LabEntry',\$part_author_le);  ## Refer: 2.
+&refer((split /=/, Dumper($author_le))[0],'LabEntry',\$author_le);  
+
+## Comp-Type:
+my $comptype_mw = $Project_frame->Menubutton(
+	 -borderwidth=>1 
+	,-background => $COLOR{cbox_bgcolor}
+	,-foreground => $COLOR{cbox_fgcolor}
+	,-relief=>'groove' 
+	,-text=>'Comp. Type'
+);
+$comptype_mw->radiobutton(
+	-label => 'self (Compstr0)'
+	,-variable => \$Project->{'comptype_mw'}
+  ,-value => '0'
+  ,-underline => 0
+  ,-command=> sub {  &set_ready(0) }
+);
+$comptype_mw->radiobutton(
+	-label => 'random (Compstr4)'
+	,-variable => \$Project->{'comptype_mw'}
+  ,-value => '4'
+  ,-underline => 0
+  ,-command=> sub {  &set_ready(0) }
+);
+$comptype_mw->form(
+   -top=>['%1',4]
+  ,-right=>['%99',4]
+);
+&refer((split /=/, Dumper($comptype_mw))[0],'Menubutton',\$comptype_mw);  
+
+## Dur-Type:
+my $durtype_mw = $Project_frame->Menubutton(
+	 -borderwidth=>1 
+	,-background => $COLOR{cbox_bgcolor}
+	,-foreground => $COLOR{cbox_fgcolor}
+	,-relief=>'groove' 
+	,-text=>'Dur. Type'
+);
+$durtype_mw->radiobutton(
+	-label => 'serial'
+	,-variable => \$Project->{'durtype_mw'}
+  ,-value => '0'
+  ,-underline => 0
+  ,-command=> sub { &set_ready(0) }
+);
+$durtype_mw->radiobutton(
+	-label => 'random'
+	,-variable => \$Project->{'durtype_mw'}
+  ,-value => '1'
+  ,-underline => 0
+  ,-command=> sub {  &set_ready(0) }
+);
+$durtype_mw->radiobutton(
+	-label => "fixed"
+	,-variable => \$Project->{'durtype_mw'}
+  ,-value => '2'
+  ,-underline => 0
+  ,-command=> sub {  &set_ready(0) }
+);
+$durtype_mw->form(
+   -top=>['%1',4]
+  ,-right=>[$comptype_mw,-4]
+);
+&refer((split /=/, Dumper($durtype_mw))[0],'Menubutton',\$durtype_mw);  
 
 ## Rythm-Type:
-my $part_rythmtype_mw = $Part_frame->Menubutton(
+my $rythmtype_mw = $Project_frame->Menubutton(
 	 -borderwidth=>1 
 	,-background => $COLOR{cbox_bgcolor}
 	,-foreground => $COLOR{cbox_fgcolor}
 	,-relief=>'groove' 
 	,-text=>'Rythm Type'
 );
-$part_rythmtype_mw->radiobutton(
+$rythmtype_mw->radiobutton(
 	-label => 'mixed-'
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '1'
   ,-underline => 0
   ,-command=> sub { &set_ready(0) }
 );
-$part_rythmtype_mw->radiobutton(
+$rythmtype_mw->radiobutton(
 	-label => 'mixed+'
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '6'
   ,-underline => 0
   ,-command=> sub { &set_ready(0) }
 );
-$part_rythmtype_mw->radiobutton(
+$rythmtype_mw->radiobutton(
 	-label => 'binary-'
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '2'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_rythmtype_mw->radiobutton(
+$rythmtype_mw->radiobutton(
 	-label => 'binary+'
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '4'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_rythmtype_mw->radiobutton(
+$rythmtype_mw->radiobutton(
 	-label => "ternary-"
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '3'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_rythmtype_mw->radiobutton(
+$rythmtype_mw->radiobutton(
 	-label => "ternary+"
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '5'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_rythmtype_mw->form(
+$rythmtype_mw->form(
    -top=>['%1',4]
-  ,-left=>[$part_author_le,4]
+  ,-right=>[$durtype_mw,-4]
 );
-&refer((split /=/, Dumper($part_rythmtype_mw))[0],'Menubutton',\$part_rythmtype_mw);  ## Refer: 6.
-
-## Struct ctl button:
-my $part_structctl_bw = $Part_frame->Button(
-	 -background =>$COLOR{'button_bgcolor'}
-	,-foreground =>$COLOR{'button_fgcolor'}
-	,-text=>'Struct'
-	,-text=>' Eval '
-  ,-command=> sub { &struct_out() }
-)->form(
-   -top=>['%1',0]
-  ,-right=>['%99',0]
-);
-
-## This variable will enable csd writing. 
-## Set after Csgrouper->struct_ctl()
-my $ready_txt = "CSD: not ready";
-my $ready_cbw =  $Part_frame->Label(
-	-textvariable=>\$ready_txt
-	,-state=>'disabled'
-)->form(
-  -top=>['%1',4]
-  ,-right=>[$part_structctl_bw,2]
-);
+&refer((split /=/, Dumper($rythmtype_mw))[0],'Menubutton',\$rythmtype_mw);  
 
 ## Line 2:
 
 ## Tempo:
-my $part_tempo_le = $Part_frame->LabEntry(
-   -label => '  Tempo: '
+my $tempo_le = $Project_frame->LabEntry(
+   -label => 'Tempo: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_tempo_le'}
+  ,-textvariable =>\$Project->{'tempo_le'}
   ,-width => 24
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'spalnumin') }
 );
-$part_tempo_le->form(   
-   -top=>[$part_title_le,4]
-  ,-left=>['%1',4]
-  ,-right=>['%36',4]
+$tempo_le->form(   
+   -top=>[$comptype_mw,4]
+  ,-left=>['%0',4]
+  ,-right=>['%32',4]
 );
 
-&refer((split /=/, Dumper($part_tempo_le))[0],'LabEntry',\$part_tempo_le);  ## Refer: 3.
+&refer((split /=/, Dumper($tempo_le))[0],'LabEntry',\$tempo_le);  
 
 ## Inter_sil:
-my $part_intersil_le = $Part_frame->LabEntry(
+my $intersil_le = $Project_frame->LabEntry(
    -label => 'Intersil: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_intersil_le'}
+  ,-textvariable =>\$Project->{'intersil_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'float') }
 );
-$part_intersil_le->form(   
-   -top=>[$part_title_le,4]
-  ,-left=>[$part_tempo_le,4]
+$intersil_le->form(   
+   -top=>[$comptype_mw,4]
+  ,-left=>[$tempo_le,4]
 );
 
-&refer((split /=/, Dumper($part_intersil_le))[0],'LabEntry',\$part_intersil_le);  ## Refer: 4.
+&refer((split /=/, Dumper($intersil_le))[0],'LabEntry',\$intersil_le);  
 
 ## Steps:
-my $part_steps_le = $Part_frame->LabEntry(
+my $steps_le = $Project_frame->LabEntry(
    -label => 'Steps: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_steps_le'}
+  ,-textvariable =>\$Project->{'steps_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'digit') }
 );
-$part_steps_le->form(   
-   -top=>[$part_title_le,4]
-  ,-left=>[$part_intersil_le,4]
+$steps_le->form(   
+   -top=>[$comptype_mw,4]
+  ,-left=>[$intersil_le,4]
 );
 
-&refer((split /=/, Dumper($part_steps_le))[0],'LabEntry',\$part_steps_le);  ## Refer: 5.
+&refer((split /=/, Dumper($steps_le))[0],'LabEntry',\$steps_le);  
 
 ## Durmin:
-my $part_durmin_le = $Part_frame->LabEntry(
+my $durmin_le = $Project_frame->LabEntry(
    -label => 'Dur. min: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_durmin_le'}
+  ,-textvariable =>\$Project->{'durmin_le'}
   ,-width => 6
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'float') }
 );
-$part_durmin_le->form(   
-   -top=>[$part_title_le,4]
-  ,-left=>[$part_steps_le,4]
+$durmin_le->form(   
+   -top=>[$comptype_mw,4]
+  ,-left=>[$steps_le,4]
 );
 
-&refer((split /=/, Dumper($part_durmin_le))[0],'LabEntry',\$part_durmin_le);  ## Refer: 5.
+&refer((split /=/, Dumper($durmin_le))[0],'LabEntry',\$durmin_le);  
 
-## Durmax:
-my $part_durmax_le = $Part_frame->LabEntry(
-   -label => 'fac. max: '
+## Durfac:
+my $durfac_le = $Project_frame->LabEntry(
+   -label => 'Fac. max: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_durmax_le'}
+  ,-textvariable =>\$Project->{'durfac_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'float') }
 );
-$part_durmax_le->form(   
-   -top=>[$part_title_le,4]
-  ,-left=>[$part_durmin_le,4]
+$durfac_le->form(   
+   -top=>[$comptype_mw,4]
+  ,-left=>[$durmin_le,4]
 );
 
-&refer((split /=/, Dumper($part_durmax_le))[0],'LabEntry',\$part_durmax_le);  ## Refer: 5.
+&refer((split /=/, Dumper($durfac_le))[0],'LabEntry',\$durfac_le);  
 
-## Reset button:
-my $part_reset_bw = $Part_frame->Button(
+## Struct ctl button:
+my $structctl_bw = $Project_frame->Button(
 	 -background =>$COLOR{'button_bgcolor'}
 	,-foreground =>$COLOR{'button_fgcolor'}
-	,-text=>'Reset'
-	,-command=>\&part_reset
+	,-text=>'Struct'
+	,-text=>' Eval '
+  ,-command=> sub { &struct_out() }
 )->form(
-   -top=>[$part_title_le,0]
+   -top=>[$comptype_mw,4]
   ,-right=>['%99',0]
+  , -padx=>2, -pady=>2
 );
 
-## Debug button:
-my $part_debug_bw = $Part_frame->Button(
-	 -background =>$COLOR{'button_bgcolor'}
-	,-foreground =>$COLOR{'button_fgcolor'}
-	,-text=>'Debug'
-	,-command=> sub { $Csgrouper::DEBFLAG = eval($Csgrouper::DEBFLAG == 0); say "deb=".$Csgrouper::DEBFLAG }
+## This variable will enable csd writing. 
+## Set after Csgrouper->struct_ctl()
+my $ready_txt = "CSD: not ready";
+my $ready_cbw =  $Project_frame->Label(
+	-textvariable=>\$ready_txt
+	,-state=>'disabled'
 )->form(
-   -top=>[$part_title_le,0]
-  ,-right=>[$part_reset_bw,0]
+   -top=>[$comptype_mw,8]
+  ,-right=>[$structctl_bw,-4]
 );
 
 
 ## ### Frame 2 (write):
-my $Part_frame2 = $Tabs{'part'}->Frame(-borderwidth=>4, -relief=>'groove');
-$Part_frame2->form(-top=>[$Part_frame,4], -left=>['%1',0], -right=>['%99',0]);
+my $Project_frame2 = $Tabs{'proj'}->Frame(-borderwidth=>4, -relief=>'groove');
+$Project_frame2->form(-top=>[$Project_frame,4], -left=>['%1',0], -right=>['%99',0]);
 
 ## Line 1:
 
 ## Xdur:
-my $part_xdur_le = $Part_frame2->LabEntry(
+my $xdur_le = $Project_frame2->LabEntry(
    -label => 'Xdur: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_xdur_le'}
+  ,-textvariable =>\$Project->{'xdur_le'}
   ,-width => 9
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
 );
-$part_xdur_le->form(   
+$xdur_le->form(   
    -top=>['%1',0]
 #  ,-right=>['%12',4]
   ,-left=>['%0',4]
 );
 
-&refer((split /=/, Dumper($part_xdur_le))[0],'LabEntry',\$part_xdur_le);  ## Refer: 7.
+&refer((split /=/, Dumper($xdur_le))[0],'LabEntry',\$xdur_le);  
 
 ## Xamp:
-my $part_xamp_le = $Part_frame2->LabEntry(
+my $xamp_le = $Project_frame2->LabEntry(
    -label => 'Xamp: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_xamp_le'}
+  ,-textvariable =>\$Project->{'xamp_le'}
   ,-width => 9
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
 );
 
-$part_xamp_le->form(   
+$xamp_le->form(   
    -top=>['%1',0]
 #  ,-right=>['%24',4]
   ,-left=>['%13',4]
 );
 
-&refer((split /=/, Dumper($part_xamp_le))[0],'LabEntry',\$part_xamp_le); ## Refer: 8.
+&refer((split /=/, Dumper($xamp_le))[0],'LabEntry',\$xamp_le); 
 
-## Xhus:
-my $part_xhus_le = $Part_frame2->LabEntry(
-   -label => 'Xhus: '
+## Xsil:
+my $xsil_le = $Project_frame2->LabEntry(
+   -label => 'Xsil: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_xhus_le'}
+  ,-textvariable =>\$Project->{'xsil_le'}
   ,-width => 9
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
 );
-$part_xhus_le->form(   
+$xsil_le->form(   
    -top=>['%1',0]
 #  ,-right=>['%36',4]
   ,-left=>['%26',4]
 );
 
-&refer((split /=/, Dumper($part_xhus_le))[0],'LabEntry',\$part_xhus_le);  ## Refer: 9.
+&refer((split /=/, Dumper($xsil_le))[0],'LabEntry',\$xsil_le);  
 
 ## Xatk:
-my $part_xatk_le = $Part_frame2->LabEntry(
+my $xatk_le = $Project_frame2->LabEntry(
    -label => 'Xatk: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_xatk_le'}
+  ,-textvariable =>\$Project->{'xatk_le'}
   ,-width => 9
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
 );
-$part_xatk_le->form(   
+$xatk_le->form(   
    -top=>['%1',0]
 #  ,-right=>['%48',4]
   ,-left=>['%39',4]
 );
 
-&refer((split /=/, Dumper($part_xatk_le))[0],'LabEntry',\$part_xatk_le);   ## Refer: 10.
+&refer((split /=/, Dumper($xatk_le))[0],'LabEntry',\$xatk_le);   
 
 ## Xpan:
-my $part_xpan_le = $Part_frame2->LabEntry(
+my $xpan_le = $Project_frame2->LabEntry(
    -label => 'Xpan: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_xpan_le'}
+  ,-textvariable =>\$Project->{'xpan_le'}
   ,-width => 9
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
 );
-$part_xpan_le->form(   
+$xpan_le->form(   
    -top=>['%1',0]
 #  ,-right=>['%60',4]
   ,-left=>['%52',4]
 );
 
-&refer((split /=/, Dumper($part_xpan_le))[0],'LabEntry',\$part_xpan_le);  ## Refer: 11.
+&refer((split /=/, Dumper($xpan_le))[0],'LabEntry',\$xpan_le);  
 
 ## Xgli:
-my $part_xgli_le = $Part_frame2->LabEntry(
+my $xgli_le = $Project_frame2->LabEntry(
    -label => 'Xgli: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_xgli_le'}
+  ,-textvariable =>\$Project->{'xgli_le'}
   ,-width => 9
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
 );
 
-$part_xgli_le->form(   
+$xgli_le->form(   
    -top=>['%1',0]
 #  ,-right=>['%72',4]
   ,-left=>['%65',4]
 );
 
-&refer((split /=/, Dumper($part_xgli_le))[0],'LabEntry',\$part_xgli_le);  ## Refer: 12.
+&refer((split /=/, Dumper($xgli_le))[0],'LabEntry',\$xgli_le);  
 
 ## Sequences buttons:
-my $del_seq_bw = $Part_frame2->Button(
+my $del_seq_bw = $Project_frame2->Button(
 	 -background =>$COLOR{'button_bgcolor'}
 	,-foreground =>$COLOR{'button_fgcolor'}
 	,-text=>'Delete'
 	,-command=>\&seq_del
 )->form(
-   -top=>['%1',0]
+   -top=>['%1',4]
   ,-right=>['%99',0]
 );
 
-my $add_seq_bw = $Part_frame2->Button(	
+my $add_seq_bw = $Project_frame2->Button(	
 	-background =>$COLOR{'button_bgcolor'}
 	,-foreground =>$COLOR{'button_fgcolor'}
 	,-text=>'Add'
 	,-command=>\&seq_add
 )->form(
-   -top=>['%1',0]
+   -top=>['%1',4]
   ,-right=>[$del_seq_bw,0]
 );
 
 my $seq_label_text = "Sequences: ";
-my $seq_label = $Part_frame2->Label( -textvariable=>\$seq_label_text )->form(
-   -top=>['%1',4]
+my $seq_label = $Project_frame2->Label( -textvariable=>\$seq_label_text )->form(
+   -top=>['%1',6]
   ,-right=>[$add_seq_bw,0]
 );
 
@@ -949,130 +988,70 @@ my $seq_label = $Part_frame2->Label( -textvariable=>\$seq_label_text )->form(
 ## Xsec:
 
 ## Xryc:
-my $part_yryc_le = $Part_frame2->LabEntry(
+my $yryc_le = $Project_frame2->LabEntry(
    -label => 'R-Canon: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_yryc_le'}
+  ,-textvariable =>\$Project->{'yryc_le'}
   ,-width => 16
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
 );
-$part_yryc_le->form(   
-   -top=>[$part_xamp_le,6]
-  ,-left=>['%1',4]
+$yryc_le->form(   
+   -top=>[$xamp_le,4]
+  ,-left=>['%0',4]
+  ,-pady=>4
 );
 
-&refer((split /=/, Dumper($part_yryc_le))[0],'LabEntry',\$part_yryc_le);  ## Refer: 13.
+&refer((split /=/, Dumper($yryc_le))[0],'LabEntry',\$yryc_le);  
 
-## Xens:
-my $part_yens_le = $Part_frame2->LabEntry(
+## Yens:
+my $yens_le = $Project_frame2->LabEntry(
    -label => 'Ensemble: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_yens_le'}
+  ,-textvariable =>\$Project->{'yens_le'}
   ,-width => 16
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
 );
-$part_yens_le->form(   
-   -top=>[$part_xamp_le,6]
+$yens_le->form(   
+   -top=>[$xamp_le,4]
   ,-left=>['%24',4]
+  ,-pady=>4
 );
 
-&refer((split /=/, Dumper($part_yens_le))[0],'LabEntry',\$part_yens_le); ## Refer: 14.
+&refer((split /=/, Dumper($yens_le))[0],'LabEntry',\$yens_le); 
 
 ## Groupings:
-my $part_sections_le = $Part_frame2->LabEntry(
+my $sections_le = $Project_frame2->LabEntry(
    -label => 'Sections: '
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{set_bgcolor}
   ,-foreground => $COLOR{set_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_sections_le'}
+  ,-textvariable =>\$Project->{'sections_le'}
   ,-width => 16
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'subsets') }
 );
-$part_sections_le->form(   
-   -top=>[$part_xamp_le,6]
+$sections_le->form(   
+   -top=>[$xamp_le,4]
   ,-left=>['%48',4]
+  ,-pady=>4
 );
 
-&refer((split /=/, Dumper($part_sections_le))[0],'LabEntry',\$part_sections_le); ## Refer: 15.
-
-## Comp-Type:
-my $part_comptype_mw = $Part_frame2->Menubutton(
-	 -borderwidth=>1 
-	,-background => $COLOR{cbox_bgcolor}
-	,-foreground => $COLOR{cbox_fgcolor}
-	,-relief=>'groove' 
-	,-text=>'Comp. Type'
-);
-$part_comptype_mw->radiobutton(
-	-label => 'self (Compstr0)'
-	,-variable => \$Part->{'part_comptype_mw'}
-  ,-value => '0'
-  ,-underline => 0
-  ,-command=> sub {  &set_ready(0) }
-);
-$part_comptype_mw->radiobutton(
-	-label => 'random (Compstr4)'
-	,-variable => \$Part->{'part_comptype_mw'}
-  ,-value => '4'
-  ,-underline => 0
-  ,-command=> sub {  &set_ready(0) }
-);
-$part_comptype_mw->form(
-   -top=>[$part_xamp_le,6]
-  ,-left=>[$part_sections_le,4]
-);
-&refer((split /=/, Dumper($part_comptype_mw))[0],'Menubutton',\$part_comptype_mw);  ## Refer: 6.
-
-## Dur-Type:
-my $part_durtype_mw = $Part_frame2->Menubutton(
-	 -borderwidth=>1 
-	,-background => $COLOR{cbox_bgcolor}
-	,-foreground => $COLOR{cbox_fgcolor}
-	,-relief=>'groove' 
-	,-text=>'Dur. Type'
-);
-$part_durtype_mw->radiobutton(
-	-label => 'serial'
-	,-variable => \$Part->{'part_durtype_mw'}
-  ,-value => '0'
-  ,-underline => 0
-  ,-command=> sub { &set_ready(0) }
-);
-$part_durtype_mw->radiobutton(
-	-label => 'random'
-	,-variable => \$Part->{'part_durtype_mw'}
-  ,-value => '1'
-  ,-underline => 0
-  ,-command=> sub {  &set_ready(0) }
-);
-$part_durtype_mw->radiobutton(
-	-label => "fixed (".$Csgrouper::CSG{'part_durmin_le'}." sec.)"
-	,-variable => \$Part->{'part_durtype_mw'}
-  ,-value => '2'
-  ,-underline => 0
-  ,-command=> sub {  &set_ready(0) }
-);
-$part_durtype_mw->form(
-   -top=>[$part_xamp_le,6]
-  ,-left=>[$part_comptype_mw,4]
-);
-&refer((split /=/, Dumper($part_durtype_mw))[0],'Menubutton',\$part_durtype_mw);  ## Refer: 6.
+&refer((split /=/, Dumper($sections_le))[0],'LabEntry',\$sections_le); 
 
 ## ### Seq Table:
-my $Seq_tblw = $Tabs{'part'}->Table(
+my $Seq_tblw = $Tabs{'proj'}->Table(
    -rows => 18
   ,-columns => 30
   ,-relief=>'raised'
@@ -1083,16 +1062,16 @@ my $Seq_tblw = $Tabs{'part'}->Table(
 );
 
 &seq_header(); ## Create the header row.
-$Seq_tblw->form(-top=>[$Part_frame2,4], -left=>['%2',4], -right=>['%98',4]);
+$Seq_tblw->form(-top=>[$Project_frame2,4], -left=>['%2',4], -right=>['%98',4]);
 
 ## Let's store a reference to it in order to refresh the file contents:
-&refer((split /=/, Dumper($Seq_tblw))[0],'SeqTable',\$Seq_tblw);  ## Refer: 18.
+&refer((split /=/, Dumper($Seq_tblw))[0],'SeqTable',\$Seq_tblw);  
 
 ## Let's load rows (or define a new one).
 ## XXX WARNING: seq_load() must occur after refer() at init time:
 ## this will be done in reload().
 
-## END Part Tab
+## END Proj Tab
 
 ## ### The Orchestra sub-notebook:
 $Tabs{'orchestra'} = $Book->add("Orchestra", -label=>"Orchestra", -state=>'normal', -raisecmd=>\&book_open);
@@ -1130,8 +1109,8 @@ my $Ftb_tw = $Ftb_top_tw->Subwidget("scrolled"); # get real widget
 ## .. which inserts unwanted unicode at control keys press.
 ## ###
 
-&refer((split /=/, Dumper($Ftb_tw))[0],'TextUndo',\$Ftb_tw); ## Refer: 19.
-$Ftb_tw->Contents($Part->{'Ftb_tw'}); ## Don't forget to load the content before starting.
+&refer((split /=/, Dumper($Ftb_tw))[0],'TextUndo',\$Ftb_tw); 
+$Ftb_tw->Contents($Project->{'Ftb_tw'}); ## Don't forget to load the content before starting.
 
 ## Global init:
 $Tabs{'init'} = $Orcbook->add("Init", -label=>"Init", -raisecmd=>\&book_open);
@@ -1144,17 +1123,18 @@ my $Orcini_top_tw = $Tabs{'init'}->Scrolled (
   , -wrap => 'word' 
 )->form(-top=>['%1',8], -left=>['%1',0], -right=>['%99',0], -bottom=>['%98',0]);
 my $Orcini_tw = $Orcini_top_tw->Subwidget("scrolled"); ## Get the real widget.
-&refer((split /=/, Dumper($Orcini_tw))[0],'TextUndo',\$Orcini_tw); ## Refer: 20.
-$Orcini_tw->Contents($Part->{Orcini_tw}); ## Don't forget to load the content before starting.
+&refer((split /=/, Dumper($Orcini_tw))[0],'TextUndo',\$Orcini_tw); 
+$Orcini_tw->Contents($Project->{Orcini_tw}); ## Don't forget to load the content before starting.
 
 ## Tab for default inst:
-&ins_load();
+&ins_load('file');
 my $test = 0;
 for (my $n = 1; $n <= MAXOBJ; $n++) { $test = 1 if (exists $CsgObj->instruments->{"I$n"}) }
-&Csgrouper::Describe($subname,"ins_def() test == $test");
-&ins_def() if ($test == 0); ## We need a first instrument tab.
+&Csgrouper::Describe($subname,"ins_load() test == $test");
+# &ins_def() if ($test == 0); ## We need a first instrument tab.
+&ins_load('default') if ($test == 0); ## We need a first instrument tab.
 ## Let's store a reference without having a widget though.
-&refer('InsTab','InsTab',\%{$CsgObj->instruments});  ## Refer: 21.
+&refer('InsTab','InsTab',\%{$CsgObj->instruments});  
 
 ## END Orchestra sub-notebook
 
@@ -1172,24 +1152,6 @@ my $score_empty_bw = $Score_select_frame->Button(
    -top=>['%1',4]
   ,-right=>['%99',4]
 );
-my $score_save_bw = $Score_select_frame->Button(
-	-background =>$COLOR{'button_bgcolor'}
-	,-foreground =>$COLOR{'button_fgcolor'}
-	,-text=>'Save As'
-	,-command=>\sub { &csd_sas }
-)->form(
-   -top=>['%1',4]
-  ,-right=>[$score_empty_bw,4]
-);
-my $score_render_bw = $Score_select_frame->Button(
-	-background =>$COLOR{'button_bgcolor'}
-	,-foreground =>$COLOR{'button_fgcolor'}
-	,-text=>'Render'
-	,-command=>\sub { &csd_render }
-)->form(
-   -top=>['%1',4]
-  ,-right=>[$score_save_bw,4]
-);
 my $score_play_bw = $Score_select_frame->Button(
 	-background =>$COLOR{'button_bgcolor'}
 	,-foreground =>$COLOR{'button_fgcolor'}
@@ -1197,7 +1159,7 @@ my $score_play_bw = $Score_select_frame->Button(
 	,-command=>\sub { &csd_play }
 )->form(
    -top=>['%1',4]
-  ,-right=>[$score_render_bw,4]
+  ,-right=>[$score_empty_bw,4]
 );
 my $score_write_bw = $Score_select_frame->Button(
 	-background =>$COLOR{'button_bgcolor'}
@@ -1220,7 +1182,7 @@ my $score_structctl_bw = $Score_select_frame->Button(
   ,-right=>[$score_write_bw,4]
 );
 
-## Cf. above Part_frame for variables:
+## Cf. above Proj_frame for variables:
 my $ready_cbw2 =  $Score_select_frame->Label(
 	-textvariable=>\$ready_txt
 	,-state=>'disabled'
@@ -1230,11 +1192,11 @@ my $ready_cbw2 =  $Score_select_frame->Label(
 );
 
 ## This cb and the associated field will decide wether to print  
-## only some Sequences in the final csd part (because a Sequence 
+## only some Sequences in the final csd score (because a Sequence 
 ## can be needed for computation but not wanted in the final score).
 my $sel_prnt_cbw =  $Score_select_frame->Checkbutton(
 	-text=>"Comment out ids:"
-	,-variable=>\$Part->{'part_selprnt_le'}
+	,-variable=>\$Project->{'selprnt_le'}
 	,-onvalue=>1
 	,-offvalue=>0
 )->form(
@@ -1244,143 +1206,143 @@ my $sel_prnt_cbw =  $Score_select_frame->Checkbutton(
 
 ## Select sequences:
 
-my $part_select_le = $Score_select_frame->LabEntry(
+my $select_le = $Score_select_frame->LabEntry(
    -label => ''
   ,-labelPack => ['-side', 'left', '-anchor', 'w' ]
   ,-background => $COLOR{input_bgcolor}
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'part_select_le'}
+  ,-textvariable =>\$Project->{'select_le'}
   ,-width => 6
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'digicominst',"",1) }
 );
-$part_select_le->form(   
+$select_le->form(   
    -top=>['%1',4]
   ,-left=>[$sel_prnt_cbw,4]
 );
 
-&refer((split /=/, Dumper($part_select_le))[0],'LabEntry',\$part_select_le); ## Refer: 16.
+&refer((split /=/, Dumper($select_le))[0],'LabEntry',\$select_le); 
 
 ## Comp-Type2:
-my $part_comptype2_mw = $Score_select_frame->Menubutton(
+my $comptype2_mw = $Score_select_frame->Menubutton(
 	 -borderwidth=>1 
 	,-background => $COLOR{cbox_bgcolor}
 	,-foreground => $COLOR{cbox_fgcolor}
 	,-relief=>'groove' 
 	,-text=>'Comp. Type'
 );
-$part_comptype2_mw->radiobutton(
+$comptype2_mw->radiobutton(
 	-label => 'self (Compstr0)'
-	,-variable => \$Part->{'part_comptype_mw'}
+	,-variable => \$Project->{'comptype_mw'}
   ,-value => '0'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_comptype2_mw->radiobutton(
+$comptype2_mw->radiobutton(
 	-label => 'random (Compstr4)'
-	,-variable => \$Part->{'part_comptype_mw'}
+	,-variable => \$Project->{'comptype_mw'}
   ,-value => '4'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_comptype2_mw->form(
+$comptype2_mw->form(
    -top=>['%1',4]
-  ,-left=>[$part_select_le,14]
+  ,-left=>[$select_le,14]
 );
-&refer((split /=/, Dumper($part_comptype2_mw))[0],'Menubutton',\$part_comptype2_mw);  ## Refer: 16b.
+&refer((split /=/, Dumper($comptype2_mw))[0],'Menubutton',\$comptype2_mw);  ## Refer: 16b.
 
 ## Dur-Type2:
-my $part_durtype2_mw = $Score_select_frame->Menubutton(
+my $durtype2_mw = $Score_select_frame->Menubutton(
 	 -borderwidth=>1 
 	,-background => $COLOR{cbox_bgcolor}
 	,-foreground => $COLOR{cbox_fgcolor}
 	,-relief=>'groove' 
 	,-text=>'Dur. Type'
 );
-$part_durtype2_mw->radiobutton(
+$durtype2_mw->radiobutton(
 	-label => 'serial'
-	,-variable => \$Part->{'part_durtype_mw'}
+	,-variable => \$Project->{'durtype_mw'}
   ,-value => '0'
   ,-underline => 0
   ,-command=> sub { &set_ready(0) }
 );
-$part_durtype2_mw->radiobutton(
+$durtype2_mw->radiobutton(
 	-label => 'random'
-	,-variable => \$Part->{'part_durtype_mw'}
+	,-variable => \$Project->{'durtype_mw'}
   ,-value => '1'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_durtype2_mw->radiobutton(
-	-label => "fixed (".$Csgrouper::CSG{'part_durmin_le'}." sec.)"
-	,-variable => \$Part->{'part_durtype_mw'}
+$durtype2_mw->radiobutton(
+	-label => "fixed"
+	,-variable => \$Project->{'durtype_mw'}
   ,-value => '2'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_durtype2_mw->form(
+$durtype2_mw->form(
    -top=>['%1',4]
-  ,-left=>[$part_comptype2_mw,4]
+  ,-left=>[$comptype2_mw,4]
 );
-&refer((split /=/, Dumper($part_durtype2_mw))[0],'Menubutton',\$part_durtype2_mw);  ## Refer: 16c.
+&refer((split /=/, Dumper($durtype2_mw))[0],'Menubutton',\$durtype2_mw);  ## Refer: 16c.
 
 ## Rythm-Type2:
-my $part_rythmtype2_mw = $Score_select_frame->Menubutton(
+my $rythmtype2_mw = $Score_select_frame->Menubutton(
 	 -borderwidth=>1 
 	,-background => $COLOR{cbox_bgcolor}
 	,-foreground => $COLOR{cbox_fgcolor}
 	,-relief=>'groove' 
 	,-text=>'Rythm Type'
 );
-$part_rythmtype2_mw->radiobutton(
+$rythmtype2_mw->radiobutton(
 	-label => 'mixed-'
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '1'
   ,-underline => 0
   ,-command=> sub { &set_ready(0) }
 );
-$part_rythmtype2_mw->radiobutton(
+$rythmtype2_mw->radiobutton(
 	-label => 'mixed+'
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '6'
   ,-underline => 0
   ,-command=> sub { &set_ready(0) }
 );
-$part_rythmtype2_mw->radiobutton(
+$rythmtype2_mw->radiobutton(
 	-label => 'binary-'
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '2'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_rythmtype2_mw->radiobutton(
+$rythmtype2_mw->radiobutton(
 	-label => 'binary+'
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '4'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_rythmtype2_mw->radiobutton(
+$rythmtype2_mw->radiobutton(
 	-label => "ternary-"
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '3'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_rythmtype2_mw->radiobutton(
+$rythmtype2_mw->radiobutton(
 	-label => "ternary+"
-	,-variable => \$Part->{'part_rythmtype_mw'}
+	,-variable => \$Project->{'rythmtype_mw'}
   ,-value => '5'
   ,-underline => 0
   ,-command=> sub {  &set_ready(0) }
 );
-$part_rythmtype2_mw->form(
+$rythmtype2_mw->form(
    -top=>['%1',4]
-  ,-left=>[$part_durtype2_mw,4]
+  ,-left=>[$durtype2_mw,4]
 );
-&refer((split /=/, Dumper($part_rythmtype2_mw))[0],'Menubutton',\$part_rythmtype2_mw);  ## Refer: 16d.
+&refer((split /=/, Dumper($rythmtype2_mw))[0],'Menubutton',\$rythmtype2_mw);  ## Refer: 16d.
 
 my $Score_top_tw = $Tabs{'score'}->Scrolled (
   'TextUndo'
@@ -1390,9 +1352,9 @@ my $Score_top_tw = $Tabs{'score'}->Scrolled (
   , -wrap => 'word' 
 )->form(-top=>[$Score_select_frame,8], -left=>['%1',0], -right=>['%99',0], -bottom=>['%98',0]);
 my $Score_tw = $Score_top_tw->Subwidget("scrolled"); ## Get the real widget.
-## I don't know yet wether to store Score_tw in part file... 110611.
+## I don't know yet wether to store Score_tw in project file... 110611.
 ## Let's store a reference to it in order to refresh the file contents:
-&refer((split /=/, Dumper($Score_tw))[0],'TextUndo',\$Score_tw); ## Refer: 22.
+&refer((split /=/, Dumper($Score_tw))[0],'TextUndo',\$Score_tw); 
 
 ## END Score Tab.
 
@@ -1410,7 +1372,7 @@ my $A_series_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'A_series_le'}
+  ,-textvariable =>\$Project->{'A_series_le'}
   ,-width => 24
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'xphonic',"",1) }
@@ -1421,7 +1383,7 @@ $A_series_le->form(
   ,-left=>['%1',4]
 );
 
-&refer((split /=/, Dumper($A_series_le))[0],'LabEntry',\$A_series_le); ## Refer: 23.
+&refer((split /=/, Dumper($A_series_le))[0],'LabEntry',\$A_series_le); 
 
 my $A_octs_le = $Series_ana_frame->LabEntry(
    -label => 'Aoct: '
@@ -1430,7 +1392,7 @@ my $A_octs_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'A_octs_le'}
+  ,-textvariable =>\$Project->{'A_octs_le'}
   ,-width => 24
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'xphonic',"",1) }
@@ -1440,12 +1402,12 @@ $A_octs_le->form(
   ,-left=>[$A_series_le,4]
 );
 
-&refer((split /=/, Dumper($A_octs_le))[0],'LabEntry',\$A_octs_le); ## Refer: 24.
+&refer((split /=/, Dumper($A_octs_le))[0],'LabEntry',\$A_octs_le); 
 
-$Part->{'ana_Aroc_cb'} = 0;
+$Project->{'ana_Aroc_cb'} = 0;
 my $ana_Aroc_cb = $Series_ana_frame->Checkbutton(
 	-text=>'ran: '
-	,-variable=>\$Part->{'ana_Aroc_cb'}
+	,-variable=>\$Project->{'ana_Aroc_cb'}
 	,-onvalue=>1
 	,-offvalue=>0
 )->form(
@@ -1453,7 +1415,7 @@ my $ana_Aroc_cb = $Series_ana_frame->Checkbutton(
   ,-left=>[$A_octs_le,0]
 );
 
-&refer((split /=/, Dumper($ana_Aroc_cb))[0],'Checkbutton',\$ana_Aroc_cb); ## Refer: 25.
+&refer((split /=/, Dumper($ana_Aroc_cb))[0],'Checkbutton',\$ana_Aroc_cb); 
 
 my $ord_series_le = $Series_ana_frame->LabEntry(
    -label => 'ord: '
@@ -1462,7 +1424,7 @@ my $ord_series_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'ord_series_le'}
+  ,-textvariable =>\$Project->{'ord_series_le'}
   ,-width => 24
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'param',"",1) }
@@ -1472,7 +1434,7 @@ $ord_series_le->form(
   ,-left=>[$ana_Aroc_cb,4]
 );
 
-&refer((split /=/, Dumper($ord_series_le))[0],'LabEntry',\$ord_series_le); ## Refer: 26.
+&refer((split /=/, Dumper($ord_series_le))[0],'LabEntry',\$ord_series_le); 
 
 my $series_ana_mw = $Series_ana_frame->Optionmenu(
 		 -options => &fun_menu('ana')
@@ -1494,7 +1456,7 @@ my $B_series_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'B_series_le'}
+  ,-textvariable =>\$Project->{'B_series_le'}
   ,-width => 24
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'xphonic',"",1) }
@@ -1504,7 +1466,7 @@ $B_series_le->form(
   ,-left=>['%1',4]
 );
 
-&refer((split /=/, Dumper($B_series_le))[0],'LabEntry',\$B_series_le); ## Refer: 27.
+&refer((split /=/, Dumper($B_series_le))[0],'LabEntry',\$B_series_le); 
 
 my $B_octs_le = $Series_ana_frame->LabEntry(
    -label => 'Boct: '
@@ -1513,7 +1475,7 @@ my $B_octs_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'B_octs_le'}
+  ,-textvariable =>\$Project->{'B_octs_le'}
   ,-width => 24
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'xphonic',"",1) }
@@ -1523,12 +1485,12 @@ $B_octs_le->form(
   ,-left=>[$B_series_le,4]
 );
 
-&refer((split /=/, Dumper($B_octs_le))[0],'LabEntry',\$B_octs_le); ## Refer: 28.
+&refer((split /=/, Dumper($B_octs_le))[0],'LabEntry',\$B_octs_le); 
 
-$Part->{'ana_Broc_cb'} = 0;
+$Project->{'ana_Broc_cb'} = 0;
 my $ana_Broc_cb = $Series_ana_frame->Checkbutton(
 	-text=>'ran: '
-	,-variable=>\$Part->{'ana_Broc_cb'}
+	,-variable=>\$Project->{'ana_Broc_cb'}
 	,-onvalue=>1
 	,-offvalue=>0
 )->form(
@@ -1536,7 +1498,7 @@ my $ana_Broc_cb = $Series_ana_frame->Checkbutton(
   ,-left=>[$B_octs_le,0]
 );
 
-&refer((split /=/, Dumper($ana_Broc_cb))[0],'Checkbutton',\$ana_Broc_cb); ## Refer: 29.
+&refer((split /=/, Dumper($ana_Broc_cb))[0],'Checkbutton',\$ana_Broc_cb); 
 
 my $signs_series_le = $Series_ana_frame->LabEntry(
    -label => 'sig: '
@@ -1545,7 +1507,7 @@ my $signs_series_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'signs_series_le'}
+  ,-textvariable =>\$Project->{'signs_series_le'}
   ,-width => 24
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'plusminus',"",1) }
@@ -1555,7 +1517,7 @@ $signs_series_le->form(
   ,-left=>[$ana_Broc_cb,4]
 );
 
-&refer((split /=/, Dumper($signs_series_le))[0],'LabEntry',\$signs_series_le); ## Refer: 30.
+&refer((split /=/, Dumper($signs_series_le))[0],'LabEntry',\$signs_series_le); 
 
 my $mod_series_le = $Series_ana_frame->LabEntry(
    -label => 'mod: '
@@ -1564,7 +1526,7 @@ my $mod_series_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'mod_series_le'}
+  ,-textvariable =>\$Project->{'mod_series_le'}
   ,-width => 24
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'xphonic',"",1) }
@@ -1575,7 +1537,7 @@ $mod_series_le->form(
   ,-left=>[$signs_series_le,4]
 );
 
-&refer((split /=/, Dumper($mod_series_le))[0],'LabEntry',\$mod_series_le); ## Refer: 31.
+&refer((split /=/, Dumper($mod_series_le))[0],'LabEntry',\$mod_series_le); 
 
 ## Third line
 
@@ -1586,7 +1548,7 @@ my $base_param_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'base_param_le'}
+  ,-textvariable =>\$Project->{'base_param_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'digit',"",1) }
@@ -1596,7 +1558,7 @@ $base_param_le->form(
   ,-left=>[ '%1',4]
 );
 
-&refer((split /=/, Dumper($base_param_le))[0],'LabEntry',\$base_param_le); ## Refer: 32.
+&refer((split /=/, Dumper($base_param_le))[0],'LabEntry',\$base_param_le); 
 
 my $range_param_le = $Series_ana_frame->LabEntry(
    -label => 'range: '
@@ -1605,7 +1567,7 @@ my $range_param_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'range_param_le'}
+  ,-textvariable =>\$Project->{'range_param_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'digit',"",1) }
@@ -1615,12 +1577,12 @@ $range_param_le->form(
   ,-left=>[$base_param_le,4]
 );
 
-&refer((split /=/, Dumper($range_param_le))[0],'LabEntry',\$range_param_le); ## Refer: 33.
+&refer((split /=/, Dumper($range_param_le))[0],'LabEntry',\$range_param_le); 
 
-$Part->{'ana_sense_cb'} = 1;
+$Project->{'ana_sense_cb'} = 1;
 my $ana_sense_cb = $Series_ana_frame->Checkbutton(
 	-text=>'sens '
-	,-variable=>\$Part->{'ana_sense_cb'}
+	,-variable=>\$Project->{'ana_sense_cb'}
 	,-onvalue=>1
 	,-offvalue=>0
 )->form(
@@ -1628,12 +1590,12 @@ my $ana_sense_cb = $Series_ana_frame->Checkbutton(
   ,-left=>[$range_param_le,0]
 );
 
-&refer((split /=/, Dumper($ana_sense_cb))[0],'Checkbutton',\$ana_sense_cb); ## Refer: 34.
+&refer((split /=/, Dumper($ana_sense_cb))[0],'Checkbutton',\$ana_sense_cb); 
 
-$Part->{'ana_exp_cb'} = 0;
+$Project->{'ana_exp_cb'} = 0;
 my $ana_exp_cb = $Series_ana_frame->Checkbutton(
 	-text=>'exp '
-	,-variable=>\$Part->{'ana_exp_cb'}
+	,-variable=>\$Project->{'ana_exp_cb'}
 	,-onvalue=>1
 	,-offvalue=>0
 )->form(
@@ -1641,12 +1603,12 @@ my $ana_exp_cb = $Series_ana_frame->Checkbutton(
   ,-left=>[$ana_sense_cb,0]
 );
 
-&refer((split /=/, Dumper($ana_exp_cb))[0],'Checkbutton',\$ana_exp_cb); ## Refer: 35.
+&refer((split /=/, Dumper($ana_exp_cb))[0],'Checkbutton',\$ana_exp_cb); 
 
-$Part->{'ana_line_cb'} = 0; ## Use this to decide wether erasing previous output.
+$Project->{'ana_line_cb'} = 0; ## Use this to decide wether erasing previous output.
 my $ana_line_cb = $Series_ana_frame->Checkbutton(
 	 -text=>'line '
-	,-variable=>\$Part->{'ana_line_cb'}
+	,-variable=>\$Project->{'ana_line_cb'}
 	,-onvalue=>1
 	,-offvalue=>0
 )->form(
@@ -1654,7 +1616,7 @@ my $ana_line_cb = $Series_ana_frame->Checkbutton(
   ,-left=>[$ana_exp_cb,0]
 );
 
-&refer((split /=/, Dumper($ana_line_cb))[0],'Checkbutton',\$ana_line_cb); ## Refer: 36.
+&refer((split /=/, Dumper($ana_line_cb))[0],'Checkbutton',\$ana_line_cb); 
 
 my $N_param_le = $Series_ana_frame->LabEntry(
    -label => 'n: '
@@ -1663,7 +1625,7 @@ my $N_param_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'N_param_le'}
+  ,-textvariable =>\$Project->{'N_param_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'float',"",1) }
@@ -1673,7 +1635,7 @@ $N_param_le->form(
   ,-left=>[$ana_line_cb,4]
 );
 
-&refer((split /=/, Dumper($N_param_le))[0],'LabEntry',\$N_param_le); ## Refer: 37.
+&refer((split /=/, Dumper($N_param_le))[0],'LabEntry',\$N_param_le); 
 
 my $X_param_le = $Series_ana_frame->LabEntry(
    -label => 'x: '
@@ -1682,7 +1644,7 @@ my $X_param_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'X_param_le'}
+  ,-textvariable =>\$Project->{'X_param_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'float',"",1) }
@@ -1692,7 +1654,7 @@ $X_param_le->form(
   ,-left=>[$N_param_le,4]
 );
 
-&refer((split /=/, Dumper($X_param_le))[0],'LabEntry',\$X_param_le); ## Refer: 38.
+&refer((split /=/, Dumper($X_param_le))[0],'LabEntry',\$X_param_le); 
 
 my $Y_param_le = $Series_ana_frame->LabEntry(
    -label => 'y: '
@@ -1701,7 +1663,7 @@ my $Y_param_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'Y_param_le'}
+  ,-textvariable =>\$Project->{'Y_param_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'float',"",1) }
@@ -1711,7 +1673,7 @@ $Y_param_le->form(
   ,-left=>[$X_param_le,4]
 );
 
-&refer((split /=/, Dumper($Y_param_le))[0],'LabEntry',\$Y_param_le); ## Refer: 39.
+&refer((split /=/, Dumper($Y_param_le))[0],'LabEntry',\$Y_param_le); 
 
 my $Z_param_le = $Series_ana_frame->LabEntry(
    -label => 'z: '
@@ -1720,7 +1682,7 @@ my $Z_param_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'Z_param_le'}
+  ,-textvariable =>\$Project->{'Z_param_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'float',"",1) }
@@ -1730,9 +1692,9 @@ $Z_param_le->form(
   ,-left=>[$Y_param_le,4]
 );
 
-&refer((split /=/, Dumper($Z_param_le))[0],'LabEntry',\$Z_param_le); ## Refer: 40.
+&refer((split /=/, Dumper($Z_param_le))[0],'LabEntry',\$Z_param_le); 
 
-$Part->{'tone_param_le'} //= 0;
+$Project->{'tone_param_le'} //= 0;
 
 my $tone_param_le = $Series_ana_frame->LabEntry(
    -label => 'tone: '
@@ -1741,7 +1703,7 @@ my $tone_param_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'tone_param_le'}
+  ,-textvariable =>\$Project->{'tone_param_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'inst',"",1) }
@@ -1751,7 +1713,7 @@ $tone_param_le->form(
   ,-left=>[$Z_param_le,4]
 );
 
-&refer((split /=/, Dumper($tone_param_le))[0],'LabEntry',\$tone_param_le); ## Refer: 41.
+&refer((split /=/, Dumper($tone_param_le))[0],'LabEntry',\$tone_param_le); 
 
 my $ins_param_le = $Series_ana_frame->LabEntry(
    -label => 'ins: '
@@ -1760,7 +1722,7 @@ my $ins_param_le = $Series_ana_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'ins_param_le'}
+  ,-textvariable =>\$Project->{'ins_param_le'}
   ,-width => 4
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'inst',"",1) }
@@ -1770,7 +1732,7 @@ $ins_param_le->form(
   ,-left=>[$tone_param_le,4]
 );
 
-&refer((split /=/, Dumper($ins_param_le))[0],'LabEntry',\$ins_param_le); ## Refer: 42.
+&refer((split /=/, Dumper($ins_param_le))[0],'LabEntry',\$ins_param_le); 
 
 my $anaplay_bw = $Series_ana_frame->Button(
 	-background =>$COLOR{'button_bgcolor'}
@@ -1855,8 +1817,8 @@ my $Notes_top_tw = $Tabs{'Notes'}->Scrolled (
   , -wrap => 'word' 
 )->form(-top=>[$Notes_frame,8], -left=>['%1',0], -right=>['%99',0], -bottom=>['%98',0]);
 my $Notes_tw = $Notes_top_tw->Subwidget("scrolled"); # get real widget
-&refer((split /=/, Dumper($Notes_tw))[0],'TextUndo',\$Notes_tw); ## Refer: 45.
-$Notes_tw->Contents($Part->{'Notes_tw'}); ## Don't forget to load the content before starting.
+&refer((split /=/, Dumper($Notes_tw))[0],'TextUndo',\$Notes_tw); 
+$Notes_tw->Contents($Project->{'Notes_tw'}); ## Don't forget to load the content before starting.
 
 ## END Notes Tab.
 
@@ -1879,7 +1841,7 @@ my $csg_lw_path = $Paths_frame->Label(
 	-textvariable=>\$csg_lw_path_text 
 )->form(-left=>['%0',0], -top=>['%1',4]);
 my $csg_path_pe = $Paths_frame->PathEntry( 
-	-textvariable=>\$Part->{'csg_path_pe'}
+	-textvariable=>\$Project->{'csg_path_pe'}
 	,-disabledforeground =>$COLOR{'input_fgcolor'}
 	,-state=>'disabled'
 )->form(
@@ -1887,11 +1849,11 @@ my $csg_path_pe = $Paths_frame->PathEntry(
   ,-right=>['%49',0]
   ,-top=>['%1',4]
 );
-&refer((split /=/, Dumper($csg_path_pe))[0],'PathEntry',\$csg_path_pe); ## Refer: 46.
+&refer((split /=/, Dumper($csg_path_pe))[0],'PathEntry',\$csg_path_pe); 
 my $run_lw_path_text = "Runtime: ";
 my $run_lw_path = $Paths_frame->Label( -textvariable=>\$run_lw_path_text )->form(-top=>[$csg_lw_path,0]); 
 my $run_path_pe = $Paths_frame->PathEntry( 
-	 -textvariable=>\$Part->{'run_path_pe'}
+	 -textvariable=>\$Project->{'run_path_pe'}
 	,-disabledforeground =>$COLOR{'input_fgcolor'}
 	,-state=>'disabled'
 )->form(
@@ -1899,30 +1861,30 @@ my $run_path_pe = $Paths_frame->PathEntry(
   ,-top=>[$csg_lw_path,0]
   ,-right=>['%49',0]
 );
-&refer((split /=/, Dumper($run_path_pe))[0],'PathEntry',\$run_path_pe); ## Refer: 47.
-my $part_lw_path_text = "Parts: ";
-my $part_lw_path = $Paths_frame->Label( -textvariable=>\$part_lw_path_text )->form( -left=>['%50',0], -top=>['%1',4]);
-my $part_path_pe = $Paths_frame->PathEntry( 
-	 -textvariable=>\$Part->{'part_path_pe'}
+&refer((split /=/, Dumper($run_path_pe))[0],'PathEntry',\$run_path_pe); 
+my $lw_path_text = "Projs: ";
+my $lw_path = $Paths_frame->Label( -textvariable=>\$lw_path_text )->form( -left=>['%50',0], -top=>['%1',4]);
+my $path_pe = $Paths_frame->PathEntry( 
+	 -textvariable=>\$Project->{'path_pe'}
 	,-disabledforeground =>$COLOR{'input_fgcolor'}
 	,-state=>'disabled'
 )->form(
-   -left=>[$part_lw_path,0]
+   -left=>[$lw_path,0]
   ,-right=>['%99',0]
   ,-top=>['%1',4]
 );
-&refer((split /=/, Dumper($part_path_pe))[0],'PathEntry',\$part_path_pe); ## Refer: 48.
+&refer((split /=/, Dumper($path_pe))[0],'PathEntry',\$path_pe); 
 my $ins_lw_path_text = "Instruments: ";
 my $ins_lw_path = $Paths_frame->Label( -textvariable=>\$ins_lw_path_text )->form(
-   -top=>[$part_lw_path,0]
+   -top=>[$lw_path,0]
   ,-left=>['%50',0]
 );
-my $ins_path_pe = $Paths_frame->PathEntry( -textvariable=>\$Part->{'ins_path_pe'}, -background=>$COLOR{input_bgcolor}, -state=>'normal',  )->form(
+my $ins_path_pe = $Paths_frame->PathEntry( -textvariable=>\$Project->{'ins_path_pe'}, -background=>$COLOR{input_bgcolor}, -state=>'normal',  )->form(
    -left=>[$ins_lw_path,0]
-  ,-top=>[$part_lw_path,0]
+  ,-top=>[$lw_path,0]
   ,-right=>['%99',0]
 );
-&refer((split /=/, Dumper($ins_path_pe))[0],'PathEntry',\$ins_path_pe); ## Refer: 49.
+&refer((split /=/, Dumper($ins_path_pe))[0],'PathEntry',\$ins_path_pe); 
 
 my $setup_paths_bw = $Paths_frame->Button(
   	-background =>$COLOR{'button_bgcolor'}
@@ -1940,12 +1902,12 @@ my $Csound_setup_frame = $Tabs{'csound'}->Frame(-borderwidth=>4, -relief=>'groov
 $Csound_setup_frame->form(-left=>['%1',0], -right=>['%99',0], -top=>['%1',4]);
 my $csound_lw_path_text = "Csound path: ";
 my $csound_lw_path = $Csound_setup_frame->Label( -textvariable=>\$csound_lw_path_text )->form(-top=>['%1',4],-left=>['%1',0]);
-my $csound_path_pe = $Csound_setup_frame->PathEntry( -textvariable=>\$Part->{'csound_path_pe'}, -background=>$COLOR{input_bgcolor}, -state=>'normal',  )->form(
+my $csound_path_pe = $Csound_setup_frame->PathEntry( -textvariable=>\$Project->{'csound_path_pe'}, -background=>$COLOR{input_bgcolor}, -state=>'normal',  )->form(
    -left=>[$csound_lw_path,0]
   ,-top=>['%1',4]
   ,-right=>['%75',0]
 );
-&refer((split /=/, Dumper($csound_path_pe))[0],'PathEntry',\$csound_path_pe); ## Refer: 53. 
+&refer((split /=/, Dumper($csound_path_pe))[0],'PathEntry',\$csound_path_pe);  
 my $audio_driver_mbw = $Csound_setup_frame->Menubutton(
 	-borderwidth=>1
 	,-background => $COLOR{cbox_bgcolor}
@@ -1954,21 +1916,21 @@ my $audio_driver_mbw = $Csound_setup_frame->Menubutton(
 	, -text=>'Audio driver'
 );
 $audio_driver_mbw->radiobutton(-label => 'ALSA',
-  -variable => \$Part->{'audio_driver_mbw'}
+  -variable => \$Project->{'audio_driver_mbw'}
   , -label => 'ALSA'
   , -value => 'alsa'
   , -underline => 0
   ,	-command=>\&menu_set_audio
 );
 $audio_driver_mbw->radiobutton(-label => 'JACK',
-  -variable => \$Part->{'audio_driver_mbw'}
+  -variable => \$Project->{'audio_driver_mbw'}
   , -label => 'JACK'
   , -value => 'jack'
   , -underline => 0
   ,	-command=>\&menu_set_audio
 );
 $audio_driver_mbw->radiobutton(-label => 'PortAudio',
-  -variable => \$Part->{'audio_driver_mbw'}
+  -variable => \$Project->{'audio_driver_mbw'}
   , -label => 'PortAudio'
   , -value => 'portaudio'
   , -underline => 0
@@ -1983,14 +1945,14 @@ my $midi_driver_mbw = $Csound_setup_frame->Menubutton(
 	, -text=>'Midi driver'
 );
 $midi_driver_mbw->radiobutton(-label => 'ALSA',
-  -variable => \$Part->{'midi_driver_mbw'}
+  -variable => \$Project->{'midi_driver_mbw'}
   , -label => 'ALSA'
   , -value => 'alsa'
   , -underline => 0
   ,	-command=>\&menu_set_midi
 );
 $midi_driver_mbw->radiobutton(-label => 'PortMidi',
-  -variable => \$Part->{'midi_driver_mbw'}
+  -variable => \$Project->{'midi_driver_mbw'}
   , -label => 'PortMidi'
   , -value => 'portmidi'
   , -underline => 0
@@ -2006,7 +1968,7 @@ my $csound_sr_le = $Csound_setup_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'csound_sr_le'}
+  ,-textvariable =>\$Project->{'csound_sr_le'}
   ,-width => 6
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'digit') }
@@ -2016,7 +1978,7 @@ $csound_sr_le->form(
   ,-left=>['%1',4]
 );
 
-&refer((split /=/, Dumper($csound_sr_le))[0],'LabEntry',\$csound_sr_le);  ## Refer: 54. 
+&refer((split /=/, Dumper($csound_sr_le))[0],'LabEntry',\$csound_sr_le);   
 
 my $csound_ksmps_le = $Csound_setup_frame->LabEntry(
    -label => 'ksm: '
@@ -2025,7 +1987,7 @@ my $csound_ksmps_le = $Csound_setup_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'csound_ksmps_le'}
+  ,-textvariable =>\$Project->{'csound_ksmps_le'}
   ,-width => 6
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'digit') }
@@ -2035,7 +1997,7 @@ $csound_ksmps_le->form(
   ,-left=>[$csound_sr_le,4]
 );
 
-&refer((split /=/, Dumper($csound_ksmps_le))[0],'LabEntry',\$csound_ksmps_le); ## Refer: 55. 
+&refer((split /=/, Dumper($csound_ksmps_le))[0],'LabEntry',\$csound_ksmps_le);  
 
 my $csound_nchnls_le = $Csound_setup_frame->LabEntry(
    -label => 'nch: '
@@ -2044,7 +2006,7 @@ my $csound_nchnls_le = $Csound_setup_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'csound_nchnls_le'}
+  ,-textvariable =>\$Project->{'csound_nchnls_le'}
   ,-width => 6
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'digit') }
@@ -2054,7 +2016,7 @@ $csound_nchnls_le->form(
   ,-left=>[$csound_ksmps_le,4]
 );
 
-&refer((split /=/, Dumper($csound_nchnls_le))[0],'LabEntry',\$csound_nchnls_le); ## Refer: 56. 
+&refer((split /=/, Dumper($csound_nchnls_le))[0],'LabEntry',\$csound_nchnls_le);  
 
 my $csound_sbuffer_le = $Csound_setup_frame->LabEntry(
    -label => 'sbw: '
@@ -2063,7 +2025,7 @@ my $csound_sbuffer_le = $Csound_setup_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'csound_sbuffer_le'}
+  ,-textvariable =>\$Project->{'csound_sbuffer_le'}
   ,-width => 6
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'digit') }
@@ -2073,7 +2035,7 @@ $csound_sbuffer_le->form(
   ,-left=>[$csound_nchnls_le,4]
 );
 
-&refer((split /=/, Dumper($csound_sbuffer_le))[0],'LabEntry',\$csound_sbuffer_le); ## Refer: 57. 
+&refer((split /=/, Dumper($csound_sbuffer_le))[0],'LabEntry',\$csound_sbuffer_le);  
 
 my $csound_hbuffer_le = $Csound_setup_frame->LabEntry(
    -label => 'hbw: '
@@ -2082,7 +2044,7 @@ my $csound_hbuffer_le = $Csound_setup_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'csound_hbuffer_le'}
+  ,-textvariable =>\$Project->{'csound_hbuffer_le'}
   ,-width => 6
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'digit') }
@@ -2092,7 +2054,7 @@ $csound_hbuffer_le->form(
   ,-left=>[$csound_sbuffer_le,4]
 );
 
-&refer((split /=/, Dumper($csound_hbuffer_le))[0],'LabEntry',\$csound_hbuffer_le); ## Refer: 58. 
+&refer((split /=/, Dumper($csound_hbuffer_le))[0],'LabEntry',\$csound_hbuffer_le);  
 
 my $csound_sample_mbw = $Csound_setup_frame->Menubutton(
 	-borderwidth=>1
@@ -2102,21 +2064,21 @@ my $csound_sample_mbw = $Csound_setup_frame->Menubutton(
 	,-text=>'Smp format'
 );
 $csound_sample_mbw->radiobutton(-label => 'FLOAT',
-  -variable => \$Part->{'csound_sample_mbw'}
+  -variable => \$Project->{'csound_sample_mbw'}
   , -label => 'Float'
   , -value => '-f'
   , -underline => 0
   ,	-command=>\sub { &pref_load }
 );
 $csound_sample_mbw->radiobutton(-label => 'LONG',
-  -variable => \$Part->{'csound_sample_mbw'}
+  -variable => \$Project->{'csound_sample_mbw'}
   , -label => 'Long'
   , -value => '-l'
   , -underline => 0
   ,	-command=>\sub { &pref_load }
 );
 $csound_sample_mbw->radiobutton(-label => 'SHORT',
-  -variable => \$Part->{'csound_sample_mbw'}
+  -variable => \$Project->{'csound_sample_mbw'}
   , -label => 'Short'
   , -value => '-s'
   , -underline => 0
@@ -2131,7 +2093,7 @@ my $csound_params_le = $Csound_setup_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'csound_params_le'}
+  ,-textvariable =>\$Project->{'csound_params_le'}
   ,-width => 64
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
@@ -2141,7 +2103,7 @@ $csound_params_le->form(
   ,-right=>['%75',0]
 );
 
-&refer((split /=/, Dumper($csound_params_le))[0],'LabEntry',\$csound_params_le); ## Refer: 59. 
+&refer((split /=/, Dumper($csound_params_le))[0],'LabEntry',\$csound_params_le);  
 
 my $realtime_params_le = $Csound_setup_frame->LabEntry(
    -label => 'realtime params: '
@@ -2150,7 +2112,7 @@ my $realtime_params_le = $Csound_setup_frame->LabEntry(
   ,-foreground => $COLOR{input_fgcolor}
   ,-relief => 'ridge'
   ,-state => 'normal'
-  ,-textvariable =>\$Part->{'realtime_params_le'}
+  ,-textvariable =>\$Project->{'realtime_params_le'}
   ,-width => 64
   ,-validate => 'key'
   ,-validatecommand => sub { &valid_entry($_[1],'text') }
@@ -2160,15 +2122,15 @@ $realtime_params_le->form(
   ,-right=>['%75',0]
 );
 
-&refer((split /=/, Dumper($realtime_params_le))[0],'LabEntry',\$realtime_params_le); ## Refer: 60. 
+&refer((split /=/, Dumper($realtime_params_le))[0],'LabEntry',\$realtime_params_le);  
 my $csound_lw_sf2path_text = "Sf2 path: ";
 my $csound_lw_sf2path = $Csound_setup_frame->Label( -textvariable=>\$csound_lw_sf2path_text )->form(-top=>[$realtime_params_le,4],-left=>['%1',0]);
-my $csound_sf2path_pe = $Csound_setup_frame->PathEntry( -textvariable=>\$Part->{'csound_sf2path_pe'}, -background=>$COLOR{input_bgcolor}, -state=>'normal',  )->form(
+my $csound_sf2path_pe = $Csound_setup_frame->PathEntry( -textvariable=>\$Project->{'csound_sf2path_pe'}, -background=>$COLOR{input_bgcolor}, -state=>'normal',  )->form(
    -left=>[$csound_lw_sf2path,0]
   ,-top=>[$realtime_params_le,4]
   ,-right=>['%75',0]
 );
-&refer((split /=/, Dumper($csound_sf2path_pe))[0],'PathEntry',\$csound_sf2path_pe); ## Refer: 61. 
+&refer((split /=/, Dumper($csound_sf2path_pe))[0],'PathEntry',\$csound_sf2path_pe);  
 
 my $csound_setup_bw = $Csound_setup_frame->Button(
   	-background =>$COLOR{'button_bgcolor'}
@@ -2260,7 +2222,7 @@ my $savenotes_enabled_cb = $Other_setup_frame2->Checkbutton(
   -left=>['%1',0]
   ,-top=>[$auto_cb_bkp,4]
 );
-&refer((split /=/, Dumper($savenotes_enabled_cb))[0],'Cbox',\$savenotes_enabled_cb); ## Refer: 62. 
+&refer((split /=/, Dumper($savenotes_enabled_cb))[0],'Cbox',\$savenotes_enabled_cb);  
 
 ## END SETUP sub-notebook.
 
@@ -2452,16 +2414,19 @@ no Data::Dumper::Simple;
 =head2 Main loop
 =cut
 
-&Resetall('init'); ## In order to load default values, now that $Part exists.
-&reload(); ## In order to load remaining prefs, now that widgets exist.
+&Resetall('init'); ## In order to load default values, now that $Project exists.
+&reload('step2'); ## In order to load remaining prefs, now that widgets exist.
 &aoa_out(\@Csgrouper::Internals, \$Internals_frame, \$internals_le, 2, "Internal Params:");
 &aoa_out(\@Csgrouper::Paramar, \$Instparams_frame, \$inst_params_le, 2, "Available Instruments Params:");
-&Csgrouper::says($subname, "loaded part '".$Part->{'csg_part'}."'",1);
+my $Date2 = &Csgrouper::Datem('n'); my $loadtime = $Date2-$Date;
+&Csgrouper::says($subname, "loaded project '".$Project->{'csg_proj'}."' in $loadtime seconds.",1);
 &Csgrouper::says($subname, "started");
 $STARTEXEC = 0; ## Launch time finished.
 # $DEBSUB = $subname;
-# &Csgrouper::Debug($subname,Dumper($Part)); 
-$mw->title('Csgrouper: '.$Part->{'part_title_le'});
+# &Csgrouper::Debug($subname,Dumper($Project)); 
+$mw->title('Csgrouper: '.$Project->{'title_le'});
+$mw->configure(-cursor => 'arrow'); 
+
 MainLoop; 
 ### END MAIN LOOP.
 
@@ -2536,7 +2501,7 @@ sub anado {
 sub aoa_out {
   my ($rslt_ref, $frame_ref, $upobj_ref, $mode, $title) = @_;
   my $subname = 'aoa_out';
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   $mode = 0 if ($mode !~ /.+/);
@@ -2606,7 +2571,7 @@ sub aoa_out {
 
 sub book_open {
   my $subname = 'book_open';
-  ## { no warnings; &Csgrouper::says($subname, "@_"); } ## Uncomment to debug.
+  #&Csgrouper::Debug($subname, "@_"); ## Uncomment to debug.
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   my $page = $Book->raised() // "";
@@ -2623,7 +2588,7 @@ sub book_open {
 sub check_wdir {
   my ($dir) = @_;
   my $subname = 'check_wdir';
-  ## { no warnings; &Csgrouper::says($subname, "@_"); } ## Uncomment to debug.
+  #&Csgrouper::Debug($subname, "@_"); ## Uncomment to debug.
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   my $test = system("touch","$dir/csg.touch");
@@ -2667,28 +2632,28 @@ sub check_csgfile {
 
 sub cline { 
   my $subname = 'cline';
-  { no warnings; &Csgrouper::says($subname, "@_"); }
+  # { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   my $d = $mw->DialogBox(-title => "csg c-line", -buttons => ["OK", "Cancel"]);
   my $w = $d->add('TextUndo', -state=>'normal', -background=>$COLOR{input_bgcolor}, -height=>'1')->pack;
   $w->Contents($Csgrouper::CSG{cline});
   my $button = $d->Show;
-  my $content = $w->Contents(); chomp($content); chomp($content); ## In case we typed return for ok..
+  my $content = $w->Contents(); chomp($content); 
   if ($button =~ /OK/) { 
-	&Csgrouper::says($subname, "\ncsg-cline\> $content :");
+	&Csgrouper::says($subname, "> $content :");
 	$Csgrouper::CSG{cline} = $content;
 	my @rslt = eval($content);
 	my $exit_value = $? >> 8;
 	my $signal_num = $? & 127;
 	my $dumped_core = $? & 128;
-	print "\ncsg-cline\> ouput: \n @rslt" if (scalar (@rslt) > 0);
-	print "\ncsg-cline\> \$\!: $!" if ($! =~ /.+/);
-	print "\ncsg-cline\> \$\@: $@"  if ($@ =~ /.+/);
-	print "\ncsg-cline\> \$signal_num: $signal_num" if ($signal_num != 0);
-	print "\ncsg-cline\> \$exit_value: $exit_value"  if ($exit_value != 0);
-	print "\ncsg-cline\> \$dumped_core: $dumped_core"  if ($dumped_core != 0);
-	print "\ncsg-cline\> done.";
+	print "$subname> ouput: \n @rslt" if (scalar (@rslt) > 1 || (scalar (@rslt) == 1 && $rslt[0]=~/.+/));
+	print "\n$subname> \$\!: $!" if ($! !~ /Resource temporarily unavailable/ and $! =~ /.+/);
+	print "\n$subname> \$\@: $@"  if ($@ =~ /.+/);
+	print "\n$subname> \$signal_num: $signal_num" if ($signal_num != 0);
+	print "\n$subname> \$exit_value: $exit_value"  if ($exit_value != 0);
+	print "\n$subname> \$dumped_core: $dumped_core"  if ($dumped_core != 0);
+	print "\n$subname> done.";
 	#$mw->messageBox(-message => "output: @rslt");
   }
   $Csgrouper::DEBFLAG =  $oldebflag;
@@ -2719,7 +2684,7 @@ sub csd_play {
   my $txt = $Score_tw->Contents();
 	die "No valid csd file to play: $!" if ($txt !~ /\<CsoundSynthesizer\>/);
   my $file = &Csgrouper::Datem('n'); $file = "csg.$file.csd";
-  my $newfile = $Part->{'bkp_path_pe'}."/".$file;
+  my $newfile = $Project->{'bkp_path_pe'}."/".$file;
   &Csgrouper::says($subname, $newfile);
 	open (FH, "> $newfile") or  die "Can't w-open $newfile: $!";
 	  print FH $txt;
@@ -2728,8 +2693,8 @@ sub csd_play {
 	my $pid=fork();
 	die "Cannot fork: $!" if (! defined $pid);
 	if (! $pid) {
-		my $opts = $Part->{'realtime_params_le'};
-		exec("/usr/bin/xterm", "-e", $Part->{'csound_path_pe'}." $opts $newfile");
+		my $opts = $Project->{'realtime_params_le'};
+		exec("/usr/bin/xterm", "-e", $Project->{'csound_path_pe'}." $opts $newfile");
 		&Csgrouper::Describe($subname,"still a little problem here.. $!"); 
 		return 1;
 	}
@@ -2750,8 +2715,8 @@ sub csd_render {
   my $txt = $Score_tw->Contents();
 	die "No valid csd file to play: $!" if ($txt !~ /\<CsoundSynthesizer\>/);
   my $file = &Csgrouper::Datem('n'); $file = "csg.$file";
-  my $newfile = $Part->{'render_path_pe'}.'/'.$file.".csd";
-  my $outfile = $Part->{'render_path_pe'}.'/'.$file.".wav";
+  my $newfile = $Project->{'render_path_pe'}.'/'.$file.".csd";
+  my $outfile = $Project->{'render_path_pe'}.'/'.$file.".wav";
   &Csgrouper::says($subname, $newfile);
 	open (FH, "> $newfile") or  die "Can't w-open $newfile: $!";
 	  print FH $txt;
@@ -2760,8 +2725,8 @@ sub csd_render {
 	my $pid=fork();
 	die "Cannot fork: $!" if (! defined $pid);
 	if (! $pid) {
-		my $opts = $Part->{'outfile_params_le'}." -o $outfile"; ## -o = outfile path
-		exec("/usr/bin/xterm", "-e", $Part->{'csound_path_pe'}." $opts $newfile");
+		my $opts = $Project->{'outfile_params_le'}." -o $outfile"; ## -o = outfile path
+		exec("/usr/bin/xterm", "-e", $Project->{'csound_path_pe'}." $opts $newfile");
 		&Csgrouper::Describe($subname,"still a little problem here.. $!"); 
 		return 1;
 	}
@@ -2781,7 +2746,7 @@ sub csd_sas {
   # $Csgrouper::DEBFLAG = 0;
   my $txt = $Score_tw->Contents();
   my $file = &Csgrouper::Datem('n'); $file = "csg.$file.csd";
-  my $newfile = $mw->getSaveFile(-title => "Save csd file as:", -initialdir => $Part->{'run_path_pe'}."/bkp", -initialfile => $file);
+  my $newfile = $mw->getSaveFile(-title => "Save csd file as:", -initialdir => $Project->{'run_path_pe'}."/bkp", -initialfile => $file);
   &Csgrouper::says($subname, $newfile);
   if ($newfile =~ /.+/) {
 	open (FH, "> $newfile") or  die "Can't w-open $newfile: $!";
@@ -2802,28 +2767,28 @@ sub csd_write {
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
   if ($CsgObj->ready != 1){
-    &Csgrouper::Describe($subname, "CSD not ready : could not write CSD part");
+    &Csgrouper::Describe($subname, "CSD not ready : could not write CSD score");
     return;
   }
   ## Which sequences to print:
-  my @comseqs = split /$Csgrouper::SETSEP/,$Part->{'part_select_le'};
-  if ($Part->{'part_selprnt_le'} == 1) {
+  my @comseqs = split /$Csgrouper::SETSEP/,$Project->{'select_le'};
+  if ($Project->{'selprnt_le'} == 1) {
   	&Csgrouper::Describe($subname,"Commented out sequences ids: @comseqs");
   }
 	## Information gathered by struct_ctl (see below).
-  my $csd = "; ".$Part->{'part_title_le'}."; ".$Part->{'part_author_le'}.", ";
+  my $csd = "; ".$Project->{'title_le'}."; ".$Project->{'author_le'}.", ";
   $csd .= &Csgrouper::Datem().".\n\n";
   $csd .= "\n; Csgrouper params:\n\n";
-  $csd .= "; intersil:\t".$Part->{'part_intersil_le'}."\n";
-  $csd .= "; steps:\t".$Part->{'part_steps_le'}."\n";
-  $csd .= "; cmp. type:\t".$Part->{'part_comptype_mw'}."\n";
-  $csd .= "; dur. type:\t".$Part->{'part_durtype_mw'}." (0 = scmp1, 1=rand)\n";
+  $csd .= "; intersil:\t".$Project->{'intersil_le'}."\n";
+  $csd .= "; steps:\t".$Project->{'steps_le'}."\n";
+  $csd .= "; cmp. type:\t".$Project->{'comptype_mw'}."\n";
+  $csd .= "; dur. type:\t".$Project->{'durtype_mw'}." (0 = scmp1, 1=rand)\n";
   $csd .= "\n<CsoundSynthesizer>\n";
   $csd .= "\n<CsInstruments>\n";
   $csd .= "\n; Csound params:\n\n";
-  $csd .= "sr=".$Part->{'csound_sr_le'}."\n";
-  $csd .= "ksmps=".$Part->{'csound_ksmps_le'}."\n";
-  $csd .= "nchnls=".$Part->{'csound_nchnls_le'}."\n";
+  $csd .= "sr=".$Project->{'csound_sr_le'}."\n";
+  $csd .= "ksmps=".$Project->{'csound_ksmps_le'}."\n";
+  $csd .= "nchnls=".$Project->{'csound_nchnls_le'}."\n";
   $csd .= "\n; Global init:\n\n";
   $csd .= $Orcini_tw->Contents()."\n";
   $csd .= "\n; Instruments:\n\n";
@@ -2856,7 +2821,7 @@ sub csd_write {
 		my $maxdur = 0; 
 		$csd .= "s ; Section $g.\n";
 		$csd .= "\n; Tempo:\n\n";
-		$csd .= $Part->{'part_tempo_le'}."\n";
+		$csd .= $Project->{'tempo_le'}."\n";
 		for (my $n = 0; $n < $len; $n++) {
 			## my $str =  ${$TracksH{$g}}[$n]; 
 			my $str =  ${$CsgObj->tracks->{$g}}[$n]; 
@@ -2868,7 +2833,7 @@ sub csd_write {
 			## Now record these tracks without any concern for time precedence:
 			## The container sequences will be set to the track ids in order to 
 			## be able to recover intelligence of what had been done when later reading a 
-			## previous csd part whose sequence order could have been modified in the meantime.
+			## previous csd score whose sequence order could have been modified in the meantime.
 			foreach (@seqs) {
 				my $tid = $_; my $seqdur = 0;
 				my $sid = $CsgObj->sequences->{"Tkrow_$tid\_id"};
@@ -2895,7 +2860,7 @@ sub csd_write {
 						else { $val =~ s/^(.*)(\.{1})$/$2/ }
 						$line .= $val."\t";
 					}
-					if ($Part->{'part_selprnt_le'} == 1) {
+					if ($Project->{'selprnt_le'} == 1) {
 						if ($sid ~~ @comseqs){ ## Not selected for printing. 
 							$line = ";$line" ;
 							$line =~ s/\n/\n;/g if ($first == 1);
@@ -2929,7 +2894,7 @@ sub csd_write {
 				$def =~ s/\n*//g; $fun =~ s/\n*//g; ## A Tk bug.
 				$line .= "$def\t";
 			} 
-			if ($Part->{'part_selprnt_le'} == 1) {
+			if ($Project->{'selprnt_le'} == 1) {
 					$line = ";$line" if ($ins ~~ @comseqs); ## Not selected for printing. 
 			}
 			$csd .= $line.";\n";
@@ -2991,519 +2956,6 @@ sub fun_menu {
 	return([@menu]);	
 }	 ## END fun_menu().
 
-=item * ins_def() : gets standard ins 1 and MAXOBJ as well as ftb 1 and global garvbsig into Orchestra tabs.
-=cut
-
-sub ins_def { 
-  my $subname = 'ins_def';
-  { no warnings; &Csgrouper::says($subname, "@_"); }
-  my $oldebflag = $Csgrouper::DEBFLAG; 
-  # $Csgrouper::DEBFLAG = 1;
-  my $pref = "i1";
-  $CsgObj->instruments->{$pref.'_author'} = "csound";
-  $CsgObj->instruments->{$pref.'_name'} = "Simple Sine";
-  $CsgObj->instruments->{$pref.'_comment'} = "A basic instrument.";
-  $CsgObj->instruments->{$pref.'_id'} = 1;
-  $CsgObj->instruments->{$pref.'_type'} = "sine";
-  $CsgObj->instruments->{$pref.'_path'} = "internal";
-  $CsgObj->instruments->{$pref.'_content'} = 
-  "\n idur = p3;\n".
-  "iamp = p4;\n".
-  "ifq1 = p5;\n".
-  "ift1 = p6;\n".
-  "irvn = p7;\n".
-  "irvs = p8;\n".
-  "a1  oscil ampdb(iamp), ifq1, ift1 ;\n".
-  "garvbsig = garvbsig+(a1*irvs);\n".
-  "outs a1,a1 ;\n".
-	"endin ;\n";
-  $CsgObj->instruments->{$pref.'_p3_fun'} = "dur";
-  $CsgObj->instruments->{$pref.'_p3_def'} = "1";
-  $CsgObj->instruments->{$pref.'_p4_fun'} = "amp";
-  $CsgObj->instruments->{$pref.'_p4_def'} = "60";
-  $CsgObj->instruments->{$pref.'_p5_fun'} = "fq1";
-  $CsgObj->instruments->{$pref.'_p5_def'} = "440";
-  $CsgObj->instruments->{$pref.'_p6_fun'} = "ft1";
-  $CsgObj->instruments->{$pref.'_p6_def'} = "10";
-  $CsgObj->instruments->{$pref.'_p7_fun'} = "rvn";
-  $CsgObj->instruments->{$pref.'_p7_def'} = "1";
-  $CsgObj->instruments->{$pref.'_p8_fun'} = "rvs";
-  $CsgObj->instruments->{$pref.'_p8_def'} = "0.2";
-
-  ## Now create or refresh the corresponding tab (-$pref = not XML storable).
-  if (exists $CsgObj->instruments->{"I1"}) { $Orcbook->delete($pref) }
-  $CsgObj->instruments->{'-'.$pref.'_tab'} = $Orcbook->add($pref, -label=>$pref, -raisecmd=>\&book_open);
-
-  $CsgObj->instruments->{"I1"} = &Csgrouper::Datem();
-
-  ## File name, Title, Desc, Comments text flds
-  $CsgObj->instruments->{'-'.$pref.'_frame'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Frame(-borderwidth=>4, -relief=>'groove');
-  $CsgObj->instruments->{'-'.$pref.'_frame'}->form(-left=>['%1',0], -right=>['%99',0], -top=>['%1',4]);
-  $CsgObj->instruments->{'-'.$pref.'_path_label'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Label( -textvariable=>\'File path: ' )->form(-top=>['%1',4],-left=>['%1',0]);
-  $CsgObj->instruments->{'-'.$pref.'_path_entry'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->PathEntry( 
-  	-textvariable=>\$CsgObj->instruments->{$pref.'_path'}
-  	,-background=>$COLOR{input_bgcolor}
-  	,-state=>'normal',  
-  )->form(
-		-left=>[$CsgObj->instruments->{'-'.$pref.'_path_label'},0]
-		,-top=>['%1',4]
-		,-right=>['%40',0]
-	);
-
-  $CsgObj->instruments->{'-'.$pref.'_author_text'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->LabEntry(
-		-label => 'Author: '
-		,-labelPack => ['-side', 'left', '-anchor', 'w' ]
-		#,-labelFont => '9x15bold'
-		,-background => $COLOR{input_bgcolor}
-		,-foreground => $COLOR{input_fgcolor}
-		,-relief => 'ridge'
-		,-state => 'normal'
-		,-textvariable =>\$CsgObj->instruments->{$pref.'_author'}
-		,-width => 12
-		,-validate => 'key'
-		,-validatecommand => sub { &valid_entry($_[1],'spalnumin') }
-		,-invalidcommand => sub { }
-  );
-  $CsgObj->instruments->{'-'.$pref.'_author_text'}->form(   
-	-top=>['%1',4]
-	,-left=>[$CsgObj->instruments->{'-'.$pref.'_path_entry'},0]
-  );
-
-  $CsgObj->instruments->{'-'.$pref.'_name_text'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->LabEntry(
-		-label => 'Ins. name: '
-		,-labelPack => ['-side', 'left', '-anchor', 'w' ]
-		#,-labelFont => '9x15bold'
-		,-background => $COLOR{input_bgcolor}
-		,-foreground => $COLOR{input_fgcolor}
-		,-relief => 'ridge'
-		,-state => 'normal'
-		,-textvariable =>\$CsgObj->instruments->{$pref.'_name'}
-		,-width => 12
-		,-validate => 'key'
-		,-validatecommand => sub { &valid_entry($_[1],'spalnumin') }
-		,-invalidcommand => sub { }
-  );
-  $CsgObj->instruments->{'-'.$pref.'_name_text'}->form(   
-		-top=>['%1',4]
-		,-left=>[$CsgObj->instruments->{'-'.$pref.'_author_text'},0]
-  );
-
-  ## ### Multi choice: $COLOR{'button_bgcolor'}
-	$CsgObj->instruments->{'-'.$pref.'_type_text'} =
-	$CsgObj->instruments->{'-'.$pref.'_frame'}->Menubutton(
-		 -borderwidth=>1
-		,-background => $COLOR{cbox_bgcolor}
-		,-foreground => $COLOR{cbox_fgcolor}
-		,-relief=>'groove'
-		,-text=>'Ins. type'
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'Inst',
-		-variable => \$CsgObj->instruments->{$pref.'_type'}
-		,-value => 'ins'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'Fx',
-		-variable => \$CsgObj->instruments->{$pref.'_type'}
-		,-value => 'fx'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->separator();
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'amp',
-		-variable => \$CsgObj->instruments->{$pref.'_amp_type'}
-		,-value => 'amp'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'ampdb',
-		-variable => \$CsgObj->instruments->{$pref.'_amp_type'}
-		,-value => 'ampdb'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->separator();
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'cps',
-		-variable => \$CsgObj->instruments->{$pref.'_freq_type'}
-		,-value => 'cps'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'cpspch',
-		-variable => \$CsgObj->instruments->{$pref.'_freq_type'}
-		,-value => 'cpspch'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'midi',
-		-variable => \$CsgObj->instruments->{$pref.'_freq_type'}
-		,-value => 'midi'
-		,-underline => 0
-	);
-	
-  $CsgObj->instruments->{'-'.$pref.'_type_text'}->form(   
-	-top=>['%1',4]
-	,-left=>[$CsgObj->instruments->{'-'.$pref.'_name_text'},4]
-  );
-
-  $CsgObj->instruments->{'-'.$pref.'_com_label'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Label( -textvariable=>\'Comments: ' )->form(-left=>['%1',0],-top=>[$CsgObj->instruments->{'-'.$pref.'_name_text'},4]);
-  $CsgObj->instruments->{'-'.$pref.'_com_text'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Text(-state=>'normal', -background=>$COLOR{input_bgcolor}, -height=>'2')->form(
-		-left=>[$CsgObj->instruments->{'-'.$pref.'_com_label'},0]
-		,-top=>[$CsgObj->instruments->{'-'.$pref.'_name_text'},4]
-		,-right=>['%99',0]
-		## XXX WARNING wrap option produces an error when not in scrolled text.
-  );
-  $CsgObj->instruments->{'-'.$pref.'_com_text'}->Contents($CsgObj->instruments->{$pref.'_comment'});
-  
-  ## Default params table  with zeroes if no previous data in i576_p4 e.g.
-  my $parnum = 2;
-  $CsgObj->instruments->{'-'.$pref.'_table'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Table(
-		-rows => 3
-		,-columns => ($parnum+1)
-		,-relief=>'groove'
-		,-scrollbars => 'se' 
-		,-fixedrows => 1
-		,-fixedcolumns => 1
-		,-takefocus => 'on'
-  );
-  $CsgObj->instruments->{'-'.$pref.'_table'}->put(0, 0, 'ind:');
-  $CsgObj->instruments->{'-'.$pref.'_table'}->put(1, 0, 'fun:');
-  $CsgObj->instruments->{'-'.$pref.'_table'}->put(2, 0, 'def:');
-  for (my $n = 1; $n <= $parnum; $n++) {
-		my $tmp_label = $CsgObj->instruments->{'-'.$pref.'_table'}->Label(-text =>"p".($n+2), -anchor => 'w', -relief =>'groove', -justify => 'left');
-		my $tmp_fun = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
-		my $tmp_def = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
-		$CsgObj->instruments->{'-'.$pref.'_table'}->put(0, $n, $tmp_label);
-		$CsgObj->instruments->{'-'.$pref.'_table'}->put(1, $n, $tmp_fun);
-		$CsgObj->instruments->{'-'.$pref.'_table'}->get(1, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_fun'}); 
-		$CsgObj->instruments->{'-'.$pref.'_table'}->put(2, $n, $tmp_def);
-		$CsgObj->instruments->{'-'.$pref.'_table'}->get(2, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_def'}); 
-  }
-  $CsgObj->instruments->{'-'.$pref.'_table'}->form(
-		-left=>['%1',0]
-		,-top=>[$CsgObj->instruments->{'-'.$pref.'_com_text'},4]
-		,-right=>['%99',0]
-  );
-
-  ## Delete button. 
-  $CsgObj->instruments->{'-'.$pref.'_delete_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Button(
-	  -background =>$COLOR{'button_bgcolor'}
-	  ,-foreground =>$COLOR{'button_fgcolor'}
-	  ,-text=>'Delete'
-	  ,-state=>'disabled'
-	  ,-command=>\sub { &ins_del($pref) }
-  )->form(
-		-right=>['%99',4]
-		, -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},4]
-  );
-
-  ## Save as button. 
-  $CsgObj->instruments->{'-'.$pref.'_saveas_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Button(
-	  -background =>$COLOR{'button_bgcolor'}
-	  ,-foreground =>$COLOR{'button_fgcolor'}
-	  ,-text=>'Save As'
-	  ,-state=>'normal'
-	  ,-command=>\sub {ins_sas($pref)}
-  )->form(
-		-right=>[$CsgObj->instruments->{'-'.$pref.'_delete_button'},4]
-		, -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},4]
-  );
-
-	## Save changes button. 
-	$CsgObj->instruments->{'-'.$pref.'_save_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Button(
-		-background =>$COLOR{'button_bgcolor'}
-		,-foreground =>$COLOR{'button_fgcolor'}
-		,-text=>'Update'
-		,-state=>'normal'
-		,-command=>\&ins_update
-	)->form(
-	  -right=>[$CsgObj->instruments->{'-'.$pref.'_saveas_button'},4]
-	  , -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},4]
-	);
-
-	## New ins button. 
-	$CsgObj->instruments->{'-'.$pref.'_new_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Menubutton(
-	  -text=>'New',
-	  -menuitems => [
-		  ['command' => 'New Ins', -command => sub { &ins_new('ins') } ],
-		  ['command' => 'New FX', -command => sub { &ins_new('fx') } ],
-	  ]	
-		,-background =>$COLOR{'button_bgcolor'}
-		,-foreground =>$COLOR{'button_fgcolor'}
-	)->form(
- 	  -right=>[$CsgObj->instruments->{'-'.$pref.'_save_button'},-4]
- 	  , -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},7]
- 	);                 		
-
-  ## Instrument text field (modifiable). 
-  $CsgObj->instruments->{'-'.$pref.'_content_text'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Scrolled(
-		'TextUndo'
-		, -background=>$COLOR{input_bgcolor}
-		, -foreground =>$COLOR{input_fgcolor}
-		, -scrollbars => 'se' 
-		, -wrap => 'word' 
-		);
-  $CsgObj->instruments->{'-'.$pref.'_content_text'}->form(
-		-top=>[$CsgObj->instruments->{'-'.$pref.'_save_button'},8]
-		, -left=>['%1',0], -right=>['%99',0]
-		, -bottom=>['%98',0]
-  );
-  $CsgObj->instruments->{'-'.$pref.'_content_text'}->Contents(
-		"instr ".$CsgObj->instruments->{$pref.'_id'}.
-		$CsgObj->instruments->{$pref.'_content'}
-  );
-  ## ### Now the same with instrument 576
-  $pref = "i576";
-  $CsgObj->instruments->{$pref.'_author'} = "csound";
-  $CsgObj->instruments->{$pref.'_name'} = "Gobal Reverb";
-  $CsgObj->instruments->{$pref.'_comment'} = "An instrument that is receiving input from a global variable should have a higher number than any instrument that are producing output for that variable.(R. Pinkston)";
-  $CsgObj->instruments->{$pref.'_id'} = 576;
-  $CsgObj->instruments->{$pref.'_type'} = "fx";
-  $CsgObj->instruments->{$pref.'_amp_type'} = "";
-  $CsgObj->instruments->{$pref.'_freq_type'} = "";
-  $CsgObj->instruments->{$pref.'_path'} = "internal";
-  $CsgObj->instruments->{$pref.'_content'} = 
-	" idur = p3 ;\n".
-	" irvbtime = p4 ;\n".
-	" asig reverb garvbsig,irvbtime ;\n".
-	" outs asig,asig ;\n".
-	" garvbsig = 0 ;\n".
-	"endin ;\n";
-  $CsgObj->instruments->{$pref.'_p3_fun'} = "dur";
-  $CsgObj->instruments->{$pref.'_p3_def'} = "120";
-  $CsgObj->instruments->{$pref.'_p4_fun'} = "rvt";
-  $CsgObj->instruments->{$pref.'_p4_def'} = "120";
-
-  ## Now create or refresh the corresponding tab (-$pref = not XML storable).
-  if (exists $CsgObj->instruments->{"I576"}) { $Orcbook->delete($pref) }
-  $CsgObj->instruments->{'-'.$pref.'_tab'} = $Orcbook->add($pref, -label=>$pref, -raisecmd=>\&book_open);
-
-  $CsgObj->instruments->{"I576"} = &Csgrouper::Datem();
-
-  ## File name, Title, Desc, Comments text flds
-  $CsgObj->instruments->{'-'.$pref.'_frame'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Frame(-borderwidth=>4, -relief=>'groove');
-  $CsgObj->instruments->{'-'.$pref.'_frame'}->form(-left=>['%1',0], -right=>['%99',0], -top=>['%1',4]);
-  $CsgObj->instruments->{'-'.$pref.'_path_label'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Label( -textvariable=>\'File path: ' )->form(-top=>['%1',4],-left=>['%1',0]);
-  $CsgObj->instruments->{'-'.$pref.'_path_entry'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->PathEntry( -textvariable=>\$CsgObj->instruments->{$pref.'_path'}, -background=>$COLOR{input_bgcolor}, -state=>'normal',  )->form(
-	-left=>[$CsgObj->instruments->{'-'.$pref.'_path_label'},0]
-	,-top=>['%1',4]
-	,-right=>['%40',0]
-  );
-
-  $CsgObj->instruments->{'-'.$pref.'_author_text'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->LabEntry(
-		-label => 'Author: '
-		,-labelPack => ['-side', 'left', '-anchor', 'w' ]
-		#,-labelFont => '9x15bold'
-		,-background => $COLOR{input_bgcolor}
-		,-foreground => $COLOR{input_fgcolor}
-		,-relief => 'ridge'
-		,-state => 'normal'
-		,-textvariable =>\$CsgObj->instruments->{$pref.'_author'}
-		,-width => 12
-		,-validate => 'key'
-		,-validatecommand => sub { &valid_entry($_[1],'spalnumin') }
-		,-invalidcommand => sub { }
-  );
-  $CsgObj->instruments->{'-'.$pref.'_author_text'}->form(   
-		-top=>['%1',4]
-		,-left=>[$CsgObj->instruments->{'-'.$pref.'_path_entry'},0]
-  );
-
-  $CsgObj->instruments->{'-'.$pref.'_name_text'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->LabEntry(
-		-label => 'Ins. name: '
-		,-labelPack => ['-side', 'left', '-anchor', 'w' ]
-		#,-labelFont => '9x15bold'
-		,-background => $COLOR{input_bgcolor}
-		,-foreground => $COLOR{input_fgcolor}
-		,-relief => 'ridge'
-		,-state => 'normal'
-		,-textvariable =>\$CsgObj->instruments->{$pref.'_name'}
-		,-width => 12
-		,-validate => 'key'
-		,-validatecommand => sub { &valid_entry($_[1],'spalnumin') }
-		,-invalidcommand => sub { }
-  );
-  $CsgObj->instruments->{'-'.$pref.'_name_text'}->form(   
-		-top=>['%1',4]
-		,-left=>[$CsgObj->instruments->{'-'.$pref.'_author_text'},0]
-  );
-
-  ## ### Multi choice:
-	$CsgObj->instruments->{'-'.$pref.'_type_text'} =
-	$CsgObj->instruments->{'-'.$pref.'_frame'}->Menubutton(
-		 -borderwidth=>1
-		,-background => $COLOR{cbox_bgcolor}
-		,-foreground => $COLOR{cbox_fgcolor}
-		,-relief=>'groove'
-		,-text=>'Ins. type'
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'Inst',
-		-variable => \$CsgObj->instruments->{$pref.'_type'}
-		,-value => 'ins'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'Fx',
-		-variable => \$CsgObj->instruments->{$pref.'_type'}
-		,-value => 'fx'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->separator();
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'amp',
-		-variable => \$CsgObj->instruments->{$pref.'_amp_type'}
-		,-value => 'amp'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'ampdb',
-		-variable => \$CsgObj->instruments->{$pref.'_amp_type'}
-		,-value => 'ampdb'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->separator();
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'cps',
-		-variable => \$CsgObj->instruments->{$pref.'_freq_type'}
-		,-value => 'cps'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'cpspch',
-		-variable => \$CsgObj->instruments->{$pref.'_freq_type'}
-		,-value => 'cpspch'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'midi',
-		-variable => \$CsgObj->instruments->{$pref.'_freq_type'}
-		,-value => 'midi'
-		,-underline => 0
-	);
-	
-  $CsgObj->instruments->{'-'.$pref.'_type_text'}->form(   
-		-top=>['%1',4]
-		,-left=>[$CsgObj->instruments->{'-'.$pref.'_name_text'},4]
-  );
-
-  $CsgObj->instruments->{'-'.$pref.'_com_label'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Label( -textvariable=>\'Comments: ' )->form(-left=>['%1',0],-top=>[$CsgObj->instruments->{'-'.$pref.'_name_text'},4]);
-		$CsgObj->instruments->{'-'.$pref.'_com_text'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Text(-state=>'normal', -background=>$COLOR{input_bgcolor}, -height=>'2')->form(
-		-left=>[$CsgObj->instruments->{'-'.$pref.'_com_label'},0]
-		,-top=>[$CsgObj->instruments->{'-'.$pref.'_name_text'},4]
-		,-right=>['%99',0]
-		## XXX WARNING wrap option produces an error when not in scrolled text.
-		);
-		$CsgObj->instruments->{'-'.$pref.'_com_text'}->Contents($CsgObj->instruments->{$pref.'_comment'});
-		
-		## Default params table  with zeroes if no previous data in i576_p4 e.g.
-		$parnum = 1;
-		$CsgObj->instruments->{'-'.$pref.'_table'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Table(
-		-rows => 3
-		,-columns => ($parnum+1)
-		,-relief=>'groove'
-		,-scrollbars => 'se' 
-		,-fixedrows => 1
-		,-fixedcolumns => 1
-		,-takefocus => 'on'
-  );
-  $CsgObj->instruments->{'-'.$pref.'_table'}->put(0, 0, 'ind:');
-  $CsgObj->instruments->{'-'.$pref.'_table'}->put(1, 0, 'fun:');
-  $CsgObj->instruments->{'-'.$pref.'_table'}->put(2, 0, 'def:');
-  for (my $n = 1; $n <= $parnum; $n++) {
-	my $tmp_label = $CsgObj->instruments->{'-'.$pref.'_table'}->Label(-text =>"p".($n+2), -anchor => 'w', -relief =>'groove', -justify => 'left');
-	my $tmp_fun = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
-	my $tmp_def = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
-	$CsgObj->instruments->{'-'.$pref.'_table'}->put(0, $n, $tmp_label);
-	$CsgObj->instruments->{'-'.$pref.'_table'}->put(1, $n, $tmp_fun);
-	$CsgObj->instruments->{'-'.$pref.'_table'}->get(1, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_fun'}); 
-	$CsgObj->instruments->{'-'.$pref.'_table'}->put(2, $n, $tmp_def);
-	$CsgObj->instruments->{'-'.$pref.'_table'}->get(2, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_def'}); 
-  }
-  $CsgObj->instruments->{'-'.$pref.'_table'}->form(
-		-left=>['%1',0]
-		,-top=>[$CsgObj->instruments->{'-'.$pref.'_com_text'},4]
-		,-right=>['%99',0]
-  );
-
-  ## Delete button. 
-  $CsgObj->instruments->{'-'.$pref.'_delete_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Button(
-	  -background =>$COLOR{'button_bgcolor'}
-	  ,-foreground =>$COLOR{'button_fgcolor'}
-	  ,-text=>'Delete'
-	  ,-state=>'disabled'
-	  ,-command=>\sub { &ins_del($pref) }
-  )->form(
-		-right=>['%99',4]
-		, -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},4]
-  );
-
-  ## Save as button. 
-  $CsgObj->instruments->{'-'.$pref.'_saveas_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Button(
-	  -background =>$COLOR{'button_bgcolor'}
-	  ,-foreground =>$COLOR{'button_fgcolor'}
-	  ,-text=>'Save As'
-	  ,-state=>'normal'
-	  ,-command=>\sub {ins_sas($pref)}
-  )->form(
-	-right=>[$CsgObj->instruments->{'-'.$pref.'_delete_button'},4]
-	, -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},4]
-  );
-
-	## Save changes button. 
-	$CsgObj->instruments->{'-'.$pref.'_save_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Button(
-		-background =>$COLOR{'button_bgcolor'}
-		,-foreground =>$COLOR{'button_fgcolor'}
-		,-text=>'Update'
-		,-state=>'normal'
-		,-command=>\&ins_update
-	)->form(
-	  -right=>[$CsgObj->instruments->{'-'.$pref.'_saveas_button'},4]
-	  , -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},4]
-	);
-
-	## New ins button. 
-	$CsgObj->instruments->{'-'.$pref.'_new_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Menubutton(
-	  -text=>'New',
-	  -menuitems => [
-		  ['command' => 'New Ins', -command => sub { &ins_new('ins') } ],
-		  ['command' => 'New FX', -command => sub { &ins_new('fx') } ],
-	  ]	
-		,-background =>$COLOR{'button_bgcolor'}
-		,-foreground =>$COLOR{'button_fgcolor'}
-	)->form(
- 	  -right=>[$CsgObj->instruments->{'-'.$pref.'_save_button'},-4]
- 	  , -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},7]
- 	);                 		
-
-  ## Instrument text field (modifiable). 
-  $CsgObj->instruments->{'-'.$pref.'_content_text'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Scrolled(
-	'TextUndo'
-	, -background=>$COLOR{input_bgcolor}
-	, -foreground =>$COLOR{input_fgcolor}
-	, -scrollbars => 'se' 
-	, -wrap => 'word' 
-  );
-  $CsgObj->instruments->{'-'.$pref.'_content_text'}->form(
-	-top=>[$CsgObj->instruments->{'-'.$pref.'_save_button'},8]
-	, -left=>['%1',0], -right=>['%99',0]
-	, -bottom=>['%98',0]
-  );
-  $CsgObj->instruments->{'-'.$pref.'_content_text'}->Contents(
-	"instr ".$CsgObj->instruments->{$pref.'_id'}."\n".
-	$CsgObj->instruments->{$pref.'_content'}
-  );
-  ## ### Now update F-tables and Global vars:
-  my $orcinit = $Orcini_tw->Contents();
-  my $ftb = $Ftb_tw->Contents();
-  $ftb = "f 1 0 65536 10 1 ;	sine (internal).\n".$ftb if ($ftb !~ /\s*f\s+1\s+\d+.*\n/);
-  $Ftb_tw->Contents($ftb);
-  $orcinit = "garvbsig = 0 ;	global reverb (internal).\n".$orcinit if ($orcinit !~ /\s*garvbsig[\=\s]+.*\n/);
-  $Orcini_tw->Contents($orcinit);
-  $Csgrouper::DEBFLAG =  $oldebflag;
-} ## END ins_def().
-
 =item * ins_del($ins) : deletes an Orchestra tab.
 =cut
 
@@ -3544,249 +2996,101 @@ sub ins_del {
 
 sub ins_load { 
   my $subname = "ins_load";
-  { no warnings; &Csgrouper::says($subname, "@_" ,1); }
+  # { no warnings; &Csgrouper::says($subname, "@_" ,1); }
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 0;
-  my ($instr,$name,$parnum,%tmp,$type,$var);
-  for (my $i = 1; $i <= MAXOBJ; $i++) { 
-		next if (not exists $Part->{"I$i"});
+  my ($arg) = @_; my $step = 1;
+  if ($arg =~ /default/) { $step = (MAXOBJ)-1 ; }
+  for (my $i = 1; $i <= MAXOBJ; $i += $step) { 
 		my $pref = "i$i";
-		$CsgObj->instruments->{"I".$i} = &Csgrouper::Datem();
-		$CsgObj->instruments->{$pref.'_id'} = $Part->{$pref.'_id'};
-		$CsgObj->instruments->{$pref.'_oldid'} = $Part->{$pref.'_oldid'};
-		$CsgObj->instruments->{$pref.'_path'} = $Part->{$pref.'_path'};
-		$CsgObj->instruments->{$pref.'_author'} = $Part->{$pref.'_author'};
-		$CsgObj->instruments->{$pref.'_name'} = $Part->{$pref.'_name'};
-		$CsgObj->instruments->{$pref.'_type'} = $Part->{$pref.'_type'};
-		$CsgObj->instruments->{$pref.'_amp_type'} = $Part->{$pref.'_amp_type'};
-		$CsgObj->instruments->{$pref.'_freq_type'}= $Part->{$pref.'_freq_type'};
-		$CsgObj->instruments->{$pref.'_comment'} = $Part->{$pref.'_comment'};
-		$CsgObj->instruments->{$pref.'_content'} = $Part->{$pref.'_content'};
-		$CsgObj->instruments->{$pref.'_parnum'} = $Part->{$pref.'_parnum'};
-		for (my $i = 1; $i <= $CsgObj->instruments->{$pref.'_parnum'}; $i++){ 
-			$CsgObj->instruments->{$pref.'_p'.($i+2).'_fun'} = $Part->{$pref.'_p'.($i+2).'_fun'};
-			$CsgObj->instruments->{$pref.'_p'.($i+2).'_def'} = $Part->{$pref.'_p'.($i+2).'_def'};
-		} 
-	
+		if ($arg =~ /default/) { # When no instrument exists, create default ones:
+		  if (exists $CsgObj->instruments->{"I$i"}) { $Orcbook->delete($pref) }
+			$CsgObj->instruments->{"I".$i} = &Csgrouper::Datem();
+			if( $i == 1 ){ # Simple sine.
+				$CsgObj->instruments->{$pref.'_author'} = "csound";
+				$CsgObj->instruments->{$pref.'_name'} = "Simple Sine";
+				$CsgObj->instruments->{$pref.'_comment'} = "A basic instrument.";
+				$CsgObj->instruments->{$pref.'_id'} = $i;
+				$CsgObj->instruments->{$pref.'_type'} = "sine";
+				$CsgObj->instruments->{$pref.'_path'} = "internal";
+				$CsgObj->instruments->{$pref.'_content'} = 
+				"\ninstr $i ;\n".
+				" idur = p3 ;\n".
+				" ifq1 = p5 ;\n".
+				" irvs = p7 ;\n".
+				" a1  oscil ampdb(p4), ifq1, p6 ;\n".
+				" garvbsig = garvbsig+(a1*irvs) ;\n".
+				" outs a1,a1 ;\n".
+				"endin ;\n";
+				$CsgObj->instruments->{$pref.'_p3_fun'} = "dur";
+				$CsgObj->instruments->{$pref.'_p3_def'} = "1";
+				$CsgObj->instruments->{$pref.'_p4_fun'} = "amp";
+				$CsgObj->instruments->{$pref.'_p4_def'} = "60";
+				$CsgObj->instruments->{$pref.'_p5_fun'} = "fq1";
+				$CsgObj->instruments->{$pref.'_p5_def'} = "440";
+				$CsgObj->instruments->{$pref.'_p6_fun'} = "ft1";
+				$CsgObj->instruments->{$pref.'_p6_def'} = "10";
+				$CsgObj->instruments->{$pref.'_p7_fun'} = "rvs";
+				$CsgObj->instruments->{$pref.'_p7_def'} = "0.2";
+				$CsgObj->instruments->{$pref.'_parnum'} = 5;
+				$Ftb_tw->Contents("f10  0   65536 10 1 ; Sine");
+				$Orcini_tw->Contents("garvbsig init 0 ;");
+			}
+			else { # Simple reverb. if ($i == MAXOBJ)
+				$CsgObj->instruments->{$pref.'_author'} = "csound";
+				$CsgObj->instruments->{$pref.'_name'} = "Gobal Reverb";
+				$CsgObj->instruments->{$pref.'_comment'} = "An instrument that is receiving input from a global variable should have a higher number than any instrument that are producing output for that variable.(R. Pinkston)";
+				$CsgObj->instruments->{$pref.'_id'} = $i;
+				$CsgObj->instruments->{$pref.'_type'} = "fx";
+				$CsgObj->instruments->{$pref.'_amp_type'} = "";
+				$CsgObj->instruments->{$pref.'_freq_type'} = "";
+				$CsgObj->instruments->{$pref.'_path'} = "internal";
+				$CsgObj->instruments->{$pref.'_content'} = 
+				"\ninstr $i\n".
+				" idur = p3 ;\n".
+				" irvbtime = p4 ;\n".
+				" asig reverb garvbsig,irvbtime ;\n".
+				" outs asig,asig ;\n".
+				" garvbsig = 0 ;\n".
+				"endin ;\n";
+				$CsgObj->instruments->{$pref.'_p3_fun'} = "dur";
+				$CsgObj->instruments->{$pref.'_p3_def'} = "120";
+				$CsgObj->instruments->{$pref.'_p4_fun'} = "rvt";
+				$CsgObj->instruments->{$pref.'_p4_def'} = "120";				
+				$CsgObj->instruments->{$pref.'_parnum'} = 2;
+			}
+			## Insert default ftables and init params:
+						
+		} ## END no previous instr.
+		elsif ($arg =~ /file/) { ## load recorded ones:
+			next if (not exists $Project->{"I$i"});
+			$CsgObj->instruments->{"I".$i} = &Csgrouper::Datem();
+			$CsgObj->instruments->{$pref.'_id'} = $Project->{$pref.'_id'};
+			$CsgObj->instruments->{$pref.'_oldid'} = $Project->{$pref.'_oldid'};
+			$CsgObj->instruments->{$pref.'_path'} = $Project->{$pref.'_path'};
+			$CsgObj->instruments->{$pref.'_author'} = $Project->{$pref.'_author'};
+			$CsgObj->instruments->{$pref.'_name'} = $Project->{$pref.'_name'};
+			$CsgObj->instruments->{$pref.'_type'} = $Project->{$pref.'_type'};
+			$CsgObj->instruments->{$pref.'_amp_type'} = $Project->{$pref.'_amp_type'};
+			$CsgObj->instruments->{$pref.'_freq_type'}= $Project->{$pref.'_freq_type'};
+			$CsgObj->instruments->{$pref.'_comment'} = $Project->{$pref.'_comment'};
+			$CsgObj->instruments->{$pref.'_content'} = $Project->{$pref.'_content'};
+			$CsgObj->instruments->{$pref.'_parnum'} = $Project->{$pref.'_parnum'};
+			for (my $i = 1; $i <= $CsgObj->instruments->{$pref.'_parnum'}; $i++){ 
+				$CsgObj->instruments->{$pref.'_p'.($i+2).'_fun'} = $Project->{$pref.'_p'.($i+2).'_fun'};
+				$CsgObj->instruments->{$pref.'_p'.($i+2).'_def'} = $Project->{$pref.'_p'.($i+2).'_def'};
+			}
+			if (exists $CsgObj->instruments->{'-'.$pref.'_tab'}) { $Orcbook->delete($pref) }
+		} ## END optarg.
+
+		&Csgrouper::Debug($subname, "Instrument: $pref $step");
+		
 		## Now create or refresh the corresponding tab (-$pref = not XML storable).
-		if (exists $CsgObj->instruments->{'-'.$pref.'_tab'}) { $Orcbook->delete($pref) }
-		$CsgObj->instruments->{'-'.$pref.'_tab'} = $Orcbook->add($pref, -label=>$pref, -raisecmd=>\&book_open);
-	
-		## File name, Title, Desc, Comments text flds
-		$CsgObj->instruments->{'-'.$pref.'_frame'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Frame(-borderwidth=>4, -relief=>'groove');
-		$CsgObj->instruments->{'-'.$pref.'_frame'}->form(-left=>['%1',0], -right=>['%99',0], -top=>['%1',4]);
-		$CsgObj->instruments->{'-'.$pref.'_path_label'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Label( -textvariable=>\'File path: ' )->form(-top=>['%1',4],-left=>['%1',0]);
-		$CsgObj->instruments->{'-'.$pref.'_path_entry'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->PathEntry( -textvariable=>\$CsgObj->instruments->{$pref.'_path'}, -background=>$COLOR{input_bgcolor}, -state=>'normal',  )->form(
-			-left=>[$CsgObj->instruments->{'-'.$pref.'_path_label'},0]
-			,-top=>['%1',4]
-			,-right=>['%40',0]
-		);
-	
-		$CsgObj->instruments->{'-'.$pref.'_author_text'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->LabEntry(
-			-label => 'Author: '
-			,-labelPack => ['-side', 'left', '-anchor', 'w' ]
-			,-background => $COLOR{input_bgcolor}
-			,-foreground => $COLOR{input_fgcolor}
-			,-relief => 'ridge'
-			,-state => 'normal'
-			,-textvariable =>\$CsgObj->instruments->{$pref.'_author'}
-			,-width => 12
-			,-validate => 'key'
-			,-validatecommand => sub { &valid_entry($_[1],'spalnumin') }	
-		);
-		$CsgObj->instruments->{'-'.$pref.'_author_text'}->form(   
-			-top=>['%1',4]
-			,-left=>[$CsgObj->instruments->{'-'.$pref.'_path_entry'},0]
-		);
-	
-		$CsgObj->instruments->{'-'.$pref.'_name_text'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->LabEntry(
-			-label => 'Ins. name: '
-			,-labelPack => ['-side', 'left', '-anchor', 'w' ]
-			,-background => $COLOR{input_bgcolor}
-			,-foreground => $COLOR{input_fgcolor}
-			,-relief => 'ridge'
-			,-state => 'normal'
-			,-textvariable =>\$CsgObj->instruments->{$pref.'_name'}
-			,-width => 12
-			,-validate => 'key'
-			,-validatecommand => sub { &valid_entry($_[1],'spalnumin') }
-		);
 		
-		$CsgObj->instruments->{'-'.$pref.'_name_text'}->form(   
-			-top=>['%1',4]
-			,-left=>[$CsgObj->instruments->{'-'.$pref.'_author_text'},0]
-		);
-	
-		## Multi-choice:
-	$CsgObj->instruments->{'-'.$pref.'_type_text'} =
-	$CsgObj->instruments->{'-'.$pref.'_frame'}->Menubutton(
-		 -borderwidth=>1
-		,-background => $COLOR{cbox_bgcolor}
-		,-foreground => $COLOR{cbox_fgcolor}
-		,-relief=>'groove'
-		,-text=>'Ins. type'
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'Inst',
-		-variable => \$CsgObj->instruments->{$pref.'_type'}
-		,-value => 'ins'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-		-label => 'Fx',
-		-variable => \$CsgObj->instruments->{$pref.'_type'}
-		,-value => 'fx'
-		,-underline => 0
-	);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->separator();
-		$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-			-label => 'amp',
-			-variable => \$CsgObj->instruments->{$pref.'_amp_type'}
-			,-value => 'amp'
-			,-underline => 0
-		);
-		$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-			-label => 'ampdb',
-			-variable => \$CsgObj->instruments->{$pref.'_amp_type'}
-			,-value => 'ampdb'
-			,-underline => 0
-		);
-	$CsgObj->instruments->{'-'.$pref.'_type_text'}->separator();
-		$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-			-label => 'cps',
-			-variable => \$CsgObj->instruments->{$pref.'_freq_type'}
-			,-value => 'cps'
-			,-underline => 0
-		);
-		$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-			-label => 'cpspch',
-			-variable => \$CsgObj->instruments->{$pref.'_freq_type'}
-			,-value => 'cpspch'
-			,-underline => 0
-		);
-		$CsgObj->instruments->{'-'.$pref.'_type_text'}->radiobutton(
-			-label => 'midi',
-			-variable => \$CsgObj->instruments->{$pref.'_freq_type'}
-			,-value => 'midi'
-			,-underline => 0
-		);
-		
-		$CsgObj->instruments->{'-'.$pref.'_type_text'}->form(   
-			-top=>['%1',4]
-			,-left=>[$CsgObj->instruments->{'-'.$pref.'_name_text'},4]
-		);
-	
-		$CsgObj->instruments->{'-'.$pref.'_com_label'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Label( -textvariable=>\'Comments: ' )->form(-left=>['%1',0],-top=>[$CsgObj->instruments->{'-'.$pref.'_name_text'},4]);
-		$CsgObj->instruments->{'-'.$pref.'_com_text'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Text(-state=>'normal', -background=>$COLOR{input_bgcolor}, -height=>'2')->form(
-			-left=>[$CsgObj->instruments->{'-'.$pref.'_com_label'},0]
-			,-top=>[$CsgObj->instruments->{'-'.$pref.'_name_text'},4]
-			,-right=>['%99',0]
-			## XXX WARNING wrap option produces an error when not in scrolled text.
-		);
-		
-		$CsgObj->instruments->{'-'.$pref.'_com_text'}->Contents($CsgObj->instruments->{$pref.'_comment'});
-		
-		## Default params table  with zeroes if no previous data in i576_p4 e.g.
-		$parnum = $CsgObj->instruments->{$pref.'_parnum'};
-		$CsgObj->instruments->{'-'.$pref.'_table'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Table(
-			-rows => 3
-			,-columns => ($parnum+1)
-			,-relief=>'groove'
-			,-scrollbars => 'se' 
-			,-fixedrows => 1
-			,-fixedcolumns => 1
-			,-takefocus => 'on'
-		);
-		$CsgObj->instruments->{'-'.$pref.'_table'}->put(0, 0, 'ind:');
-		$CsgObj->instruments->{'-'.$pref.'_table'}->put(1, 0, 'fun:');
-		$CsgObj->instruments->{'-'.$pref.'_table'}->put(2, 0, 'def:');
-		for (my $n = 1; $n <= $parnum; $n++){
-			my $tmp_label = $CsgObj->instruments->{'-'.$pref.'_table'}->Label(-text =>"p".($n+2), -anchor => 'w', -relief =>'groove', -justify => 'left');
-			my $tmp_fun = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
-			my $tmp_def = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
-			$CsgObj->instruments->{'-'.$pref.'_table'}->put(0, $n, $tmp_label);
-			$CsgObj->instruments->{'-'.$pref.'_table'}->put(1, $n, $tmp_fun);
-			$CsgObj->instruments->{'-'.$pref.'_table'}->get(1, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_fun'}); 
-			&Csgrouper::Debug($subname, "pref_p_fun:".$CsgObj->instruments->{$pref.'_p'.($n+2).'_fun'});
-			$CsgObj->instruments->{'-'.$pref.'_table'}->put(2, $n, $tmp_def);
-			$CsgObj->instruments->{'-'.$pref.'_table'}->get(2, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_def'}); 
-		}
-		$CsgObj->instruments->{'-'.$pref.'_table'}->form(
-			-left=>['%1',0]
-			,-top=>[$CsgObj->instruments->{'-'.$pref.'_com_text'},4]
-			,-right=>['%99',0]
-		);
-	
-		## Delete button. 
-		my $state = 'normal';
-		$CsgObj->instruments->{'-'.$pref.'_delete_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Button(
-			-background =>$COLOR{'button_bgcolor'}
-			,-foreground =>$COLOR{'button_fgcolor'}
-			,-text=>'Delete'
-			,-state=>$state
-			,-command=>\sub { &ins_del($pref) }
-		)->form(
-			-right=>['%99',4]
-			, -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},4]
-		);
-	
-		## Save as button. 
-		$CsgObj->instruments->{'-'.$pref.'_saveas_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Button(
-			-background =>$COLOR{'button_bgcolor'}
-			,-foreground =>$COLOR{'button_fgcolor'}
-			,-text=>'Save As'
-			,-state=>$state
-			,-command=>\sub {ins_sas($pref)}
-		)->form(
-			-right=>[$CsgObj->instruments->{'-'.$pref.'_delete_button'},4]
-			, -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},4]
-		);
-	
-		## Save changes button. 
-		$CsgObj->instruments->{'-'.$pref.'_save_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Button(
-			-background =>$COLOR{'button_bgcolor'}
-			,-foreground =>$COLOR{'button_fgcolor'}
-			,-text=>'Update'
-			,-state=>$state
-			,-command=>\&ins_update
-		)->form(
-			-right=>[$CsgObj->instruments->{'-'.$pref.'_saveas_button'},4]
-			, -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},4]
-		);
-	
-		## Instrument text field (modifiable).        	
-	
-		## New ins button. 
-		$CsgObj->instruments->{'-'.$pref.'_new_button'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Menubutton(
-			-text=>'New',
-			-menuitems => [
-				['command' => 'New Ins', -command => sub { &ins_new('ins') } ],
-				['command' => 'New FX', -command => sub { &ins_new('fx') } ],
-			]	
-			,-background =>$COLOR{'button_bgcolor'}
-			,-foreground =>$COLOR{'button_fgcolor'}
-		)->form(
-			-right=>[$CsgObj->instruments->{'-'.$pref.'_save_button'},-4]
-			, -top=>[$CsgObj->instruments->{'-'.$pref.'_frame'},7]
-		);                 		
-	
-		$CsgObj->instruments->{'-'.$pref.'_content_text'} = $CsgObj->instruments->{'-'.$pref.'_tab'}->Scrolled(
-			'TextUndo'
-			, -background=>$COLOR{input_bgcolor}
-			, -foreground =>$COLOR{input_fgcolor}
-			, -scrollbars => 'se' 
-			, -wrap => 'word' 
-		);
-	
-		$CsgObj->instruments->{'-'.$pref.'_content_text'}->form(
-			-top=>[$CsgObj->instruments->{'-'.$pref.'_save_button'},8]
-			, -left=>['%1',0], -right=>['%99',0]
-			, -bottom=>['%98',0]
-		);
-		$CsgObj->instruments->{'-'.$pref.'_content_text'}->Contents($CsgObj->instruments->{$pref.'_content'});
+		&ins_refresh($pref,$CsgObj->instruments->{$pref.'_parnum'});
   }
+  &ins_update();
   &Csgrouper::Debug($subname, "Instruments loaded.");
-  END_INS_LOAD:
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END ins_load().
 
@@ -3804,7 +3108,7 @@ sub ins_open {
   while (<$fh>) { ## Our Global reverb and main F-table.
 		my $line = $_ ;
 		chomp $line;
-		if ($line =~ /([^<>;]*)(instr\s\d+)(.*)/){
+		if ($line =~ /([^<>;]*)(instr\s*\d+)(.*)/){
 			$var = $line;
 			$var =~ s/([^<>;]*)(instr\s+)(\d+)(.*)/$3/;
 			$tmp{'_oldid'} = $var;
@@ -3835,11 +3139,11 @@ sub ins_open {
 		}
 		else {
 			if ($line =~ /(.*)(\W+)(p\d+)(\s*.*)/){
-			$var = $line;
-			$var =~ s/(.*)(\W+)(p\d+)(\s*.*)/$3/;
-			## $tmp{'_params'} .= "$var "; ## This var would remain only for the opening session.
-			$tmp{'_parnum'}++; ## We need both:
-			$parnum++;
+				$var = $line;
+				$var =~ s/(.*)(\W+)(p\d+)(\s*.*)/$3/;
+				## $tmp{'_params'} .= "$var "; ## This var would remain only for the opening session.
+				$tmp{'_parnum'}++; ## We need both:
+				$parnum++;
 			}
 			$tmp{'_content'} .= "$line\n";
 		}
@@ -3889,8 +3193,26 @@ sub ins_open {
   &Csgrouper::Debug($subname, "pnm: ".$CsgObj->instruments->{$pref.'_parnum'});
   &Csgrouper::Debug($subname, "com: ".$CsgObj->instruments->{$pref.'_comment'});
   &Csgrouper::Debug($subname, "con: ".$CsgObj->instruments->{$pref.'_content'});
+
+  &ins_refresh($pref,$parnum,'new');
+  &ins_update();
+  END_INS_OPEN:
+  $Csgrouper::DEBFLAG =  $oldebflag;
+} # END ins_open().
+  
+=item * ins_refresh($pref) : create or refresh instrument's tab.
+=cut
+
+sub ins_refresh { 
+  my ($pref,$parnum,$mode) = @_;
+  my $subname = "ins_refresh";
+  { no warnings; &Csgrouper::says($subname, "@_"); }
+  my $oldebflag = $Csgrouper::DEBFLAG;
+  # $Csgrouper::DEBFLAG = 1;
+  my ($instr,$name,$parnum,%tmp,$var);  
+  
   ## Now create or refresh the corresponding tab (-$pref = not XML storable).
-  if (exists $CsgObj->instruments->{'-'.$pref.'_tab'}) { $Orcbook->delete($pref) }
+  if (exists $CsgObj->instruments->{'-'.$pref.'_tab'} && exists $Orcbook->{$pref}) { $Orcbook->delete($pref) }
   $CsgObj->instruments->{'-'.$pref.'_tab'} = $Orcbook->add($pref, -label=>$pref, -raisecmd=>\&book_open);
 
   ## File name, Title, Desc, Comments text flds
@@ -4009,8 +3331,7 @@ sub ins_open {
   );
   $CsgObj->instruments->{'-'.$pref.'_com_text'}->Contents($CsgObj->instruments->{$pref.'_comment'});
   
-  ## Default params table  with zeroes if no previous data in i576_p4 e.g.
-  $parnum = $CsgObj->instruments->{'-'.$pref.'_parnum'};
+  ## Default params table  with zeroes if no previous data, in i576_p4 e.g.
   $CsgObj->instruments->{'-'.$pref.'_table'} = $CsgObj->instruments->{'-'.$pref.'_frame'}->Table(
 	-rows => 3
 		,-columns => ($parnum+1)
@@ -4023,15 +3344,16 @@ sub ins_open {
   $CsgObj->instruments->{'-'.$pref.'_table'}->put(0, 0, 'ind:');
   $CsgObj->instruments->{'-'.$pref.'_table'}->put(1, 0, 'fun:');
   $CsgObj->instruments->{'-'.$pref.'_table'}->put(2, 0, 'def:');
+
   for (my $n = 1; $n <= $parnum; $n++) {
-	my $tmp_label = $CsgObj->instruments->{'-'.$pref.'_table'}->Label(-text =>"p".($n+2), -anchor => 'w', -relief =>'groove', -justify => 'left');
-	my $tmp_fun = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
-	my $tmp_def = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
-	$CsgObj->instruments->{'-'.$pref.'_table'}->put(0, $n, $tmp_label);
-	$CsgObj->instruments->{'-'.$pref.'_table'}->put(1, $n, $tmp_fun);
-	$CsgObj->instruments->{'-'.$pref.'_table'}->get(1, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_fun'}); 
-	$CsgObj->instruments->{'-'.$pref.'_table'}->put(2, $n, $tmp_def);
-	$CsgObj->instruments->{'-'.$pref.'_table'}->get(2, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_def'}); 
+		my $tmp_label = $CsgObj->instruments->{'-'.$pref.'_table'}->Label(-text =>"p".($n+2), -anchor => 'w', -relief =>'groove', -justify => 'left');
+		my $tmp_fun = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
+		my $tmp_def = $CsgObj->instruments->{'-'.$pref.'_table'}->Text(-background => $COLOR{table_bgcolor}, -foreground => $COLOR{table_fgcolor}, -height=>1, -width =>4);
+		$CsgObj->instruments->{'-'.$pref.'_table'}->put(0, $n, $tmp_label);
+		$CsgObj->instruments->{'-'.$pref.'_table'}->put(1, $n, $tmp_fun);
+		$CsgObj->instruments->{'-'.$pref.'_table'}->get(1, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_fun'}); 
+		$CsgObj->instruments->{'-'.$pref.'_table'}->put(2, $n, $tmp_def);
+		$CsgObj->instruments->{'-'.$pref.'_table'}->get(2, $n)->Contents($CsgObj->instruments->{$pref.'_p'.($n+2).'_def'}); 
   }
   $CsgObj->instruments->{'-'.$pref.'_table'}->form(
 		-left=>['%1',0]
@@ -4102,13 +3424,19 @@ sub ins_open {
 		,-left=>['%1',0], -right=>['%99',0]
 		,-bottom=>['%98',0]
   );
-  $CsgObj->instruments->{'-'.$pref.'_content_text'}->Contents(
-		"instr ".$CsgObj->instruments->{$pref.'_id'}."\n".
-		$CsgObj->instruments->{$pref.'_content'}
-  );
-  END_INS_OPEN:
+  if( $mode =~ /new/){
+		$CsgObj->instruments->{'-'.$pref.'_content_text'}->Contents(
+			"instr ".$CsgObj->instruments->{$pref.'_id'}."\n".
+			$CsgObj->instruments->{$pref.'_content'}
+		);
+  }
+  else {
+		$CsgObj->instruments->{'-'.$pref.'_content_text'}->Contents(
+			$CsgObj->instruments->{$pref.'_content'}
+		);
+  }
   $Csgrouper::DEBFLAG =  $oldebflag;
-} ## END ins_open().
+} ## END ins_refresh().
 
 =item * ins_parnum($text) : extract parameter names of a Csound instrument text.
 120426: There are some problems to fix here: (exclude comments from regex matching etc.).
@@ -4117,30 +3445,30 @@ sub ins_open {
 sub ins_parnum {
   my ($txt) = @_;
   my $subname = "ins_parnum";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
   my @lines = split /\n/,$txt;
-  my ($params,$parnum,%tmp);
-  foreach (@lines) { 
-		my $line = $_ ;
-		chomp $line;
-		if ($line =~ /(.*)([^a-zA-Z0-9]+)(p\d+)([^a-zA-Z0-9]*)/){
-			my $var = $line;
-			my @tmp; 
+  my ($line, $params,$parnum,$durtest,@max);
+  $durtest = 0;
+  foreach $line (@lines) { 
+		if ($line =~ /([^;]*)([^a-zA-Z0-9;]+)(p\d+)([^a-zA-Z0-9]*)/){
+			my ($var,$junk) = split /;/, $line;
 			my @pars = $var =~ m/([^a-zA-Z0-9]{1}p\d+[^a-zA-Z0-9]*)/gi;
 			&Csgrouper::Debug($subname, "\@vars: @pars");
 			foreach (@pars) { 
-				my $p = $_;
-				$p =~ s/([^a-zA-Z0-9]{1})(p\d+)([^a-zA-Z0-9]*)/$2/;
-				push @tmp, $p;
+				$_ =~ s/([^a-zA-Z0-9]{1}p)(\d+)([^a-zA-Z0-9]*)/$2/;
+				$max[$_]++;	$durtest = 1 if ($_ == 3);
 			}
-			&Csgrouper::Debug($subname, "\@tmp: @tmp");
-			foreach (@tmp) { $tmp{$_} = 1 }
 		}
   } 
-	while (my ($key,$val) = each %tmp) { $parnum++ }
-  &Csgrouper::Debug($subname, $parnum);
+  for( my $i = 4; $i < (@max); $i++) {
+  	if( $max[$i] < 1 ){
+  		&Csgrouper::Describe($subname, "some parameter is missing");
+  	}
+  }
+  $parnum = scalar(@max)-3; 
+  &Csgrouper::Debug($subname, "$parnum $durtest");
   $Csgrouper::DEBFLAG =  $oldebflag;
   return $parnum;
 } ## END ins_parnum().
@@ -4156,7 +3484,7 @@ sub ins_new {
   # $Csgrouper::DEBFLAG = 1;
   my $txt; 
   my $file = &Csgrouper::Datem('n'); $file = "i.$file.ins";
-  my $fs = $mw->FileSelect(-directory => $Part->{'ins_path_pe'});
+  my $fs = $mw->FileSelect(-directory => $Project->{'ins_path_pe'});
   my $newfile = $fs->Show;
   &Csgrouper::says($subname, $newfile);
   if (!(-f $newfile)) {
@@ -4196,7 +3524,7 @@ sub ins_sas {
   &ins_update();
   my $txt = $CsgObj->instruments->{$ins.'_content'};
   my $file = &Csgrouper::Datem('n'); $file = "i.$file.ins";
-  my $newfile = $mw->getSaveFile(-title => "Save instrument as:", -initialdir => $Part->{'run_path_pe'}."/bkp", -initialfile => $file);
+  my $newfile = $mw->getSaveFile(-title => "Save instrument as:", -initialdir => $Project->{'run_path_pe'}."/bkp", -initialfile => $file);
   &Csgrouper::says($subname, $newfile);
   if ($newfile =~ /.+/) {
 	open (FH, "> $newfile") or  die "Can't w-open $newfile: $!";
@@ -4220,18 +3548,10 @@ sub ins_update {
   ## Here the case is not like a table we only need one numbering.
   ## Having destroyed $CsgObj->instruments->{"I$n"} is sufficient to skip saving all its data.
   for ($n = 1; $n <= MAXOBJ; $n++){ push @len, $n if (exists $CsgObj->instruments->{"I".$n}) } 
-	&Csgrouper::Describe($subname, "@len");
+	&Csgrouper::Debug($subname, "@len");
   foreach (@len){
 		$n = $_;
 		my $pref = "i$n"; 
-		## $CsgObj->instruments->{$pref.'_id'} Should be set already.
-		## $CsgObj->instruments->{$pref.'_oldid'} Should be set already.
-		## $CsgObj->instruments->{$pref.'_type'} should be set already;
-		## $CsgObj->instruments->{$pref.'_amp_type'} should be set already;
-		## $CsgObj->instruments->{$pref.'_freq_type'} should be set already;
-		## $CsgObj->instruments->{$pref.'_author'} should be set already;
-		## $CsgObj->instruments->{$pref.'_name'} should be set already;
-		## $CsgObj->instruments->{$pref.'_path'}  Should be set already.
 		$CsgObj->instruments->{$pref.'_comment'} = $CsgObj->instruments->{'-'.$pref.'_com_text'}->Contents();
 		## Now the value of _content  is changed from what it was during ins_open and ready to be reloaded:
 		$CsgObj->instruments->{$pref.'_content'} = $CsgObj->instruments->{'-'.$pref.'_content_text'}->Contents();
@@ -4322,12 +3642,390 @@ sub menu_about {
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
-  $mw->messageBox(-message=>"about");
+  $mw->messageBox(-icon => 'info', -message=>"Csgrouper ".$Csgrouper::CSG{'csg_version'}.
+  	"\n(2011-2012)\n\nA music composition software at the intersection of polytonality, polymodality and serialism.\n".
+  	"\nemilbarton\@ymail.com\n".
+  	"\nCsgrouper's aim is not to tell musicians how to compose, but to provide a permutationnal framework with scalable settings.");
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END menu_about().
 
+=item * menu_balloon() : shows balloon help.
+=cut
+
+sub menu_balloff {
+  my $subname = 'menu_balloff';
+  { no warnings; &Csgrouper::says($subname, "@_"); }
+  my $oldebflag = $Csgrouper::DEBFLAG; 
+  # $Csgrouper::DEBFLAG = 1;
+  # Sequences Table:
+  my $widget = $Seq_tblw->get(0,0); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,0); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,1); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,1); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,2); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,2); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,3); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,3); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,4); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,4); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,5); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,5); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,6); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,6); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,7); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,7); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,8); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,8); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,9); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,9); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,10); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,10); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,11); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,11); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,12); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,12); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,13); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,13); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,14); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,14); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,15); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,15); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,16); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,16); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,17); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,17); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,18); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,18); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,19); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,19); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,20); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,20); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,21); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,21); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,22); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,22); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,23); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,23); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,24); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,24); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,25); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,25); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,26); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,26); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,27); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,27); $Balloon->detach($widget);
+  $widget = $Seq_tblw->get(0,28); $Balloon->detach($widget); $widget = $Seq_tblw->get(1,28); $Balloon->detach($widget);
+  
+  $Balloon->detach($Project_frame); 
+  $Balloon->detach($add_seq_bw);
+  $Balloon->detach($comptype_mw);
+  $Balloon->detach($del_seq_bw);
+  $Balloon->detach($durfac_le);
+  $Balloon->detach($durmin_le);
+  $Balloon->detach($durtype_mw);
+  $Balloon->detach($intersil_le);
+  $Balloon->detach($rythmtype_mw); 
+  $Balloon->detach($sections_le);
+  $Balloon->detach($steps_le);
+  $Balloon->detach($structctl_bw);
+  $Balloon->detach($tempo_le);
+  $Balloon->detach($xamp_le);
+  $Balloon->detach($xatk_le);
+  $Balloon->detach($xdur_le);
+  $Balloon->detach($xsil_le);
+  $Balloon->detach($xpan_le);
+  $Balloon->detach($yens_le);
+  &Csgrouper::says($subname,"Balloon help disabled.");
+  $Csgrouper::DEBFLAG =  $oldebflag;
+} ## END menu_balloon().
+
+=item * menu_balloon() : shows balloon help.
+
+  my $tmp_label = $Seq_tblw->Label(-text =>"sel", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 0,  $tmp_label); 
+
+  
+=cut
+
+sub menu_balloon {
+  my $subname = 'menu_balloon';
+  { no warnings; &Csgrouper::says($subname, "@_"); }
+  my $oldebflag = $Csgrouper::DEBFLAG; 
+  # $Csgrouper::DEBFLAG = 1;
+  # Sequences Table:
+  my $widget = $Seq_tblw->get(0,0);
+  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
+  $widget = $Seq_tblw->get(1,0);
+  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
+  
+  $widget = $Seq_tblw->get(0,1);
+  $Balloon->attach($widget,-balloonmsg => "The Tk row id is not the Sequence id, but its position in the table.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0} ] ");
+  $widget = $Seq_tblw->get(1,1);
+  $Balloon->attach($widget,-balloonmsg => "The Tk row id is not the Sequence id, but its position in the table. ",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1} ] ");
+
+  $widget = $Seq_tblw->get(0,2);
+  $Balloon->attach($widget,-balloonmsg => "Update the recorded Sequence without having to deselect and reselect it.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0} ] ");
+  $widget = $Seq_tblw->get(1,2);
+  $Balloon->attach($widget,-balloonmsg => "Update the recorded Sequence without having to deselect and reselect it. ",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1} ] ");
+
+  $widget = $Seq_tblw->get(0,3);
+  $Balloon->attach($widget,-balloonmsg => "The Sequence base is the number of signs of the mode.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_base} ] ");
+  $widget = $Seq_tblw->get(1,3);
+  $Balloon->attach($widget,-balloonmsg => "The Sequence base is the number of signs of the mode.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_base} ] ");
+
+  $widget = $Seq_tblw->get(0,4);
+  $Balloon->attach($widget,-balloonmsg => "Name of the Sequence to be displayed in Csound score.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_name} ] ");
+  $widget = $Seq_tblw->get(1,4);
+  $Balloon->attach($widget,-balloonmsg => "Name of the Sequence to be displayed in Csound score.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_name} ] ");
+
+  $widget = $Seq_tblw->get(0,5);
+  $Balloon->attach($widget,-balloonmsg => "Csound instrument id.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_instr} ] ");
+  $widget = $Seq_tblw->get(1,5);
+  $Balloon->attach($widget,-balloonmsg => "Csound instrument id.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_instr} ] ");
+
+  $widget = $Seq_tblw->get(0,6);
+  $Balloon->attach($widget,-balloonmsg => "Functionnal param.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_n} ] ");
+  $widget = $Seq_tblw->get(1,6);
+  $Balloon->attach($widget,-balloonmsg => "Functionnal param.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_n} ] ");
+
+  $widget = $Seq_tblw->get(0,7);
+  $Balloon->attach($widget,-balloonmsg => "Functionnal param.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_x} ] ");
+  $widget = $Seq_tblw->get(1,7);
+  $Balloon->attach($widget,-balloonmsg => "Functionnal param.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_x} ] ");
+
+  $widget = $Seq_tblw->get(0,8);
+  $Balloon->attach($widget,-balloonmsg => "Functionnal param.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_y} ] ");
+  $widget = $Seq_tblw->get(1,8);
+  $Balloon->attach($widget,-balloonmsg => "Functionnal param.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_y} ] ");
+
+  $widget = $Seq_tblw->get(0,9);
+  $Balloon->attach($widget,-balloonmsg => "Functionnal param.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_z} ] ");
+  $widget = $Seq_tblw->get(1,9);
+  $Balloon->attach($widget,-balloonmsg => "Functionnal param.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_z} ] ");
+
+  $widget = $Seq_tblw->get(0,10);
+  $Balloon->attach($widget,-balloonmsg => "Group Sequences together under one or several sets denoted by integers and separated by the character '".$Csgrouper::SETSEP."'.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_sets} ] ");
+  $widget = $Seq_tblw->get(1,10);
+  $Balloon->attach($widget,-balloonmsg => "Group Sequences together under one or several sets denoted by integers and separated by the character '".$Csgrouper::SETSEP."'.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_sets} ] ");
+
+  $widget = $Seq_tblw->get(0,11);
+  $Balloon->attach($widget,-balloonmsg => "Define a previous sequence for this one by mentionning its Sequence id (not Tkrow id).",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_pre} ] ");
+  $widget = $Seq_tblw->get(1,11);
+  $Balloon->attach($widget,-balloonmsg => "Define a previous sequence for this one by mentionning its Sequence id (not Tkrow id).",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_pre} ] ");
+
+  $widget = $Seq_tblw->get(0,12);
+  $Balloon->attach($widget,-balloonmsg => "Define a number of repetitions for this sequence (0 = no additionnal repetition).",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_rep} ] ");
+  $widget = $Seq_tblw->get(1,12);
+  $Balloon->attach($widget,-balloonmsg => "Define a number of repetitions for this sequence (0 = no additionnal repetition).",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_rep} ] ");
+
+  $widget = $Seq_tblw->get(0,13);
+  $Balloon->attach($widget,-balloonmsg => "Choose a Sequence construction function for this serial content (A, or A and B).",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_fun} ] ");
+  $widget = $Seq_tblw->get(1,13);
+  $Balloon->attach($widget,-balloonmsg => "Choose a Sequence construction function for this serial content (A, or A and B).",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_fun} ] ");
+
+  $widget = $Seq_tblw->get(0,14);
+  $Balloon->attach($widget,-balloonmsg => "Decide wether or not the output of the sequence creation function should be expanded or restricted to its last series.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_exp} ] ");
+  $widget = $Seq_tblw->get(1,14);
+  $Balloon->attach($widget,-balloonmsg => "Decide wether or not the output of the sequence creation function should be expanded or restricted to its last series.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_exp} ] ");
+
+  $widget = $Seq_tblw->get(0,15);
+  $Balloon->attach($widget,-balloonmsg => "'opt' has to be checked with Random() in order to let the function run again each time the project is reloaded.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_opt} ] ");
+  $widget = $Seq_tblw->get(1,15);
+  $Balloon->attach($widget,-balloonmsg => "'opt' has to be checked with Random() in order to let the function run again each time the project is reloaded.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_opt} ] ");
+
+  $widget = $Seq_tblw->get(0,16);
+  $Balloon->attach($widget,-balloonmsg => "'A' is the main serial content. Some functions require it to contain only distinct signs.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_A} ] ");
+  $widget = $Seq_tblw->get(1,16);
+  $Balloon->attach($widget,-balloonmsg => "'A' is the main serial content. Some functions require it to contain only distinct signs.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_A} ] ");
+
+  $widget = $Seq_tblw->get(0,17);
+  $Balloon->attach($widget,-balloonmsg => "Each sign in this string describes the octave of the corresponding note in 'A', from 0 to 12. 440 Hz =~ 7.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_Aoct} ] ");
+  $widget = $Seq_tblw->get(1,17);
+  $Balloon->attach($widget,-balloonmsg => "Each sign in this string describes the octave of the corresponding note in 'A', from 0 to 12. 440 Hz =~ 7.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_Aoct} ] ");
+
+  $widget = $Seq_tblw->get(0,18);
+  $Balloon->attach($widget,-balloonmsg => "Decide wether octaves should vary randomly around the positions indicated by 'Aoct'.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_Aroc} ] ");
+  $widget = $Seq_tblw->get(1,18);
+  $Balloon->attach($widget,-balloonmsg => "Decide wether octaves should vary randomly around the positions indicated by 'Aoct'.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_Aroc} ] ");
+
+  $widget = $Seq_tblw->get(0,19);
+  $Balloon->attach($widget,-balloonmsg => "'B' is the secondary serial content. Train functions require it.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_B} ] ");
+  $widget = $Seq_tblw->get(1,19);
+  $Balloon->attach($widget,-balloonmsg => "'B' is the secondary serial content. Train functions require it.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_B} ] ");
+
+  $widget = $Seq_tblw->get(0,20);
+  $Balloon->attach($widget,-balloonmsg => "Each sign in this string describes the octave of the corresponding note in 'B', from 0 to 12. 440 Hz =~ 7.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_Boct} ] ");
+  $widget = $Seq_tblw->get(1,20);
+  $Balloon->attach($widget,-balloonmsg => "Each sign in this string describes the octave of the corresponding note in 'B', from 0 to 12. 440 Hz =~ 7.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_Boct} ] ");
+
+  $widget = $Seq_tblw->get(0,21);
+  $Balloon->attach($widget,-balloonmsg => "Decide wether octaves should vary randomly around the positions indicated by 'Boct'.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_Broc} ] ");
+  $widget = $Seq_tblw->get(1,21);
+  $Balloon->attach($widget,-balloonmsg => "Decide wether octaves should vary randomly around the positions indicated by 'Boct'.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_Broc} ] ");
+
+  $widget = $Seq_tblw->get(0,22); 
+  $Balloon->attach($widget,-balloonmsg => "Train functions require an order to be defined.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_ord} ] ");
+  $widget = $Seq_tblw->get(1,22);
+  $Balloon->attach($widget,-balloonmsg => "Train functions require an order to be defined.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_ord} ] ");
+
+  $widget = $Seq_tblw->get(0,23);
+  $Balloon->attach($widget,-balloonmsg => "Train functions require corresponding signs to be defined.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_signs} ] ");
+  $widget = $Seq_tblw->get(1,23);
+  $Balloon->attach($widget,-balloonmsg => "Train functions require corresponding signs to be defined.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_signs} ] ");
+
+  $widget = $Seq_tblw->get(0,24); 
+  $Balloon->attach($widget,-balloonmsg => "Mode is mandatory. The normal mode is the chromatic scale of the chosen base.\nIn base 12 00224557799B is a Dorian mode.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_mode} ] ");
+  $widget = $Seq_tblw->get(1,24);
+  $Balloon->attach($widget,-balloonmsg => "Mode is mandatory. The normal mode is the chromatic scale of the chosen base.\nIn base 12 00224557799B is a Dorian mode.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_mode} ] ");
+
+  $widget = $Seq_tblw->get(0,25); 
+  $Balloon->attach($widget,-balloonmsg => "Include some comments to this sequence in the Csound score.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0_com} ] ");
+  $widget = $Seq_tblw->get(1,25);
+  $Balloon->attach($widget,-balloonmsg => "Include some comments to this sequence in the Csound score.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1_com} ] ");
+
+  $widget = $Seq_tblw->get(0,26);
+  $Balloon->attach($widget,-balloonmsg => "Update the recorded Sequence without having to deselect and reselect it.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0} ] ");
+  $widget = $Seq_tblw->get(1,26);
+  $Balloon->attach($widget,-balloonmsg => "Update the recorded Sequence without having to deselect and reselect it. ",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1} ] ");
+
+  $widget = $Seq_tblw->get(0,27);
+  $Balloon->attach($widget,-balloonmsg => "The Tk row id is not the Sequence id, but its position in the table.",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_0} ] ");
+  $widget = $Seq_tblw->get(1,27);
+  $Balloon->attach($widget,-balloonmsg => "The Tk row id is not the Sequence id, but its position in the table. ",-statusmsg => "Sequences Table [ \$Seq_tblw \$CsgObj->sequences->{Tkrow_1} ] ");
+
+  $widget = $Seq_tblw->get(0,28);
+  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
+  $widget = $Seq_tblw->get(1,28);
+  $Balloon->attach($widget,-balloonmsg => "Selecting or deselecting the sequence can be achieved from both ends of the table row. ",-statusmsg => "Sequences Table [ \$Seq_tblw ] ");
+  
+
+  $Balloon->attach(
+  	$Project_frame, 
+  	-balloonmsg => "", 
+  	-statusmsg => "Project Frame"
+  );
+  $Balloon->attach(
+  	$add_seq_bw, 
+  	-balloonmsg => "Add a new row to the sequence table.", 
+  	-statusmsg => "Sequence Add Button"
+  );
+  $Balloon->attach(
+  	$comptype_mw, 
+  	-balloonmsg => "Choose a comparison means for decision procedures.\n".
+  		"Four determinist serial comparison subroutines are proposed.\n".
+  		"They are based on permutationnal properties of the rows and\n".
+  		"can be modified in the interface package Csgrouperinter (csgrouper.pl).", 
+  	-statusmsg => "Serial Comparison Type [ \$Project->{comptype_mw} default: \$Csgrouper::CSG{comptype_mw} ]"
+  );
+  # $Balloon->attach(
+  #	$debug_bw, 
+  #	-balloonmsg => "Turn all debug messages on/off by switching their variable to 1/0.\n".
+  #		"Debug can also be set for some subroutines by setting\n".
+  #		"\$Csgrouper::DEBSUBS to their comma separated list of names.", 
+  #	-statusmsg => "Debug Button [ \$Csgrouper::DEBFLAG ]"
+  # );
+  $Balloon->attach(
+  	$del_seq_bw, 
+  	-balloonmsg => "Delete the selected rows from the sequence table.", 
+  	-statusmsg => "Sequence Delete Button"
+  );
+  $Balloon->attach(
+  	$durmin_le, 
+  	-balloonmsg => "Increase or decrease this value to obtain shorter or longer notes.",
+  	-statusmsg => "Minimum Duration [ \$Project->{durmin_le} default: \$Csgrouper::CSG{durmin_le} ]"
+  );
+  $Balloon->attach(
+  	$durfac_le, 
+  	-balloonmsg => "Increase or decrease this value to obtain slower or faster cadences.",
+  	-statusmsg => "Note Duration Factor [ \$Project->{durfac_le} default: \$Csgrouper::CSG{durfac_le} ]"
+  );
+  $Balloon->attach(
+  	$durtype_mw, 
+  	-balloonmsg => "Note duration represents a challenge in the context of varying tonal bases.\n".
+  		"When 'serial', the value is set empirically by inote() in a determinist perspective.\n".
+  		"'random' will add some randomness to the attribution and 'fixed' will set \n".
+  		"each note to the same minimal duration (see Dur. min.).",
+  	-statusmsg => "Note Duration Type [ \$Project->{durtype_mw} default: \$Csgrouper::CSG{durtype_mw} ]"
+  );
+  $Balloon->attach(
+  	$intersil_le, 
+  	-balloonmsg => "Duration of the silence between sections (in seconds).",
+  	-statusmsg => "Inter Sections Silence [ \$Project->{intersil_le} default: \$Csgrouper::CSG{intersil_le} ]"
+  );
+  # $Balloon->attach(
+  	# $reset_bw, 
+  	# -balloonmsg => "Resetting Project Frame boxes to their default values.\n".
+  		# "These are set in Csgrouper.pm.", 
+  	# -statusmsg => "Reset Button [ &reset() ]"
+  # ); 
+  $Balloon->attach(
+  	$rythmtype_mw, 
+  	-balloonmsg => "Rhythms can either be ternary, binary or mixed.\n".
+  		"Rhythm variants proposed here are defined in inote().", 
+  	-statusmsg => "Rythm Type Menu [ \$Project->{rythmtype_mw} default: \$Csgrouper::CSG{rythmtype_mw} ]"
+  ); 
+  $Balloon->attach(
+  	$sections_le, 
+  	-balloonmsg => "Sets can be grouped into sections that will be played successively.\n".
+  		"Set ids are separated by the character '".$Csgrouper::SETSEP."' and sections by '".$Csgrouper::GRPSEP."'.\n".
+  		"A set that appears in two different sections will be played twice.",
+  	-statusmsg => "Grouping Sets into Sections [ \$Project->{sections_le} ]"
+  ); 
+  $Balloon->attach(
+  	$steps_le, 
+  	-balloonmsg => "Interval trains can show all their serial values or only one over some steps,\n".
+  		"which makes the resulting sequence shorter but less predictable.\n".
+  		"The chosen value has to be a divisor of the base.", 
+  	-statusmsg => "Interval Trains Steps [ \$Project->{steps_le} default: \$Csgrouper::CSG{steps_le} ]"
+  ); 
+  $Balloon->attach(
+  	$structctl_bw, 
+  	-balloonmsg => "Preliminary checking of sequences structure and validity.\n".
+  		"This will make the .csd score ready to be printed \n".
+  		"and unselect sequences that are not correctly set.", 
+  	-statusmsg => "Eval Button [ &struct_ctl() ]"
+  ); 
+  $Balloon->attach(
+  	$tempo_le, 
+  	-balloonmsg => "Csound tempo line.", 
+  	-statusmsg => "Csound Tempo Line [ \$Project->{tempo_le} default: \$Csgrouper::CSG{tempo_le} ]"
+  ); 
+  $Balloon->attach(
+  	$xamp_le, 
+  	-balloonmsg => "Apply amplitude specifications to notes of mentionned sets of sequences.\n".
+  		"Set ids are separated by the character '".$Csgrouper::SETSEP."' . Each of them can be followed \n".
+  		"by a parameter expression for overwriting defaults.",
+  	-statusmsg => "Amplitude Post-Treatment Xfun [ \$Project->{xamp_le} &struct_out() &Xfun() &inseth() &overfun() ]"
+  ); 
+  $Balloon->attach(
+  	$xatk_le, 
+  	-balloonmsg => "Apply attack specifications to notes of mentionned sets of sequences.\n".
+  		"Set ids are separated by the character '".$Csgrouper::SETSEP."' . Each of them can be followed \n".
+  		"by a parameter expression for overwriting defaults.",
+  	-statusmsg => "Attack Post-Treatment Xfun [ \$Project->{xatk_le} &struct_out() &Xfun() &inseth() &overfun() ]"
+  ); 
+  $Balloon->attach(
+  	$xdur_le, 
+  	-balloonmsg => "Apply duration specifications to notes of mentionned sets of sequences.\n".
+  		"Set ids are separated by the character '".$Csgrouper::SETSEP."' . Each of them can be followed \n".
+  		"by a parameter expression for overwriting defaults.",
+  	-statusmsg => "Duration Post-Treatment Xfun [ \$Project->{xdur_le} &struct_out() &Xfun() &inseth() &overfun() ]"
+  ); 
+  $Balloon->attach(
+  	$xgli_le, 
+  	-balloonmsg => "Apply glissando specifications to notes of mentionned sets of sequences.\n".
+  		"Set ids are separated by the character '".$Csgrouper::SETSEP."' . Each of them can be followed \n".
+  		"by a parameter expression for overwriting defaults.",
+  	-statusmsg => "Glissando Post-Treatment Xfun [ \$Project->{xgli_le} &struct_out() &Xfun() &inseth() &overfun() ]"
+  ); 
+  $Balloon->attach(
+  	$xpan_le, 
+  	-balloonmsg => "Apply balance specifications to notes of mentionned sets of sequences.\n".
+  		"Set ids are separated by the character '".$Csgrouper::SETSEP."' . Each of them can be followed \n".
+  		"by a parameter expression for overwriting defaults.",
+  	-statusmsg => "Balance Post-Treatment Xfun [ \$Project->{xpan_le} &struct_out() &Xfun() &inseth() &overfun() ]"
+  ); 
+  $Balloon->attach(
+  	$xsil_le, 
+  	-balloonmsg => "Apply silence specifications to notes of mentionned sets of sequences.\n".
+  		"Set ids are separated by the character '".$Csgrouper::SETSEP."' . Each of them can be followed \n".
+  		"by a parameter expression for overwriting defaults.",
+  	-statusmsg => "Silence Post-Treatment Xfun [ \$Project->{xdur_le} &struct_out() &Xfun() &inseth() &overfun() ]"
+  ); 
+  $Balloon->attach(
+  	$yens_le, 
+  	-balloonmsg => "Create an ensemble relation between notes of mentionned sets of sequences.\n".
+  		"Set ids are separated by the character '".$Csgrouper::SETSEP."' . Each of them can be followed \n".
+  		"by a parameter expression for overwriting defaults.",
+  	-statusmsg => "Ensemble Post-Treatment Yfun [ \$Project->{yens_le} &struct_out() &Yfun() &yens() ]"
+  ); 
+  $Balloon->attach(
+  	$yryc_le, 
+  	-balloonmsg => "Create a rythmic canon relation between notes of mentionned sets of sequences.\n".
+  		"Set ids are separated by the character '".$Csgrouper::SETSEP."' . Each of them can be followed \n".
+  		"by a parameter expression for overwriting defaults.",
+  	-statusmsg => "Rythmic Canon Post-Treatment Yfun [ \$Project->{yryc_le} &struct_out() &Yfun() &yryc() ]"
+  ); 
+  &Csgrouper::says($subname,"Balloon help enabled.");
+  $Csgrouper::DEBFLAG =  $oldebflag;
+} ## END menu_balloon().
+
 =item * menu_bar() : creates main menu bar.
 =cut
+
+
 
 sub menu_bar { 
   my $subname = 'menu_bar';
@@ -4355,23 +4053,33 @@ sub menu_bar {
 	['~Edit', 
 	  [ 
 		['command', 'Clear output ...', -accelerator, 'Ctrl-o', -command =>sub {$Output_tw->Contents('')}], 
-		['command', 'Command ...', -accelerator, 'Ctrl-k', -command => \&cline], 
+		['command', 'Command line...', -accelerator, 'Ctrl-k', -command => \&cline], 
+		['command', 'Debug messages on ...', -command => sub { $Csgrouper::DEBFLAG = eval($Csgrouper::DEBFLAG == 0); say "deb=".$Csgrouper::DEBFLAG } ], 
 		'', 
 		['command', 'Setup ...', -command => \&menu_setup], 
+		['command', 'Reset Project defaults ...', -command => \&reset ], 
+	  ], 
+	], 
+	['~Output', 
+	  [ 
+		['command', 'Save Csound score as ...', -command =>\sub { &csd_sas } ], 
+		['command', 'Render Csound score to disk ...', -command =>\sub { &csd_render } ], 
 	  ], 
 	], 
 	['~Help', 
 	  [ 
+		['command', 'Show Balloon Help', -command => \&menu_balloon], 
+		['command', 'Hide Balloon Help', -command => \&menu_balloff], 
+		'', 
 		['command', 'Manual', -command => \&menu_man], 
 		'', 
-		['command', 
-		'About', -command => \&menu_about], 
+		['command', 'About', -command => \&menu_about], 
 	  ], 
 	], 
   ]; 
 } ## END menu_bar().
 
-=item * menu_bkp() : does a backup of the active part file.
+=item * menu_bkp() : does a backup of the active project file.
 =cut
 
 sub menu_bkp {
@@ -4380,17 +4088,17 @@ sub menu_bkp {
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   my $date = &Csgrouper::Datem('n');
-  my $file = $Partfile;
+  my $file = $Projectfile;
   $file =~ s/^(.*\/+)([^\/]+)$/$2/;
   &Csgrouper::Debug($subname, $file,1);
-  if (!(-d $Part->{'run_path_pe'}."/bkp")){
-	system("mkdir",$Part->{'run_path_pe'}."/bkp");
+  if (!(-d $Project->{'run_path_pe'}."/bkp")){
+	system("mkdir",$Project->{'run_path_pe'}."/bkp");
   }  
-  die "Can't create bkp dir." if (!(-d $Part->{'run_path_pe'}."/bkp"));
-  system("cp","$Partfile",$Part->{'run_path_pe'}."/bkp/$file.$date.bkp");
-  &Csgrouper::says($subname,"Part file backed up.");
+  die "Can't create bkp dir." if (!(-d $Project->{'run_path_pe'}."/bkp"));
+  system("cp","$Projectfile",$Project->{'run_path_pe'}."/bkp/$file.$date.bkp");
+  &Csgrouper::says($subname,"Proj file backed up.");
   $Csgrouper::DEBFLAG =  $oldebflag;
-} ## END menu_about().
+} ## END menu_bkp().
 
 =item * menu_clear() : clears Output text widget.
 =cut
@@ -4437,7 +4145,7 @@ sub menu_quit {
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   &csd_empty();
-  &part_save();
+  &save();
   $Csgrouper::DEBFLAG =  $oldebflag;
   exit;
 } ## END menu_quit().
@@ -4462,17 +4170,17 @@ sub menu_new {
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
-  my $d = $mw->Dialog(-title => "Alert", -text => "Should this part be saved before opening new file?", -buttons => ["Yes", "No"]);
+  my $d = $mw->Dialog(-title => "Alert", -text => "Should this project be saved before opening new file?", -buttons => ["Yes", "No"]);
   if ($d->Show =~ /Yes/) {
-		&Csgrouper::Describe($subname, "Saving present part file", 1);
-		&part_save();
+		&Csgrouper::Describe($subname, "Saving present project file", 1);
+		&save();
 		&Csgrouper::says($subname,"Project saved.");
   }
-  my $fs = $mw->FileSelect(-directory => $Part->{'part_path_pe'});
+  my $fs = $mw->FileSelect(-directory => $Project->{'path_pe'});
   my $newfile = $fs->Show;
   &Csgrouper::says($subname, $newfile);
   my $test = -1;
-  $test = &part_default($newfile);
+  $test = &def_project($newfile);
   &Csgrouper::says($subname, $test);
 	if ($test != -1){
 		my $pid=fork();
@@ -4497,13 +4205,13 @@ sub menu_open {
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
-  my $d = $mw->Dialog(-title => "Alert", -text => "Should this part be saved before opening new file?", -buttons => ["Yes", "No"]);
+  my $d = $mw->Dialog(-title => "Alert", -text => "Should this project be saved before opening new file?", -buttons => ["Yes", "No"]);
   if ($d->Show =~ /Yes/) {
-		&Csgrouper::Describe($subname, "Saving present part file", 1);
-		&part_save();
+		&Csgrouper::Describe($subname, "Saving present project file", 1);
+		&save();
 		&Csgrouper::says($subname,"Project saved.");
   }
-  my $fs = $mw->FileSelect(-directory => $Part->{'part_path_pe'});
+  my $fs = $mw->FileSelect(-directory => $Project->{'path_pe'});
   my $newfile = $fs->Show;
   &Csgrouper::says($subname, $newfile);
 	my $pid=fork();
@@ -4537,7 +4245,7 @@ sub menu_sall {
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END menu_sall().
 
-=item * menu_sas() : saves part file as new file.
+=item * menu_sas() : saves project file as new file.
 =cut
 
 sub menu_sas {
@@ -4546,18 +4254,18 @@ sub menu_sas {
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   my $date = &Csgrouper::Datem('n');
-	system("cp","$Partfile", $Part->{'part_path_pe'}."/\.tmp");
-	&Csgrouper::says($subname,"Old part file saved as temporary file.");
-  &part_save();
-  my $newfile = $mw->getSaveFile(-title => "Save part $Partfile as:", -initialdir => $Part->{'part_path_pe'}, -initialfile => $Partfile);
+	system("cp","$Projectfile", $Project->{'path_pe'}."/\.tmp");
+	&Csgrouper::says($subname,"Old project file saved as temporary file.");
+  &save();
+  my $newfile = $mw->getSaveFile(-title => "Save project $Projectfile as:", -initialdir => $Project->{'path_pe'}, -initialfile => $Projectfile);
   &Csgrouper::says($subname, "$newfile");
   if ($newfile =~ /.+/) {
-  	system("cp","$Partfile","$newfile");
-  	&Csgrouper::says($subname,"Part file saved as $newfile.");
+  	system("cp","$Projectfile","$newfile");
+  	&Csgrouper::says($subname,"Proj file saved as $newfile.");
   }
   else { &Csgrouper::says($subname,"Saving aborted.") }
-	system("cp", $Part->{'part_path_pe'}."/\.tmp", $Partfile );
-	&Csgrouper::says($subname,"Old temporary file reopened as part file.");
+	system("cp", $Project->{'path_pe'}."/\.tmp", $Projectfile );
+	&Csgrouper::says($subname,"Old temporary file reopened as project file.");
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END menu_sas().
 
@@ -4569,7 +4277,7 @@ sub menu_save {
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
-  &part_save();
+  &save();
   &Csgrouper::says($subname,"Project saved.");
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END menu_save().
@@ -4599,7 +4307,7 @@ sub notes_sas {
   # $Csgrouper::DEBFLAG = 0;
   my $txt = $Notes_tw->Contents();
   my $file = &Csgrouper::Datem('n'); $file = "notes.$file.csd";
-  my $newfile = $mw->getSaveFile(-title => "Save notes as:", -initialdir => $Part->{'run_path_pe'}."/bkp", -initialfile => $file);
+  my $newfile = $mw->getSaveFile(-title => "Save notes as:", -initialdir => $Project->{'run_path_pe'}."/bkp", -initialfile => $file);
   &Csgrouper::says($subname, $newfile);
   if ($newfile =~ /.+/) {
 	open (FH, "> $newfile") or  die "Can't w-open $newfile: $!";
@@ -4611,15 +4319,15 @@ sub notes_sas {
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END notes_sas.
 
-=item * part_default() : creates a default part file.
+=item * def_project() : creates a default project file.
 =cut
 
-sub part_default {
+sub def_project {
 	my ($filename) = @_;
 	$filename //= $Csgdef;
 	$filename =~ s/([^.]+)(\.?.*)/$1/; ## Suppress previous suffixe.
 	$filename .= ".xml"; ## Recreate it..
-  my $subname = 'part_default';
+  my $subname = 'def_project';
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
@@ -4631,35 +4339,35 @@ sub part_default {
   close FH;
   return $filename;
   $Csgrouper::DEBFLAG =  $oldebflag;
-} ## END part_default().
+} ## END def_project().
 
-=item * part_save() : record process step 3 (final): writes $Part to file.
+=item * save() : record process step 3 (final): writes $Project to file.
 =cut
 
-sub part_save { 
-  my $subname = 'part_save';
+sub save { 
+  my $subname = 'save';
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG;
   #  $Csgrouper::DEBFLAG = 1;
-  $Part->{'saved'} = &Csgrouper::Datem();
-  &Csgrouper::says($subname, "Saving part file '".$Part->{csg_part}."' to $Partfile ..(".&Csgrouper::Datem().").");
+  $Project->{'saved'} = &Csgrouper::Datem();
+  &Csgrouper::says($subname, "Saving project file '".$Project->{csg_file}."' to $Projectfile ..(".&Csgrouper::Datem().").");
   &setup_save(); ## Keep last preferences..
   &record('all');
-  open (FH, "> $Partfile") or  die "Can't w-open $Partfile: $!";
+  open (FH, "> $Projectfile") or  die "Can't w-open $Projectfile: $!";
 	## SuppressEmpty => undef: in order to prevent XML to put an empty hash value in place of empty values.
 	## Empty hash values (e.g. HASH(0x001C), containing parentheses, cannont be treated by valid_entry().
-	my $text = XMLout($Part,AttrIndent => 1, NoIndent => 0, NoAttr => 1, SuppressEmpty => undef);
+	my $text = XMLout($Project,AttrIndent => 1, NoIndent => 0, NoAttr => 1, SuppressEmpty => undef);
 	$text =~ s/\s+\<\//\<\//g; ## Erase those empty lines put at the end of xml text containers!
 	print FH $text;
   close FH;
   $Csgrouper::DEBFLAG =  $oldebflag;
-} ## END part_save().
+} ## END save().
 
-=item * part_reset() : resets $CSG defaults.
+=item * reset() : resets $CSG defaults.
 =cut
 
-sub part_reset { 
-  my $subname = 'part_reset';
+sub reset { 
+  my $subname = 'reset';
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
@@ -4672,7 +4380,7 @@ sub part_reset {
   &Resetall('reset');
   &pref_load;
   $Csgrouper::DEBFLAG =  $oldebflag;
-} ## END part_save().
+} ## END save().
 
 
 =item * pref_load() : load process step 2.b (from reload()): recreate the widgets states.
@@ -4684,37 +4392,37 @@ sub pref_load { ## See also : setup_save().
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
-  ## Normal cases: We dont reload entries already mapped to variables like $part_title_le.
+  ## Normal cases: We dont reload entries already mapped to variables like $title_le.
   ## Special cases (e.g. $variables as direct content for cb and labels):
   ## ### Other Prefs Tab:
-  if (exists $Part->{'savenotes_enabled_cb'}) { 
-	&Csgrouper::Debug($subname, $Part->{'savenotes_enabled_cb'});
-	$notes_state = $Part->{'savenotes_enabled_cb'};
+  if (exists $Project->{'savenotes_enabled_cb'}) { 
+	&Csgrouper::Debug($subname, $Project->{'savenotes_enabled_cb'});
+	$notes_state = $Project->{'savenotes_enabled_cb'};
   } 
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END pref_load().
 
-=item * refer() : record process step 1: create a $Part hash for the object.
+=item * refer() : record process step 1: create a $Project hash for the object.
 =cut
 
 sub refer { 
   my ($spell,$type,$ref) = @_;
   my $subname = 'refer';
-  ## { no warnings; &Csgrouper::says($subname, "@_"); } ## Uncomment to debug.
+  #&Csgrouper::Debug($subname, "@_"); ## Uncomment to debug.
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
   $spell =~ s/([\$\%\@\ \t]+)(.+)(\s+)$/$2/;
   my $key = '-'.$spell;
   &Csgrouper::Debug($subname, "refer: $key");
   ## Let's store a reference to it in order to refresh the file contents:
-  $Part->{$key} = {}; ## An anonymous hashref not XML storable.
-  $Part->{$key}->{'xmlkey'} = $spell; ## The xml container name: = $Part->{key}.
-  $Part->{$key}->{'reftype'} = $type;
-  $Part->{$key}->{'reference'} = $ref; ## A hashref.
+  $Project->{$key} = {}; ## An anonymous hashref not XML storable.
+  $Project->{$key}->{'xmlkey'} = $spell; ## The xml container name: = $Project->{key}.
+  $Project->{$key}->{'reftype'} = $type;
+  $Project->{$key}->{'reference'} = $ref; ## A hashref.
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END refer().
 
-=item * record() : record process step 2: treats each type of $Part objects and records data into the storable var $Part.
+=item * record() : record process step 2: treats each type of $Project objects and records data into the storable var $Project.
 =cut
 
 sub record {  
@@ -4724,38 +4432,38 @@ sub record {
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
   $target = 'all' if ($target !~/.+/);
-  while (my ($key,$val) = each %{$Part}) {
+  while (my ($key,$val) = each %{$Project}) {
 		next if (($target !~ /^(all)$/) && ($target !~ /^($key)$/));
 		next if ($key !~ /^(-.+)$/); ## Beggin the ref by a minus sign not stored by XML::Simple.
 		my $data = "";
 		if (not exists $val->{'reference'}) { next } 
-		else { ## 2 values are stored in $Part for each container: type + reference.
+		else { ## 2 values are stored in $Project for each container: type + reference.
 			&Csgrouper::Debug($subname, "old: '".$val->{'xmlkey'}."' type: ".$val->{'reftype'});
 			if ($val->{'reftype'} =~ /^(Text)|(TextUndo)$/){ ## The Text containers:
 				&Csgrouper::Debug($subname, "ref : ".$val->{'reference'});
 				$data = ${$val->{'reference'}}->Contents(); 
 				&Csgrouper::Debug($subname, "data: $data");
-				$Part->{$val->{'xmlkey'}} = $data; 
+				$Project->{$val->{'xmlkey'}} = $data; 
 			}
 			elsif ($val->{'reftype'} =~ /^(Entry)|(LabEntry)|(PathEntry)$/){ ## The Text containers:
 				&Csgrouper::Debug($subname, "ref : ".$val->{'reference'});
 				$data = ${${$val->{'reference'}}->cget(-textvariable)}; 
 				&Csgrouper::Debug($subname, "data : $data");
-				$Part->{$val->{'xmlkey'}} = $data; 
+				$Project->{$val->{'xmlkey'}} = $data; 
 			}
 			elsif ($val->{'reftype'} =~ /^(Cbox)$/){ ## The Text containers:
 				&Csgrouper::Debug($subname, "ref : ".$val->{'reference'});
 				$data = ${${$val->{'reference'}}->cget(-variable)}; 
 				&Csgrouper::Debug($subname, "data : $data");
-				$Part->{$val->{'xmlkey'}} = $data; 
+				$Project->{$val->{'xmlkey'}} = $data; 
 			}
 			elsif ($val->{'reftype'} =~ /^(SeqTable)$/){ ## The Seq Table:
 				&Csgrouper::Debug($subname, "ref : ".$val->{'reference'});
 				&seq_save();
-				# Here %{$CsgObj->sequences} contains all the precomputing for the part:
+				# Here %{$CsgObj->sequences} contains all the precomputing for the proj:
 				while (my ($key2,$val2) = each %{$CsgObj->sequences}) {
 					next if ($key2 =~ /^(Seq_\d+)$/);
-					$Part->{$key2} = $val2;
+					$Project->{$key2} = $val2;
 					&Csgrouper::Debug($subname, "$key2 => $val2");
 				}
 			}
@@ -4763,17 +4471,17 @@ sub record {
 				&Csgrouper::Debug($subname, "ref : ".$val->{'reference'});
 				&ins_update();
 				while (my ($key2,$val2) = each %{$CsgObj->instruments}) {
-					$Part->{$key2} = $val2;
+					$Project->{$key2} = $val2;
 					&Csgrouper::Debug($subname, "$key2 => $val2");
 				}
 			}
-			&Csgrouper::Debug($subname, "new: '".$Part->{$val->{'xmlkey'}});
+			&Csgrouper::Debug($subname, "new: '".$Project->{$val->{'xmlkey'}});
 		}
   } 
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END record().
 
-=item * reload() : load process step 1: loads/refreshes globals ($Part/$Csgrouper::Sequences/$Csgrouper::Instruments) from file.
+=item * reload() : load process step 1: loads/refreshes globals ($Project/$Csgrouper::Sequences/$Csgrouper::Instruments) from file.
 =cut
 
 sub reload { 
@@ -4786,62 +4494,68 @@ sub reload {
   ## SuppressEmpty => undef: in order to prevent XML to put an empty hash value in place of empty values.
   ## Empty hash values (e.g. HASH(0x001C), containing parentheses, cannont be treated by valid_entry().
   ## Hereafter mode init2 (loading of a new file during a session) is a special case of mode init.
-  if ($mode =~ /init/) { $Part = XMLin($Partfile, SuppressEmpty => undef) } ## Only at init time otherwise the Referred -keys are suppressed.
+  if ($mode =~ /init/) { $Project = XMLin($Projectfile, SuppressEmpty => undef) } ## Only at init time otherwise the Referred -keys are suppressed.
   ## For all modes:
   while (my ($key,$val) = each %Csgrouper::CSG) { 
-		if (!(defined($Part->{$key})) || $Part->{$key} !~ /.+/) { $Part->{$key} = $val }
+		if (!(defined($Project->{$key})) || $Project->{$key} !~ /.+/) { $Project->{$key} = $val }
   } 
   if ($mode =~ /init/) { ## The content windows aren't yet constructed:
 		## File Check 1:
-		if (&check_csgfile($Partfile)==0) {
-			&Csgrouper::Debug($subname, "Not a valid file : $Partfile..", 1) ;
+		if (&check_csgfile($Projectfile)==0) {
+			&Csgrouper::Debug($subname, "Not a valid file : $Projectfile..", 1) ;
 			## The default file must contain a valid csg_ structure (or at least the key csg_key):
-			my $file1 = $Partfile; $file1 =~ s/^(.+\/)([^\/]+)$/$2/;
+			my $file1 = $Projectfile; $file1 =~ s/^(.+\/)([^\/]+)$/$2/;
 			my $file2 = $Csgdef; $file2 =~ s/^(.+\/)([^\/]+)$/$2/;
-			&part_default if ($file1 == $file2);
+			&def_project if ($file1 == $file2);
 			&Csgrouper::Debug($subname, "Falling back to default.", 1) ;
-			$Partfile = $Csgdef;
+			$Projectfile = $Csgdef;
 		}
   }
   else { 
 		## File Check 2:
-		if (!(defined($Part->{'csg_key'}))) {
-			&Csgrouper::Debug($subname, "Not a valid file : $Partfile..", 1) ;
+		$mw->configure(-cursor => 'watch'); 
+		if (!(defined($Project->{'csg_key'}))) {
+			&Csgrouper::Debug($subname, "Not a valid file : $Projectfile..", 1) ;
 			## The default file must contain a valid csg structure (or at least the key csg_key):
-			&Csgrouper::Error($subname, "Aborting") if ($Partfile =~ /^($Csgdef)$/);
+			&Csgrouper::Error($subname, "Aborting") if ($Projectfile =~ /^($Csgdef)$/);
 			&Csgrouper::Debug($subname, "Falling back to default.", 1) ;
-			$Partfile = $Csgdef;
+			$Projectfile = $Csgdef;
 		}
-		&seq_load(); ## LOAD SEQUENCES FROM Part FILE.
-		&ins_load(); ## LOAD INSTRUMENTS FROM Part FILE.
+		my $oldstartexec = $STARTEXEC;
+		$STARTEXEC = 1;
+		&seq_load(); ## LOAD SEQUENCES FROM proj file.
+		$STARTEXEC = $oldstartexec;
+		&ins_load('file') unless ($mode =~ /step2/); ## LOAD INSTRUMENTS FROM proj file.
 		&pref_load();	
-		&Csgrouper::Debug($subname, "Loading part file..");
-		$Notes_tw->Contents($Part->{'Notes_tw'}) ;
+		&Csgrouper::Debug($subname, "Loading project file..");
+		$Notes_tw->Contents($Project->{'Notes_tw'}) ;
 		## Load default values when necessary:
 		while (my ($key,$val) = each %Csgrouper::CSG) {
 			&Csgrouper::Debug($subname, "$key ===> $val");
-			if (defined $Part->{$key} && $Part->{$key} !~ /.+/) {
-			$Part->{$key} = $Csgrouper::CSG{$key};
+			if (defined $Project->{$key} && $Project->{$key} !~ /.+/) {
+			$Project->{$key} = $Csgrouper::CSG{$key};
 			}
 		}
+		$mw->configure(-cursor => 'arrow'); 
 		## XXX WARNING : if this log isn't recorded at init time a call to reload() is missing somewhere:
-		&Csgrouper::says($subname,"Loaded part, connection and files for '$Partfile'.");
+		my $date = &Csgrouper::Datem();
+		&Csgrouper::says($subname,"$date : Loaded proj, connection and files for '$Projectfile'.");
   } ## END else mode is not init.
   ## Both modes:
   &Csgrouper::Debug($subname, "mode: $mode");
   ## Params Not (toomuch) User-Configurable:
   ## Failsafe:
-  if (!(-d $Part->{'part_path_pe'}) || !(&check_wdir($Part->{'part_path_pe'})==0)) { $Part->{'part_path_pe'} = $Csgrouper::CSG{'part_path_pe'} }
-  if (!(-d $Part->{'run_path_pe'} ) || !(&check_wdir($Part->{'run_path_pe'})==0)) { $Part->{'run_path_pe'} = $Csgrouper::CSG{'run_path_pe'} }
-  if (!(-d $Part->{'ins_path_pe'} ) || !(&check_wdir($Part->{'ins_path_pe'})==0)) { $Part->{'ins_path_pe'} = $Csgrouper::CSG{'ins_path_pe'} }
-  if (!(-d $Part->{'csg_path_pe'} ) || !(&check_wdir($Part->{'csg_path_pe'})==0)) { $Part->{'csg_path_pe'} = $Csgrouper::CSG{'csg_path_pe'} }
+  if (!(-d $Project->{'path_pe'}) || !(&check_wdir($Project->{'path_pe'})==0)) { $Project->{'path_pe'} = $Csgrouper::CSG{'path_pe'} }
+  if (!(-d $Project->{'run_path_pe'} ) || !(&check_wdir($Project->{'run_path_pe'})==0)) { $Project->{'run_path_pe'} = $Csgrouper::CSG{'run_path_pe'} }
+  if (!(-d $Project->{'ins_path_pe'} ) || !(&check_wdir($Project->{'ins_path_pe'})==0)) { $Project->{'ins_path_pe'} = $Csgrouper::CSG{'ins_path_pe'} }
+  if (!(-d $Project->{'csg_path_pe'} ) || !(&check_wdir($Project->{'csg_path_pe'})==0)) { $Project->{'csg_path_pe'} = $Csgrouper::CSG{'csg_path_pe'} }
 
-  if (!($Part->{'db_name_le'} =~/.+/)) { $Part->{'db_name_le'} = $Csgrouper::CSG{'db_name_le'} }
-  if (!($Part->{'db_user_le'} =~/.+/)) { $Part->{'db_user_le'} = $Csgrouper::CSG{'db_user_le'} }
-  if (!($Part->{'db_password_le'} =~/.+/)) { $Part->{'db_password_le'} = $Csgrouper::CSG{'db_password_le'} }
-
-  $Part->{'csg_part'} = $Partfile;
-  &Csgrouper::Debug($subname, "Loaded part '$Partfile'");
+  if (!($Project->{'db_name_le'} =~/.+/)) { $Project->{'db_name_le'} = $Csgrouper::CSG{'db_name_le'} }
+  if (!($Project->{'db_user_le'} =~/.+/)) { $Project->{'db_user_le'} = $Csgrouper::CSG{'db_user_le'} }
+  if (!($Project->{'db_password_le'} =~/.+/)) { $Project->{'db_password_le'} = $Csgrouper::CSG{'db_password_le'} }
+  
+  $Project->{'csg_proj'} = $Projectfile;
+  &Csgrouper::Debug($subname, "Loaded project '$Projectfile'");
   $Csgrouper::DEBFLAG =  $oldebflag;
   return 1;
 } ## END reload().
@@ -4876,6 +4590,7 @@ sub seq_add {
 
   ## 0 selbtn:
   $CsgObj->sequences->{$pref.'_sel'} = $vals[0] ;
+  &Csgrouper::Debug($subname, "sel=".$CsgObj->sequences->{$pref.'_sel'}." ".$vals[0]);
   if ($vals[0] !~ /.+/) { $CsgObj->sequences->{$pref.'_sel'} = 1 }
   $selcbw = $Seq_tblw->Checkbutton(
 		-variable =>\$CsgObj->sequences->{$pref.'_sel'}
@@ -4964,7 +4679,7 @@ sub seq_add {
 			,-background =>$COLOR{'label_bgcolor'}
 			,-relief =>'ridge'
 		);
- $Seq_tblw->put($len, 3, $basebw);
+	$Seq_tblw->put($len, 3, $basebw);
 	## END base label.
 
 	## 4 name: orchestra name for the sequence (allegro? etc.).
@@ -4984,6 +4699,7 @@ sub seq_add {
 		)
 	);
 	## END name.
+	&Csgrouper::Debug($subname, "sel=".$CsgObj->sequences->{$pref.'_sel'});
 	
 	## 5 ins: instrument id.
   $CsgObj->sequences->{$pref.'_ins'} = $vals[4] ;
@@ -4995,10 +4711,12 @@ sub seq_add {
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_ins'}
 			## Don't validate yet, we need freedom for param definitions:
 			,-validate => 'key'
-			,-validatecommand => sub{&valid_entry($_[1],'text',$pref)} 
+			,-validatecommand => \sub{&valid_entry($_[1],'text',$pref)} 
 		)
 	);
 	## END ins.
+
+	&Csgrouper::Debug($subname, "sel=".$CsgObj->sequences->{$pref.'_sel'});
 	
 	## 6 n: numeric var.
   $CsgObj->sequences->{$pref.'_n'} = $vals[5];
@@ -5009,7 +4727,7 @@ sub seq_add {
 			,-width=>2
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_n'}
 			,-validate => 'key'
-			,-validatecommand => sub{&valid_entry($_[1],'float',$pref)} 
+			,-validatecommand => \sub{&valid_entry($_[1],'float',$pref)} 
 		)
 	);
 	## END n.
@@ -5023,7 +4741,7 @@ sub seq_add {
 			,-width=>2
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_x'}
 			,-validate => 'key'
-			,-validatecommand => sub{ &valid_entry($_[1],'float',$pref) } 
+			,-validatecommand => \sub{ &valid_entry($_[1],'float',$pref) } 
 		)
 	);
 	## END x.
@@ -5037,7 +4755,7 @@ sub seq_add {
 			,-width=>2
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_y'}
 			,-validate => 'key'
-			,-validatecommand => sub{&valid_entry($_[1],'float',$pref)} 
+			,-validatecommand => \sub{&valid_entry($_[1],'float',$pref)} 
 		)
 	);
 	## END y.
@@ -5051,7 +4769,7 @@ sub seq_add {
 			,-width=>2
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_z'}
 			,-validate => 'key'
-			,-validatecommand => sub{&valid_entry($_[1],'float',$pref)} 
+			,-validatecommand => \sub{&valid_entry($_[1],'float',$pref)} 
 		)
 	);
 	## END z.
@@ -5066,7 +4784,7 @@ sub seq_add {
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_sets'}
 			,-state => 'normal'
 			,-validate => 'key'
-			,-validatecommand => sub{&valid_entry($_[1],'digicom',$pref)} 
+			,-validatecommand => \sub{&valid_entry($_[1],'digicom',$pref)} 
 		)
 	);
 	## END sets.
@@ -5081,7 +4799,7 @@ sub seq_add {
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_pre'}
 			,-state => 'normal'
 			,-validate => 'key'
-			,-validatecommand => sub{ &valid_entry($_[1],'digit',$pref) } 
+			,-validatecommand => \sub{ &valid_entry($_[1],'digit',$pref) } 
 		)
 	);
 	## END pre.
@@ -5137,11 +4855,11 @@ sub seq_add {
   $Seq_tblw->put($len, 14, $tmp);
 	## END exp.
 	
-	## 15 modo: (not in use yet).
-  $CsgObj->sequences->{$pref.'_modo'} = $vals[14];
-  if ($vals[14] !~ /.+/) { $CsgObj->sequences->{$pref.'_modo'} = '0' } 
+	## 15 opt:.
+  $CsgObj->sequences->{$pref.'_opt'} = $vals[14];
+  if ($vals[14] !~ /.+/) { $CsgObj->sequences->{$pref.'_opt'} = '0' } 
   $tmp = $Seq_tblw->Checkbutton(
-		-variable =>\$CsgObj->sequences->{$pref.'_modo'}
+		-variable =>\$CsgObj->sequences->{$pref.'_opt'}
 		,-relief =>'ridge'
 		,-onvalue=>1
 		,-offvalue=>0
@@ -5150,7 +4868,7 @@ sub seq_add {
 		,-command=> sub {  &valid_entry(0,'unset',$pref) }
   );
   $Seq_tblw->put($len,15, $tmp); 
-	## END modo.
+	## END opt.
 	
 	## 16 A:
   $CsgObj->sequences->{$pref.'_A'} = $vals[15];
@@ -5170,7 +4888,7 @@ sub seq_add {
 	
 	## 17 Aoct:
   $CsgObj->sequences->{$pref.'_Aoct'} = $vals[16];
-  if ($vals[16] !~ /.+/) { $CsgObj->sequences->{$pref.'_Aoct'} = $Csgrouper::CSG{'part_octs_le'} }  
+  if ($vals[16] !~ /.+/) { $CsgObj->sequences->{$pref.'_Aoct'} = $Csgrouper::CSG{'octs_le'} }  
   $Seq_tblw->put($len, 17, $Seq_tblw->Entry(
 			-background =>$COLOR{'input_bgcolor'} 
 			,-foreground =>$COLOR{'input_fgcolor'}
@@ -5215,7 +4933,7 @@ sub seq_add {
 	
 	## 20 Boct:
   $CsgObj->sequences->{$pref.'_Boct'} = $vals[19];
-  if ($vals[19] !~ /.+/) { $CsgObj->sequences->{$pref.'_Boct'} = $Csgrouper::CSG{'part_octs_le'} }  
+  if ($vals[19] !~ /.+/) { $CsgObj->sequences->{$pref.'_Boct'} = $Csgrouper::CSG{'octs_le'} }  
   $Seq_tblw->put($len, 20, $Seq_tblw->Entry(
 			-background =>$COLOR{'input_bgcolor'} 
 			,-foreground =>$COLOR{'input_fgcolor'}
@@ -5223,7 +4941,7 @@ sub seq_add {
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_Boct'}
 			,-state => 'normal'
 			,-validate => 'key'
-			,-validatecommand => sub{&valid_entry($_[1],'xphonic',$pref)} 
+			,-validatecommand => \sub{&valid_entry($_[1],'xphonic',$pref)} 
 		)
 	);
 	## END Boct.
@@ -5253,14 +4971,14 @@ sub seq_add {
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_ord'}
 			,-state => 'normal'
 			,-validate => 'key'
-			,-validatecommand => sub{&valid_entry($_[1],'xphonic',$pref)} 
+			,-validatecommand => \sub{&valid_entry($_[1],'xphonic',$pref)} 
 		)
 	);
 	## END ord.
 	
 	## 23 sign: needed by trains - could serve other purposes in new funcs.
   $CsgObj->sequences->{$pref.'_sign'} = $vals[22];
-  if ($vals[22] !~ /.+/) { $CsgObj->sequences->{$pref.'_sign'} = $Csgrouper::CSG{'part_signs_le'} }  
+  if ($vals[22] !~ /.+/) { $CsgObj->sequences->{$pref.'_sign'} = $Csgrouper::CSG{'signs_le'} }  
   $Seq_tblw->put($len, 23, $Seq_tblw->Entry(
 			-background =>$COLOR{'input_bgcolor'} 
 			,-foreground =>$COLOR{'input_fgcolor'}
@@ -5268,7 +4986,7 @@ sub seq_add {
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_sign'}
 			,-state => 'normal'
 			,-validate => 'key'
-			,-validatecommand => sub{&valid_entry($_[1],'plusalnumin',$pref)} 
+			,-validatecommand => \sub{&valid_entry($_[1],'plusalnumin',$pref)} 
 		)
 	);
 	## END sign.
@@ -5282,7 +5000,7 @@ sub seq_add {
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_mode'}
 			,-state => 'normal'
 			,-validate => 'key'
-			,-validatecommand => sub{ &valid_entry($_[1],'xphonic',$pref) }
+			,-validatecommand => \sub{ &valid_entry($_[1],'xphonic',$pref) }
 		)
 	);
 	## END mode.
@@ -5297,14 +5015,14 @@ sub seq_add {
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_tone'}
 			,-state => 'normal'
 			,-validate => 'key'
-			,-validatecommand => sub{&valid_entry($_[1],'xphonic',$pref)} 
+			,-validatecommand => \sub{&valid_entry($_[1],'xphonic',$pref)} 
 		)
 	);
 	## END mode.
 	
 	## 26 com: a place to comment on the sequence.
   $CsgObj->sequences->{$pref.'_com'} = $vals[25];
-  if ($vals[25] !~ /.+/) { $CsgObj->sequences->{$pref.'_com'} = $Csgrouper::CSG{'part_com_le'} }  
+  if ($vals[25] !~ /.+/) { $CsgObj->sequences->{$pref.'_com'} = $Csgrouper::CSG{'com_le'} }  
   $Seq_tblw->put($len, 26, $Seq_tblw->Entry(
 			-background =>$COLOR{'input_bgcolor'} 
 			,-foreground =>$COLOR{'input_fgcolor'}
@@ -5312,7 +5030,7 @@ sub seq_add {
 			,-textvariable=>\$CsgObj->sequences->{$pref.'_com'}
 			,-state => 'normal'
 			,-validate => 'key'
-			,-validatecommand => sub{ &valid_entry($_[1],'text',$pref,1) } ## Don't unselect for such change..
+			,-validatecommand => \sub{ &valid_entry($_[1],'text',$pref,1) } ## Don't unselect for such change..
 		)
 	);
 	## END com.
@@ -5347,7 +5065,7 @@ sub seq_del {
   # $Csgrouper::DEBFLAG = 1;
   my $pref = 0; 
   ## We are going to keep the hash values but delete and rewrite the old $Sequence pairs when present.
-  my $table = $Tabs{'part'}->Table(
+  my $table = $Tabs{'proj'}->Table(
 		-rows => 20
 		,-columns => 30
 		,-relief=>'raised'
@@ -5378,66 +5096,66 @@ sub seq_del {
 		delete $CsgObj->sequences->{"Seq\_$id\_tid"}; ## Delete for both selected and copied rows.
 		if ($CsgObj->sequences->{"$pref\_sel"} == 1) { ## Don't copy selected rows.
 			delete $CsgObj->sequences->{$id}; ## Delete the Csg object reference. KEEP IT UP!
-			delete $CsgObj->sequences->{"$pref\_sel"}; delete $Part->{"$pref\_sel"};
-			delete $CsgObj->sequences->{$pref.'_ind'}; delete $Part->{$pref.'_ind'};
+			delete $CsgObj->sequences->{"$pref\_sel"}; delete $Project->{"$pref\_sel"};
+			delete $CsgObj->sequences->{$pref.'_ind'}; delete $Project->{$pref.'_ind'};
 			## The Csg::Sequence object is $CsgObj->sequences->{'Seq_'.$CsgObj->sequences->{$pref.'_id'}};
 			&Csgrouper::Debug($subname, $CsgObj->sequences->{$pref.'_id'}.": ".$CsgObj->sequences->{'Seq_'.$CsgObj->sequences->{$pref.'_id'}});
-			delete $CsgObj->sequences->{$pref.'_id'}; delete $Part->{$pref.'_id'};
-			delete $CsgObj->sequences->{$pref.'_name'}; delete $Part->{$pref.'_name'};
-			delete $CsgObj->sequences->{$pref.'_ins'}; delete $Part->{$pref.'_ins'};
-			delete $CsgObj->sequences->{$pref.'_n'}; delete $Part->{$pref.'_n'};
-			delete $CsgObj->sequences->{$pref.'_x'}; delete $Part->{$pref.'_x'};
-			delete $CsgObj->sequences->{$pref.'_y'}; delete $Part->{$pref.'_y'};
-			delete $CsgObj->sequences->{$pref.'_z'}; delete $Part->{$pref.'_z'};
-			delete $CsgObj->sequences->{$pref.'_sets'}; delete $Part->{$pref.'_sets'};
-			delete $CsgObj->sequences->{$pref.'_pre'}; delete $Part->{$pref.'_pre'};
-			delete $CsgObj->sequences->{$pref.'_rep'}; delete $Part->{$pref.'_rep'};
-			delete $CsgObj->sequences->{"$pref\_funt"}; delete $Part->{"$pref\_funt"};
-			delete $CsgObj->sequences->{"$pref\_fun"}; delete $Part->{"$pref\_fun"};
-			delete $CsgObj->sequences->{"$pref\_exp"}; delete $Part->{"$pref\_exp"};
-			delete $CsgObj->sequences->{"$pref\_modo"}; delete $Part->{"$pref\_modo"};
-			delete $CsgObj->sequences->{$pref.'_A'}; delete $Part->{$pref.'_A'};
-			delete $CsgObj->sequences->{$pref.'_Aoct'}; delete $Part->{$pref.'_Aoct'};
-			delete $CsgObj->sequences->{"$pref\_Aroc"};delete $Part->{"$pref\_Aroc"};
-			delete $CsgObj->sequences->{$pref.'_B'}; delete $Part->{$pref.'_B'};
-			delete $CsgObj->sequences->{$pref.'_Boct'};delete $Part->{$pref.'_Boct'};
-			delete $CsgObj->sequences->{"$pref\_Broc"}; delete $Part->{"$pref\_Broc"};
-			delete $CsgObj->sequences->{$pref.'_ord'}; delete $Part->{$pref.'_ord'};
-			delete $CsgObj->sequences->{$pref.'_sign'}; delete $Part->{$pref.'_sign'};
-			delete $CsgObj->sequences->{$pref.'_mode'}; delete $Part->{$pref.'_mode'};
-			delete $CsgObj->sequences->{$pref.'_tone'}; delete $Part->{$pref.'_tone'};
-			delete $CsgObj->sequences->{$pref.'_com'}; delete $Part->{$pref.'_com'};
+			delete $CsgObj->sequences->{$pref.'_id'}; delete $Project->{$pref.'_id'};
+			delete $CsgObj->sequences->{$pref.'_name'}; delete $Project->{$pref.'_name'};
+			delete $CsgObj->sequences->{$pref.'_ins'}; delete $Project->{$pref.'_ins'};
+			delete $CsgObj->sequences->{$pref.'_n'}; delete $Project->{$pref.'_n'};
+			delete $CsgObj->sequences->{$pref.'_x'}; delete $Project->{$pref.'_x'};
+			delete $CsgObj->sequences->{$pref.'_y'}; delete $Project->{$pref.'_y'};
+			delete $CsgObj->sequences->{$pref.'_z'}; delete $Project->{$pref.'_z'};
+			delete $CsgObj->sequences->{$pref.'_sets'}; delete $Project->{$pref.'_sets'};
+			delete $CsgObj->sequences->{$pref.'_pre'}; delete $Project->{$pref.'_pre'};
+			delete $CsgObj->sequences->{$pref.'_rep'}; delete $Project->{$pref.'_rep'};
+			delete $CsgObj->sequences->{"$pref\_funt"}; delete $Project->{"$pref\_funt"};
+			delete $CsgObj->sequences->{"$pref\_fun"}; delete $Project->{"$pref\_fun"};
+			delete $CsgObj->sequences->{"$pref\_exp"}; delete $Project->{"$pref\_exp"};
+			delete $CsgObj->sequences->{"$pref\_opt"}; delete $Project->{"$pref\_opt"};
+			delete $CsgObj->sequences->{$pref.'_A'}; delete $Project->{$pref.'_A'};
+			delete $CsgObj->sequences->{$pref.'_Aoct'}; delete $Project->{$pref.'_Aoct'};
+			delete $CsgObj->sequences->{"$pref\_Aroc"};delete $Project->{"$pref\_Aroc"};
+			delete $CsgObj->sequences->{$pref.'_B'}; delete $Project->{$pref.'_B'};
+			delete $CsgObj->sequences->{$pref.'_Boct'};delete $Project->{$pref.'_Boct'};
+			delete $CsgObj->sequences->{"$pref\_Broc"}; delete $Project->{"$pref\_Broc"};
+			delete $CsgObj->sequences->{$pref.'_ord'}; delete $Project->{$pref.'_ord'};
+			delete $CsgObj->sequences->{$pref.'_sign'}; delete $Project->{$pref.'_sign'};
+			delete $CsgObj->sequences->{$pref.'_mode'}; delete $Project->{$pref.'_mode'};
+			delete $CsgObj->sequences->{$pref.'_tone'}; delete $Project->{$pref.'_tone'};
+			delete $CsgObj->sequences->{$pref.'_com'}; delete $Project->{$pref.'_com'};
 			&Csgrouper::Describe($subname, "$id: deleted");
 			next;
 		}
 		my @vals;
-		$vals[0] = delete $CsgObj->sequences->{"$pref\_sel"}; delete $Part->{"$pref\_sel"};
-		$vals[1] = delete $CsgObj->sequences->{$pref.'_ind'}; delete $Part->{$pref.'_ind'};
-		$vals[2] = delete $CsgObj->sequences->{$pref.'_id'}; delete $Part->{$pref.'_id'};
-		$vals[3] = delete $CsgObj->sequences->{$pref.'_name'}; delete $Part->{$pref.'_name'};
-		$vals[4] = delete $CsgObj->sequences->{$pref.'_ins'}; delete $Part->{$pref.'_ins'};
-		$vals[5] = delete $CsgObj->sequences->{$pref.'_n'}; delete $Part->{$pref.'_n'};
-		$vals[6] = delete $CsgObj->sequences->{$pref.'_x'}; delete $Part->{$pref.'_x'};
-		$vals[7] = delete $CsgObj->sequences->{$pref.'_y'}; delete $Part->{$pref.'_y'};
-		$vals[8] = delete $CsgObj->sequences->{$pref.'_z'}; delete $Part->{$pref.'_z'};
-		$vals[9] = delete $CsgObj->sequences->{$pref.'_sets'}; delete $Part->{$pref.'_sets'};
-		$vals[10] = delete $CsgObj->sequences->{$pref.'_pre'}; delete $Part->{$pref.'_pre'};
-		$vals[11] = delete $CsgObj->sequences->{$pref.'_rep'}; delete $Part->{$pref.'_rep'};
-		$vals[12] = delete $CsgObj->sequences->{"$pref\_funt"}; delete $Part->{"$pref\_funt"};
-		$vals[13] = delete $CsgObj->sequences->{"$pref\_exp"}; delete $Part->{"$pref\_exp"};
-		$vals[14] = delete $CsgObj->sequences->{"$pref\_modo"}; delete $Part->{"$pref\_modo"};
-		$vals[15] = delete $CsgObj->sequences->{$pref.'_A'}; delete $Part->{$pref.'_A'};
-		$vals[16] = delete $CsgObj->sequences->{$pref.'_Aoct'}; delete $Part->{$pref.'_Aoct'};
-		$vals[17] = delete $CsgObj->sequences->{"$pref\_Aroc"};delete $Part->{"$pref\_Aroc"};
-		$vals[18] = delete $CsgObj->sequences->{$pref.'_B'}; delete $Part->{$pref.'_B'};
-		$vals[19] = delete $CsgObj->sequences->{$pref.'_Boct'};delete $Part->{$pref.'_Boct'};
-		$vals[20] = delete $CsgObj->sequences->{"$pref\_Broc"}; delete $Part->{"$pref\_Broc"};
-		$vals[21] = delete $CsgObj->sequences->{$pref.'_ord'}; delete $Part->{$pref.'_ord'};
-		$vals[22] = delete $CsgObj->sequences->{$pref.'_sign'}; delete $Part->{$pref.'_sign'};
-		$vals[23] = delete $CsgObj->sequences->{$pref.'_mode'}; delete $Part->{$pref.'_mode'};
-		$vals[24] = delete $CsgObj->sequences->{$pref.'_tone'}; delete $Part->{$pref.'_tone'};
-		$vals[25] = delete $CsgObj->sequences->{$pref.'_com'}; delete $Part->{$pref.'_com'};
-		$vals[26] = delete $CsgObj->sequences->{"$pref\_fun"}; delete $Part->{"$pref\_fun"};
+		$vals[0] = delete $CsgObj->sequences->{"$pref\_sel"}; delete $Project->{"$pref\_sel"};
+		$vals[1] = delete $CsgObj->sequences->{$pref.'_ind'}; delete $Project->{$pref.'_ind'};
+		$vals[2] = delete $CsgObj->sequences->{$pref.'_id'}; delete $Project->{$pref.'_id'};
+		$vals[3] = delete $CsgObj->sequences->{$pref.'_name'}; delete $Project->{$pref.'_name'};
+		$vals[4] = delete $CsgObj->sequences->{$pref.'_ins'}; delete $Project->{$pref.'_ins'};
+		$vals[5] = delete $CsgObj->sequences->{$pref.'_n'}; delete $Project->{$pref.'_n'};
+		$vals[6] = delete $CsgObj->sequences->{$pref.'_x'}; delete $Project->{$pref.'_x'};
+		$vals[7] = delete $CsgObj->sequences->{$pref.'_y'}; delete $Project->{$pref.'_y'};
+		$vals[8] = delete $CsgObj->sequences->{$pref.'_z'}; delete $Project->{$pref.'_z'};
+		$vals[9] = delete $CsgObj->sequences->{$pref.'_sets'}; delete $Project->{$pref.'_sets'};
+		$vals[10] = delete $CsgObj->sequences->{$pref.'_pre'}; delete $Project->{$pref.'_pre'};
+		$vals[11] = delete $CsgObj->sequences->{$pref.'_rep'}; delete $Project->{$pref.'_rep'};
+		$vals[12] = delete $CsgObj->sequences->{"$pref\_funt"}; delete $Project->{"$pref\_funt"};
+		$vals[13] = delete $CsgObj->sequences->{"$pref\_exp"}; delete $Project->{"$pref\_exp"};
+		$vals[14] = delete $CsgObj->sequences->{"$pref\_opt"}; delete $Project->{"$pref\_opt"};
+		$vals[15] = delete $CsgObj->sequences->{$pref.'_A'}; delete $Project->{$pref.'_A'};
+		$vals[16] = delete $CsgObj->sequences->{$pref.'_Aoct'}; delete $Project->{$pref.'_Aoct'};
+		$vals[17] = delete $CsgObj->sequences->{"$pref\_Aroc"};delete $Project->{"$pref\_Aroc"};
+		$vals[18] = delete $CsgObj->sequences->{$pref.'_B'}; delete $Project->{$pref.'_B'};
+		$vals[19] = delete $CsgObj->sequences->{$pref.'_Boct'};delete $Project->{$pref.'_Boct'};
+		$vals[20] = delete $CsgObj->sequences->{"$pref\_Broc"}; delete $Project->{"$pref\_Broc"};
+		$vals[21] = delete $CsgObj->sequences->{$pref.'_ord'}; delete $Project->{$pref.'_ord'};
+		$vals[22] = delete $CsgObj->sequences->{$pref.'_sign'}; delete $Project->{$pref.'_sign'};
+		$vals[23] = delete $CsgObj->sequences->{$pref.'_mode'}; delete $Project->{$pref.'_mode'};
+		$vals[24] = delete $CsgObj->sequences->{$pref.'_tone'}; delete $Project->{$pref.'_tone'};
+		$vals[25] = delete $CsgObj->sequences->{$pref.'_com'}; delete $Project->{$pref.'_com'};
+		$vals[26] = delete $CsgObj->sequences->{"$pref\_fun"}; delete $Project->{"$pref\_fun"};
 		for (my $i = 0; $i < scalar(@vals); $i++) { chomp $vals[$i] }
 		&Csgrouper::Debug($subname, "vals: @vals");
 		push @rows, [@vals];
@@ -5452,7 +5170,7 @@ sub seq_del {
 		&seq_add(@$_) 
 	}
 	$STARTEXEC = $oldstartexec;
-  $Seq_tblw->form(-top=>[$Part_frame2,4], -left=>['%2',4], -right=>['%98',4]);
+  $Seq_tblw->form(-top=>[$Project_frame2,4], -left=>['%2',4], -right=>['%98',4]);
   SEQ_DEL_END:
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END seq_del().
@@ -5466,37 +5184,68 @@ sub seq_header {
   { no warnings; &Csgrouper::says($subname, "@_"); }
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
-  $Seq_tblw->put(0, 0, 'sel');
-  $Seq_tblw->put(0, 1, 'row');
-  $Seq_tblw->put(0, 2, 'id');
-  $Seq_tblw->put(0, 3, 'base');
-  $Seq_tblw->put(0, 4, 'name');
-  $Seq_tblw->put(0, 5, 'ins'); 
-  $Seq_tblw->put(0, 6, 'n'); 
-  $Seq_tblw->put(0, 7, 'x'); 
-  $Seq_tblw->put(0, 8, 'y'); 
-  $Seq_tblw->put(0, 9, 'z'); 
-  $Seq_tblw->put(0, 10, 'set'); 
-  $Seq_tblw->put(0, 11, 'pre'); 
-  $Seq_tblw->put(0, 12, 'rep'); 
-  $Seq_tblw->put(0, 13, 'fun'); 
-  $Seq_tblw->put(0, 14, 'exp');
-  $Seq_tblw->put(0, 15, 'mod');
-  $Seq_tblw->put(0, 16, 'A');  
-  $Seq_tblw->put(0, 17, 'Aoct'); 
-  $Seq_tblw->put(0, 18, 'ran');
-  $Seq_tblw->put(0, 19, 'B'); 
-  $Seq_tblw->put(0, 20, 'Boct'); 
-  $Seq_tblw->put(0, 21, 'ran');
-  $Seq_tblw->put(0, 22, 'ord'); 
-  $Seq_tblw->put(0, 23, 'signs'); 
-  $Seq_tblw->put(0, 24, 'mode'); 
-  $Seq_tblw->put(0, 25, 'tone'); 
-  $Seq_tblw->put(0, 26, 'comments'); 
-  $Seq_tblw->put(0, 27, 'base'); 
-  $Seq_tblw->put(0, 28, 'id'); 
-  $Seq_tblw->put(0, 29, 'row'); 
-  $Seq_tblw->put(0, 30, 'sel'); 
+  my $tmp_label = $Seq_tblw->Label(-text =>"sel", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 0,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"row", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 1,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"id", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 2,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"base", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 3,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"name", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 4,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"ins", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 5,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"n", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 6,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"x", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 7,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"y", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 8,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"z", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 9,  $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"set", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 10, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"pre", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 11, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"rep", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 12, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"fun", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 13, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"exp", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 14, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"opt", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 15, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"A", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 16, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"Aoct", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 17, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"ran", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 18, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"B", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 19, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"Boct", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 20, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"ran", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 21, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"ord", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 22, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"signs", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 23, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"mode", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 24, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"tone", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 25, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"comments", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 26, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"base", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 27, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"id", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 28, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"row", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 29, $tmp_label); 
+  $tmp_label = $Seq_tblw->Label(-text =>"sel", -relief =>'groove', -justify => 'center');
+  $Seq_tblw->put(0, 30, $tmp_label); 
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END seq_header().
 
@@ -5514,37 +5263,38 @@ sub seq_load {
   { no strict 'refs'; no warnings;
 	for (my $i = 1; $i <= MAXOBJ; $i++){ 
 	  $pref = "Tkrow_$i"; 
-	  next if (!(defined $Part->{$pref.'_id'}));
-	  my $id = 'Seq_'.$Part->{$pref.'_id'};
+	  next if (!(defined $Project->{$pref.'_id'}));
+	  my $id = 'Seq_'.$Project->{$pref.'_id'};
 	  &Csgrouper::Debug($subname, "$pref\_id: $id"); 
 	  my @vals;
-	  $vals[0] = $CsgObj->sequences->{"$pref\_sel"} = $Part->{"$pref\_sel"};
-	  $vals[1] = $CsgObj->sequences->{$pref.'_ind'} = $Part->{$pref.'_ind'};
-	  $vals[2] = $CsgObj->sequences->{$pref.'_id'} = $Part->{$pref.'_id'};
-	  $vals[3] = $CsgObj->sequences->{$pref.'_name'} = $Part->{$pref.'_name'};
-	  $vals[4] = $CsgObj->sequences->{$pref.'_ins'} = $Part->{$pref.'_ins'};
-	  $vals[5] = $CsgObj->sequences->{$pref.'_n'} = $Part->{$pref.'_n'};
-	  $vals[6] = $CsgObj->sequences->{$pref.'_x'} = $Part->{$pref.'_x'};
-	  $vals[7] = $CsgObj->sequences->{$pref.'_y'} = $Part->{$pref.'_y'};
-	  $vals[8] = $CsgObj->sequences->{$pref.'_z'} = $Part->{$pref.'_z'};
-	  $vals[9] = $CsgObj->sequences->{$pref.'_sets'} = $Part->{$pref.'_sets'};
-	  $vals[10] = $CsgObj->sequences->{$pref.'_pre'} = $Part->{$pref.'_pre'};
-	  $vals[11] = $CsgObj->sequences->{$pref.'_rep'} = $Part->{$pref.'_rep'};
-	  $vals[12] = $CsgObj->sequences->{"$pref\_funt"} = $Part->{"$pref\_funt"};
-	  $vals[13] = $CsgObj->sequences->{"$pref\_exp"} = $Part->{"$pref\_exp"};
-	  $vals[14] = $CsgObj->sequences->{"$pref\_modo"} = $Part->{"$pref\_modo"};
-	  $vals[15] = $CsgObj->sequences->{$pref.'_A'} = $Part->{$pref.'_A'};
-	  $vals[16] = $CsgObj->sequences->{$pref.'_Aoct'} = $Part->{$pref.'_Aoct'};
-	  $vals[17] = $CsgObj->sequences->{"$pref\_Aroc"} = $Part->{"$pref\_Aroc"};
-	  $vals[18] = $CsgObj->sequences->{$pref.'_B'} = $Part->{$pref.'_B'};
-	  $vals[19] = $CsgObj->sequences->{$pref.'_Boct'} = $Part->{$pref.'_Boct'};
-	  $vals[20] = $CsgObj->sequences->{"$pref\_Broc"} = $Part->{"$pref\_Broc"};
-	  $vals[21] = $CsgObj->sequences->{$pref.'_ord'} = $Part->{$pref.'_ord'};
-	  $vals[22] = $CsgObj->sequences->{$pref.'_sign'} = $Part->{$pref.'_sign'};
-	  $vals[23] = $CsgObj->sequences->{$pref.'_mode'} = $Part->{$pref.'_mode'};
-	  $vals[24] = $CsgObj->sequences->{$pref.'_tone'} = $Part->{$pref.'_tone'};
-	  $vals[25] = $CsgObj->sequences->{$pref.'_com'} = $Part->{$pref.'_com'};
-	  $vals[26] = $CsgObj->sequences->{"$pref\_fun"} = $Part->{"$pref\_fun"};
+	  $vals[0] = $CsgObj->sequences->{"$pref\_sel"} = $Project->{"$pref\_sel"};
+	  &Csgrouper::Debug($subname, "selected=".$vals[0]); 
+	  $vals[1] = $CsgObj->sequences->{$pref.'_ind'} = $Project->{$pref.'_ind'};
+	  $vals[2] = $CsgObj->sequences->{$pref.'_id'} = $Project->{$pref.'_id'};
+	  $vals[3] = $CsgObj->sequences->{$pref.'_name'} = $Project->{$pref.'_name'};
+	  $vals[4] = $CsgObj->sequences->{$pref.'_ins'} = $Project->{$pref.'_ins'};
+	  $vals[5] = $CsgObj->sequences->{$pref.'_n'} = $Project->{$pref.'_n'};
+	  $vals[6] = $CsgObj->sequences->{$pref.'_x'} = $Project->{$pref.'_x'};
+	  $vals[7] = $CsgObj->sequences->{$pref.'_y'} = $Project->{$pref.'_y'};
+	  $vals[8] = $CsgObj->sequences->{$pref.'_z'} = $Project->{$pref.'_z'};
+	  $vals[9] = $CsgObj->sequences->{$pref.'_sets'} = $Project->{$pref.'_sets'};
+	  $vals[10] = $CsgObj->sequences->{$pref.'_pre'} = $Project->{$pref.'_pre'};
+	  $vals[11] = $CsgObj->sequences->{$pref.'_rep'} = $Project->{$pref.'_rep'};
+	  $vals[12] = $CsgObj->sequences->{"$pref\_funt"} = $Project->{"$pref\_funt"};
+	  $vals[13] = $CsgObj->sequences->{"$pref\_exp"} = $Project->{"$pref\_exp"};
+	  $vals[14] = $CsgObj->sequences->{"$pref\_opt"} = $Project->{"$pref\_opt"};
+	  $vals[15] = $CsgObj->sequences->{$pref.'_A'} = $Project->{$pref.'_A'};
+	  $vals[16] = $CsgObj->sequences->{$pref.'_Aoct'} = $Project->{$pref.'_Aoct'};
+	  $vals[17] = $CsgObj->sequences->{"$pref\_Aroc"} = $Project->{"$pref\_Aroc"};
+	  $vals[18] = $CsgObj->sequences->{$pref.'_B'} = $Project->{$pref.'_B'};
+	  $vals[19] = $CsgObj->sequences->{$pref.'_Boct'} = $Project->{$pref.'_Boct'};
+	  $vals[20] = $CsgObj->sequences->{"$pref\_Broc"} = $Project->{"$pref\_Broc"};
+	  $vals[21] = $CsgObj->sequences->{$pref.'_ord'} = $Project->{$pref.'_ord'};
+	  $vals[22] = $CsgObj->sequences->{$pref.'_sign'} = $Project->{$pref.'_sign'};
+	  $vals[23] = $CsgObj->sequences->{$pref.'_mode'} = $Project->{$pref.'_mode'};
+	  $vals[24] = $CsgObj->sequences->{$pref.'_tone'} = $Project->{$pref.'_tone'};
+	  $vals[25] = $CsgObj->sequences->{$pref.'_com'} = $Project->{$pref.'_com'};
+	  $vals[26] = $CsgObj->sequences->{"$pref\_fun"} = $Project->{"$pref\_fun"};
 	  for (my $i = 0; $i < scalar(@vals); $i++) { chomp $vals[$i] if (defined $vals[$i]) }
 	  ## The Csgrouper::Sequence object: will be created by seq_add.
 	  ## &Csgrouper::Debug($subname, "@vals");
@@ -5557,7 +5307,7 @@ sub seq_load {
 		&Csgrouper::Debug($subname, "|==> @$_ <==|"); 
 		&seq_add(@$_) 
 	}
-	$Seq_tblw->form(-top=>[$Part_frame2,4], -left=>['%2',4], -right=>['%98',4]);
+	$Seq_tblw->form(-top=>[$Project_frame2,4], -left=>['%2',4], -right=>['%98',4]);
 	$Csgrouper::DEBFLAG =  $oldebflag;
   } ## strict and warnings anew..
 } ## END seq_load().	
@@ -5575,7 +5325,7 @@ sub seq_obj {
 	my @params;
 	my $seqid = "Seq_".$CsgObj->sequences->{$pref.'_id'};
   push @params, 'sel'		=>$CsgObj->sequences->{$pref.'_sel'};
-  push @params, 'sid'		=>$CsgObj->sequences->{$pref.'_id'}; ##  Was: "sid => $seqid" but why? ;
+  push @params, 'sid'		=>$CsgObj->sequences->{$pref.'_id'}; 
   push @params, 'name'	=>$CsgObj->sequences->{$pref.'_name'};
   push @params, 'ins'		=>$CsgObj->sequences->{$pref.'_ins'};
   push @params, 'n'			=>$CsgObj->sequences->{$pref.'_n'};
@@ -5588,7 +5338,7 @@ sub seq_obj {
   push @params, 'funt'	=>$CsgObj->sequences->{$pref.'_funt'};
   push @params, 'fun'		=>$CsgObj->sequences->{$pref.'_fun'};
   push @params, 'exp'		=>$CsgObj->sequences->{$pref.'_exp'};
-  push @params, 'modo'	=>$CsgObj->sequences->{$pref.'_modo'};
+  push @params, 'opt'		=>$CsgObj->sequences->{$pref.'_opt'};
   push @params, 'A'			=>$CsgObj->sequences->{$pref.'_A'};
   push @params, 'Aoct'	=>$CsgObj->sequences->{$pref.'_Aoct'};
   push @params, 'Aroc'	=>$CsgObj->sequences->{$pref.'_Aroc'};
@@ -5608,7 +5358,7 @@ sub seq_obj {
 
   ## XXX NOTE: keep classes independant from interface! 
   ## Don't push @params, 'tkob'=>\%{$CsgObj->sequences}; 
-  ## This would make a circular reference in part_save.
+  ## This would make a circular reference in save.
 
   ## Finally create the corresponding sequence object:
 	&Csgrouper::Debug($subname, "$seqid params: @params");
@@ -5616,7 +5366,7 @@ sub seq_obj {
   $CsgObj->sequences->{$seqid} = Csgrouper::Sequence->new(@params);
   ## XXX NOTE: A proof that Sequence object has been recorded 
   ## (otherwise: no seqobj value):
-	&Csgrouper::Describe($subname, "$seqid before Build_tree: A: ".$CsgObj->sequences->{$seqid}->A." = seqobj: ".$CsgObj->sequences->{$seqid}->fun);
+	&Csgrouper::Describe($subname, "$seqid before Build_tree, selected=".$CsgObj->sequences->{$pref.'_sel'}." A: ".$CsgObj->sequences->{$seqid}->A." = seqobj: ".$CsgObj->sequences->{$seqid}->fun);
 
   ## The tree shall be built UNLESS :
   ## 		a) _sel is off; or 
@@ -5756,28 +5506,28 @@ sub seq_test {
   push @params, 'sel'		=>	"1";
   push @params, 'sid'		=>	"0"; 
   push @params, 'name'	=>	"test sequence";
-  push @params, 'ins'		=>	$Part->{'ins_param_le'} // $Csgrouper::CSG{'ins_param_le'};
-  push @params, 'n'			=>	$Part->{'N_param_le'} // $Csgrouper::CSG{'N_param_le'};
-  push @params, 'x'			=>	$Part->{'X_param_le'} // $Csgrouper::CSG{'X_param_le'};
-  push @params, 'y'			=>	$Part->{'Y_param_le'} // $Csgrouper::CSG{'Y_param_le'};
-  push @params, 'z'			=>	$Part->{'Z_param_le'} // $Csgrouper::CSG{'Z_param_le'};
+  push @params, 'ins'		=>	$Project->{'ins_param_le'} // $Csgrouper::CSG{'ins_param_le'};
+  push @params, 'n'			=>	$Project->{'N_param_le'} // $Csgrouper::CSG{'N_param_le'};
+  push @params, 'x'			=>	$Project->{'X_param_le'} // $Csgrouper::CSG{'X_param_le'};
+  push @params, 'y'			=>	$Project->{'Y_param_le'} // $Csgrouper::CSG{'Y_param_le'};
+  push @params, 'z'			=>	$Project->{'Z_param_le'} // $Csgrouper::CSG{'Z_param_le'};
   push @params, 'sets'	=>	"";
   push @params, 'pre'		=>	"0"; ## The sequence id itself (no previous sequence in tests).
   push @params, 'rep'		=>	"0"; ## No repetitions in tests.
   push @params, 'funt'	=>	$tanavar;
   push @params, 'fun'		=>	$anavar;
-  push @params, 'exp'		=>	$Part->{'ana_exp_cb'} // $Csgrouper::CSG{'ana_exp'};
-  push @params, 'modo'	=>	"1"; ## Always apply the displayed mode.
-  push @params, 'A'			=>	$Part->{'A_series_le'} // $Csgrouper::CSG{'A_series_le'};
-  push @params, 'Aoct'	=>	$Part->{'A_octs_le'} // $Csgrouper::CSG{'A_octs_le'};
-  push @params, 'Aroc'	=>	$Part->{'ana_Aroc_cb'} // $Csgrouper::CSG{'ana_Aroc_cb'};
-  push @params, 'B'			=>	$Part->{'B_series_le'} // $Csgrouper::CSG{'B_series_le'};
-  push @params, 'Boct'	=>	$Part->{'B_octs_le'} // $Csgrouper::CSG{'B_octs_le'};
-  push @params, 'Broc'	=>	$Part->{'ana_Broc_cb'} // $Csgrouper::CSG{'ana_Broc_cb'};
-  push @params, 'ord'		=>	$Part->{'ord_series_le'} // $Csgrouper::CSG{'ord_series_le'};
-  push @params, 'sign'	=>	$Part->{'signs_series_le'} // $Csgrouper::CSG{'signs_series_le'};
-  push @params, 'mode'	=>	$Part->{'mod_series_le'} // $Csgrouper::CSG{'mod_series_le'};
-  push @params, 'tone'	=>	$Part->{'ton_series_le'} // $Csgrouper::CSG{'ton_series_le'};
+  push @params, 'exp'		=>	$Project->{'ana_exp_cb'} // $Csgrouper::CSG{'ana_exp'};
+  push @params, 'opt'		=>	"1"; ## Always apply the displayed mode.
+  push @params, 'A'			=>	$Project->{'A_series_le'} // $Csgrouper::CSG{'A_series_le'};
+  push @params, 'Aoct'	=>	$Project->{'A_octs_le'} // $Csgrouper::CSG{'A_octs_le'};
+  push @params, 'Aroc'	=>	$Project->{'ana_Aroc_cb'} // $Csgrouper::CSG{'ana_Aroc_cb'};
+  push @params, 'B'			=>	$Project->{'B_series_le'} // $Csgrouper::CSG{'B_series_le'};
+  push @params, 'Boct'	=>	$Project->{'B_octs_le'} // $Csgrouper::CSG{'B_octs_le'};
+  push @params, 'Broc'	=>	$Project->{'ana_Broc_cb'} // $Csgrouper::CSG{'ana_Broc_cb'};
+  push @params, 'ord'		=>	$Project->{'ord_series_le'} // $Csgrouper::CSG{'ord_series_le'};
+  push @params, 'sign'	=>	$Project->{'signs_series_le'} // $Csgrouper::CSG{'signs_series_le'};
+  push @params, 'mode'	=>	$Project->{'mod_series_le'} // $Csgrouper::CSG{'mod_series_le'};
+  push @params, 'tone'	=>	$Project->{'ton_series_le'} // $Csgrouper::CSG{'ton_series_le'};
   push @params, 'com'		=>	"This is a test ($date).";
   push @params, 'cdat'	=>	$date;
   push @params, 'mdat'	=>	$date;
@@ -5843,7 +5593,7 @@ sub setup_save {
   # $Csgrouper::DEBFLAG = 1;
   &Csgrouper::says($subname, "Saving setup.");
   ## Special cases:
-  $Part->{'savenotes_enabled_cb'} = $notes_state; 
+  $Project->{'savenotes_enabled_cb'} = $notes_state; 
   &Csgrouper::says($subname,"Setup saved.");
   $Csgrouper::DEBFLAG =  $oldebflag;
 } ## END setup_save().
@@ -5852,7 +5602,7 @@ sub setup_save {
 =cut
 
 sub struct_out {
-	my $test = $CsgObj->struct_ctl($Part->{'part_sections_le'});
+	my $test = $CsgObj->struct_ctl($Project->{'sections_le'});
 	if ($test != 1) {
 		&Csgrouper::Describe($subname, "no structure available");
 		$ready_txt = "CSD: not ready";
@@ -5886,7 +5636,7 @@ sub struct_out {
 	&set_ready(1);
 } ## END struct_out().
 
-=item * set_ready() : set the overall state for the part.
+=item * set_ready() : set the overall state for the proj.
 =cut
 
 sub set_ready {
@@ -5907,7 +5657,7 @@ sub set_ready {
 sub valid_entry{
   my ($entry,$type,$pref,$mode) = @_; ## See Csgrouper::Types.pm for type names.
   my $subname = "valid_entry";
-  ## { no warnings; &Csgrouper::says($subname, "@_"); } ## Uncomment to debug.
+  #&Csgrouper::Debug($subname, "@_"); ## Uncomment to debug.
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
   $mode //= 0;
@@ -6029,7 +5779,7 @@ sub valid_entry{
 sub Log {
   my ($data) = @_;
   my $subname = "Log";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
   my $date = &Csgrouper::Datem();
@@ -6050,80 +5800,80 @@ sub Resetall {
   { no strict 'refs'; no warnings;
 	## And set Globals to their Defaults:
 	if ($mode =~ /init/){ 
-	  $Author 	= $Part->{'part_author_le'} 		//= $Csgrouper::CSG{'part_author_le'}; 
-	  $Intersil = $Part->{'part_intersil_le'} 	//= $Csgrouper::CSG{'part_intersil_le'}; 
-	  $Comptype = $Part->{'part_comptype_mw'} 	//= $Csgrouper::CSG{'part_comptype_mw'}; 
-	  $Durmin = $Part->{'part_durmin_le'} 	//= $Csgrouper::CSG{'part_durmin_le'}; 
-	  $Durmax = $Part->{'part_durmax_le'} 	//= $Csgrouper::CSG{'part_durmax_le'}; 
-	  $Durtype = $Part->{'part_durtype_mw'} 	//= $Csgrouper::CSG{'part_durtype_mw'}; 
-	  $Rythmtype = $Part->{'part_rythmtype_mw'} 	//= $Csgrouper::CSG{'part_rythmtype_mw'}; 
-	  $Steps 		= $Part->{'part_steps_le'} 			//= $Csgrouper::CSG{'part_steps_le'}; 
-	  $Tempo 		= $Part->{'part_tempo_le'} 			//= $Csgrouper::CSG{'part_tempo_le'}; 
-	  $Title 		= $Part->{'part_title_le'} 			//= $Csgrouper::CSG{'part_title_le'}; 
+	  $Author 	= $Project->{'author_le'} 		//= $Csgrouper::CSG{'author_le'}; 
+	  $Intersil = $Project->{'intersil_le'} 	//= $Csgrouper::CSG{'intersil_le'}; 
+	  $Comptype = $Project->{'comptype_mw'} 	//= $Csgrouper::CSG{'comptype_mw'}; 
+	  $Durmin = $Project->{'durmin_le'} 	//= $Csgrouper::CSG{'durmin_le'}; 
+	  $Durfac = $Project->{'durfac_le'} 	//= $Csgrouper::CSG{'durfac_le'}; 
+	  $Durtype = $Project->{'durtype_mw'} 	//= $Csgrouper::CSG{'durtype_mw'}; 
+	  $Rythmtype = $Project->{'rythmtype_mw'} 	//= $Csgrouper::CSG{'rythmtype_mw'}; 
+	  $Steps 		= $Project->{'steps_le'} 			//= $Csgrouper::CSG{'steps_le'}; 
+	  $Tempo 		= $Project->{'tempo_le'} 			//= $Csgrouper::CSG{'tempo_le'}; 
+	  $Title 		= $Project->{'title_le'} 			//= $Csgrouper::CSG{'title_le'}; 
 	  # Paths:
 	  my $var;
-	  $var = $Part->{'csg_path_pe'}; $var =~ /^(~\/.*)$/?  $Part->{'csg_path_pe'} = $var =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Part->{'csg_path_pe'} = $Csgrouper::CSG{'csg_path_pe'};
-	  $BasePath = $Part->{'csg_path_pe'}; 
+	  $var = $Project->{'csg_path_pe'}; $var =~ /^(~\/.*)$/?  $Project->{'csg_path_pe'} = $var =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Project->{'csg_path_pe'} = $Csgrouper::CSG{'csg_path_pe'};
+	  $BasePath = $Project->{'csg_path_pe'}; 
 	  
-	  $var = $Part->{'csound_sf2path_pe'}; $var =~ /^(~\/.*)$/?  $Part->{'csound_sf2path_pe'} = $var =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Part->{'csound_sf2path_pe'} = $Csgrouper::CSG{'csound_sf2path_pe'};
-	  $Sf2Path 	= $Part->{'csound_sf2path_pe'}; 
+	  $var = $Project->{'csound_sf2path_pe'}; $var =~ /^(~\/.*)$/?  $Project->{'csound_sf2path_pe'} = $var =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Project->{'csound_sf2path_pe'} = $Csgrouper::CSG{'csound_sf2path_pe'};
+	  $Sf2Path 	= $Project->{'csound_sf2path_pe'}; 
 	  
-	  $var = $Part->{'run_path_pe'}; $var  =~ /^(~\/.*)$/?  $Part->{'run_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Part->{'run_path_pe'} = $Csgrouper::CSG{'run_path_pe'};
-	  $var = $Part->{'render_path_pe'}; $var  =~ /^(~\/.*)$/?  $Part->{'render_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Part->{'render_path_pe'} = $Csgrouper::CSG{'render_path_pe'};
-	  $var = $Part->{'bkp_path_pe'}; $var  =~ /^(~\/.*)$/?  $Part->{'bkp_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Part->{'bkp_path_pe'} = $Csgrouper::CSG{'bkp_path_pe'};
-	  $var = $Part->{'ins_path_pe'}; $var  =~ /^(~\/.*)$/?  $Part->{'ins_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Part->{'ins_path_pe'} = $Csgrouper::CSG{'ins_path_pe'};
-	  $var = $Part->{'part_path_pe'}; $var  =~ /^(~\/.*)$/?  $Part->{'part_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Part->{'part_path_pe'} = $Csgrouper::CSG{'part_path_pe'};
-	  $var = $Part->{'part_path_pe'}; $var  =~ /^(~\/.*)$/?  $Part->{'part_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Part->{'part_path_pe'} = $Csgrouper::CSG{'part_path_pe'};
+	  $var = $Project->{'run_path_pe'}; $var  =~ /^(~\/.*)$/?  $Project->{'run_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Project->{'run_path_pe'} = $Csgrouper::CSG{'run_path_pe'};
+	  $var = $Project->{'render_path_pe'}; $var  =~ /^(~\/.*)$/?  $Project->{'render_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Project->{'render_path_pe'} = $Csgrouper::CSG{'render_path_pe'};
+	  $var = $Project->{'bkp_path_pe'}; $var  =~ /^(~\/.*)$/?  $Project->{'bkp_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Project->{'bkp_path_pe'} = $Csgrouper::CSG{'bkp_path_pe'};
+	  $var = $Project->{'ins_path_pe'}; $var  =~ /^(~\/.*)$/?  $Project->{'ins_path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Project->{'ins_path_pe'} = $Csgrouper::CSG{'ins_path_pe'};
+	  $var = $Project->{'path_pe'}; $var  =~ /^(~\/.*)$/?  $Project->{'path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Project->{'path_pe'} = $Csgrouper::CSG{'path_pe'};
+	  $var = $Project->{'path_pe'}; $var  =~ /^(~\/.*)$/?  $Project->{'path_pe'} = $var  =~ s/^(~\/)(.*)$/$Csgrouper::INSTALLDIR$2/ : $Project->{'path_pe'} = $Csgrouper::CSG{'path_pe'};
 	  
 	}
 	elsif ($mode =~ /reset/){
-	  $Author = $Csgrouper::CSG{'part_author_le'};
-	  if (defined $Part->{'part_author_le'}) {
-	  	$Part->{'part_author_le'} = $Author ; 
+	  $Author = $Csgrouper::CSG{'author_le'};
+	  if (defined $Project->{'author_le'}) {
+	  	$Project->{'author_le'} = $Author ; 
 	  }
-	  $Intersil = $Csgrouper::CSG{'part_intersil_le'};
-	  if (defined $Part->{'part_intersil_le'}){
-	  	$Part->{'part_intersil_le'} = $Intersil ;
+	  $Intersil = $Csgrouper::CSG{'intersil_le'};
+	  if (defined $Project->{'intersil_le'}){
+	  	$Project->{'intersil_le'} = $Intersil ;
 	  }
-	  $Comptype = $Csgrouper::CSG{'part_comptype_mw'};
-	  if (defined $Part->{'part_comptype_mw'}){
-	  	$Part->{'part_comptype_mw'} = $Comptype ;
+	  $Comptype = $Csgrouper::CSG{'comptype_mw'};
+	  if (defined $Project->{'comptype_mw'}){
+	  	$Project->{'comptype_mw'} = $Comptype ;
 	  }
-	  $Durtype = $Csgrouper::CSG{'part_durtype_mw'};
-	  if (defined $Part->{'part_durtype_mw'}){
-	  	$Part->{'part_durtype_mw'} = $Durtype ;
+	  $Durtype = $Csgrouper::CSG{'durtype_mw'};
+	  if (defined $Project->{'durtype_mw'}){
+	  	$Project->{'durtype_mw'} = $Durtype ;
 	  }
-	  $Durmin = $Csgrouper::CSG{'part_durmin_le'};
-	  if (defined $Part->{'part_durmin_le'}){
-	  	$Part->{'part_durmin_le'} = $Durmin ;
+	  $Durmin = $Csgrouper::CSG{'durmin_le'};
+	  if (defined $Project->{'durmin_le'}){
+	  	$Project->{'durmin_le'} = $Durmin ;
 	  }
-	  $Durmax = $Csgrouper::CSG{'part_durmax_le'};
-	  if (defined $Part->{'part_durmax_le'}){
-	  	$Part->{'part_durmax_le'} = $Durmax ;
+	  $Durfac = $Csgrouper::CSG{'durfac_le'};
+	  if (defined $Project->{'durfac_le'}){
+	  	$Project->{'durfac_le'} = $Durfac ;
 	  }
-	  $Rythmtype = $Csgrouper::CSG{'part_rythmtype_mw'};
-	  if (defined $Part->{'part_rythmtype_mw'}){
-	  	$Part->{'part_rythmtype_mw'} = $Rythmtype ;
+	  $Rythmtype = $Csgrouper::CSG{'rythmtype_mw'};
+	  if (defined $Project->{'rythmtype_mw'}){
+	  	$Project->{'rythmtype_mw'} = $Rythmtype ;
 	  }
 	  $BasePath = $Csgrouper::CSG{'csg_path_pe'};
-	  if (defined $Part->{'csg_path_pe'}){
-	  	$Part->{'csg_path_pe'} = $BasePath ;
+	  if (defined $Project->{'csg_path_pe'}){
+	  	$Project->{'csg_path_pe'} = $BasePath ;
 	  }
 	  $Sf2Path = $Csgrouper::CSG{'csound_sf2path_pe'};
-	  if (defined $Part->{'csound_sf2path_pe'}){
-	  	$Part->{'csound_sf2path_pe'} = $Sf2Path ;
+	  if (defined $Project->{'csound_sf2path_pe'}){
+	  	$Project->{'csound_sf2path_pe'} = $Sf2Path ;
 	  }
-	  $Steps= $Csgrouper::CSG{'part_steps_le'};
-		  if (defined $Part->{'part_steps_le'}){
-		$Part->{'part_steps_le'} = $Steps ;
+	  $Steps= $Csgrouper::CSG{'steps_le'};
+		  if (defined $Project->{'steps_le'}){
+		$Project->{'steps_le'} = $Steps ;
 	  }
-	  $Tempo= $Csgrouper::CSG{'part_tempo_le'};
-	  if (defined $Part->{'part_tempo_le'}){
-	  	$Part->{'part_tempo_le'} = $Tempo ;
+	  $Tempo= $Csgrouper::CSG{'tempo_le'};
+	  if (defined $Project->{'tempo_le'}){
+	  	$Project->{'tempo_le'} = $Tempo ;
 	  }
-	  $Title = $Csgrouper::CSG{'part_title_le'};
-	  if (defined $Part->{'part_title_le'}) {
-	  	$Part->{'part_title_le'} = $Title ; 
+	  $Title = $Csgrouper::CSG{'title_le'};
+	  if (defined $Project->{'title_le'}) {
+	  	$Project->{'title_le'} = $Title ; 
 	  }
 	} ## END if mode = reset;
 	&set_ready(0); ## Not ready unless Eval is done.
@@ -6137,7 +5887,7 @@ sub Resetall {
 
 =over
 
-=item * Xfun() : applies csgrouper.pl main functions to sections of sequences representing sections of a part.
+=item * Xfun() : applies csgrouper.pl main functions to sections of sequences representing sections of a score.
 =cut
 
 sub Xfun {
@@ -6197,10 +5947,10 @@ sub basedef {
   ##  Get Sequence Defaults:
 	my $instr = $CsgObj->sequences->{$spref}->instr; ## Instr. id.
 	my $parnum = $CsgObj->instruments->{$instr.'_parnum'}; ## Number of p-values.
-	if ($Part->{'part_durtype_mw'} == 1) { ## Duration
+	if ($Project->{'durtype_mw'} == 1) { ## Duration
 		&Csgrouper::Describe($subname, "Duration set to random mode.");
 	}
-	elsif ($Part->{'part_durtype_mw'} == 2) {
+	elsif ($Project->{'durtype_mw'} == 2) {
 		&Csgrouper::Describe($subname, "Duration set to fixed mode.");
 	}
 	for (my $p = 3; $p <= ($parnum+2); $p++){ 
@@ -6257,51 +6007,100 @@ sub inote {
 		## KEYWORD = "dur".
 		## Here a modal composition in a small base will receive smaller average durations;
 		## the final result needs to be normalized by $CsgObj->defaults->{$spref}->{dur}.
-		## old: my $dur = &Csgrouper::Dodecad($ref->scmp1)+1; 
+		## Set the original duration from serial content: 
 		my $dur = ((&Csgrouper::Dodecad($ref->val)%8)*(&Csgrouper::Dodecad($ref->indi)%8))/8;
-		if ($Part->{'part_durtype_mw'} == 1) {
-			$dur = (int(rand($Csgrouper::CSG{part_durmax_le})%8)*(&Csgrouper::Dodecad($ref->indi)%8))/8;
+		if ($Project->{'durtype_mw'} == 1) { # Randomization:
+			$dur = (int(rand($Csgrouper::CSG{durfac_le})%8)*(&Csgrouper::Dodecad($ref->indi)%8))/8;
 		}
-		elsif ($Part->{'part_durtype_mw'} == 2) {
-			$dur = $Part->{part_durmin_le}*$Part->{'part_rythmtype_mw'};
+		elsif ($Project->{'durtype_mw'} == 2) { # Fixed (but dependant on rythm type):
+			$dur = $Project->{durmin_le}*$Project->{'rythmtype_mw'};
 		}
 		## Normalization.. comment it to allow durations of 0 sec.:
-		$dur = $Csgrouper::CSG{part_durmin_le} if ($dur == 0);
+		$dur = $Csgrouper::CSG{durmin_le} if ($dur == 0);
 		## Rythm type:
-		my $rval = $dur*8; 
-		&Csgrouper::Describe($subname, "dur: $dur") ; 
-		if ($Part->{'part_rythmtype_mw'} == 1) { ## Mixed-.
-			if ($rval == 1) { $rval++; &Csgrouper::Describe($subname, "rval++") }
-			else { while (not($rval%3 == 0 || $rval%2 == 0)) { $rval--; &Csgrouper::Describe($subname, "rval--") } }
+		my $rval = $dur*8; # Temporary expansion.
+		# &Csgrouper::Describe($subname, "dur: $dur") ; 
+		if ($Project->{'rythmtype_mw'} == 1) { ## Mixed-.
+			if ($rval == 1) { 
+				$rval++; 
+				&Csgrouper::Debug($subname, "rval++");
+			}
+			else { 
+				while (not($rval%3 == 0 || $rval%2 == 0)) { 
+					$rval--; 
+					&Csgrouper::Debug($subname, "rval--");
+				} 
+			}
 		}
-		elsif ($Part->{'part_rythmtype_mw'} == 6) { ## Mixed+.
-			if ($rval == 1) { $rval++; &Csgrouper::Describe($subname, "rval++") }
-			else { while (not($rval%3 == 0 || $rval%2 == 0)) { $rval++; &Csgrouper::Describe($subname, "rval++") } }
+		elsif ($Project->{'rythmtype_mw'} == 6) { ## Mixed+.
+			if ($rval == 1) { 
+				$rval++; 
+				&Csgrouper::Debug($subname, "rval++");
+			}
+			else { 
+				while (not($rval%3 == 0 || $rval%2 == 0)) { 
+					$rval++; 
+					&Csgrouper::Debug($subname, "rval++");
+				}
+			}
 		}
-		elsif ($Part->{'part_rythmtype_mw'} == 2) { ## Binary-.
-			if ($rval == 1) { $rval++; &Csgrouper::Describe($subname, "rval++")  }
-			else { while ($rval%2 != 0) { $rval--; &Csgrouper::Describe($subname, "rval--")  } }
+		elsif ($Project->{'rythmtype_mw'} == 2) { ## Binary-.
+			if ($rval == 1) { 
+				$rval++; 
+				&Csgrouper::Debug($subname, "rval++");
+			}
+			else { 
+				while ($rval%2 != 0) { 
+					$rval--; 
+					&Csgrouper::Debug($subname, "rval--");
+				} 
+			}
 		}
-		elsif ($Part->{'part_rythmtype_mw'} == 3) { ## Ternary-.
-			if ($rval < 3) { $rval = 3; &Csgrouper::Describe($subname, "rval->3")  }
-			else { while ($rval%3 != 0) { $rval--; &Csgrouper::Describe($subname, "rval--")  } }
+		elsif ($Project->{'rythmtype_mw'} == 3) { ## Ternary-.
+			if ($rval < 3) { 
+				$rval = 3; 
+				# &Csgrouper::Describe($subname, "rval->3")  ;
+			}
+			else { 
+				while ($rval%3 != 0) { 
+					$rval--; 
+					# &Csgrouper::Describe($subname, "rval--")  ;
+				} 
+			}
 		}
-		elsif ($Part->{'part_rythmtype_mw'} == 4) { ## Binary+.
-			if ($rval == 1) { $rval++; &Csgrouper::Describe($subname, "rval++")  }
-			else { while ($rval%2 != 0) { $rval++; &Csgrouper::Describe($subname, "rval++")  } }
+		elsif ($Project->{'rythmtype_mw'} == 4) { ## Binary+.
+			if ($rval == 1) { 
+				$rval++; 
+				# &Csgrouper::Describe($subname, "rval++")  ;
+			}
+			else { 
+				while ($rval%2 != 0) { 
+					$rval++; 
+					# &Csgrouper::Describe($subname, "rval++")  ;
+				} 
+			}
 		}
-		elsif ($Part->{'part_rythmtype_mw'} == 5) { ## Ternary+.
-			if ($rval < 3) { $rval = 3; &Csgrouper::Describe($subname, "rval->3")  }
-			else { while ($rval%3 != 0) { $rval++; &Csgrouper::Describe($subname, "rval++")  } }
+		elsif ($Project->{'rythmtype_mw'} == 5) { ## Ternary+.
+			if ($rval < 3) { 
+				$rval = 3; 
+				&Csgrouper::Debug($subname, "rval->3");
+			}
+			else { 
+				while ($rval%3 != 0) { 
+					$rval++; 
+					# &Csgrouper::Describe($subname, "rval++") ;
+				} 
+			}
 		}
-		$dur = $rval/8;
-		&Csgrouper::Describe($subname, "new dur: $dur") ; 
+		$dur = $rval/8; # Resize back.
+		# &Csgrouper::Describe($subname, "new dur: $dur") ; 
 		## The best solution remains to set $CsgObj->defaults->{$spref}->{dur} as factor:
 		&Csgrouper::Debug($subname, "## dur=".$dur." new=".$CsgObj->defaults->{$spref}->{dur}*$dur);
 		$dur = $CsgObj->defaults->{$spref}->{dur}*$dur; 
 		$dur =~ s/^(.+\.\d{3})(.+)$/$1/;	
-		$dur = ($Part->{part_durmin_le}*$Part->{'part_rythmtype_mw'}) if ($dur < ($Part->{part_durmin_le}*$Part->{'part_rythmtype_mw'}));
-		$dur = ($Part->{part_durmin_le}*$Part->{part_durmax_le}*$Part->{'part_rythmtype_mw'}) if ($dur > ($Part->{part_durmin_le}*$Part->{part_durmax_le}*$Part->{'part_rythmtype_mw'}));
+		# Post-normalization: this won't affect fixed durations:
+		$dur = ($Project->{durmin_le}*$Project->{'rythmtype_mw'}) if ($dur < ($Project->{durmin_le}*$Project->{'rythmtype_mw'}));
+		$dur = ($Project->{durmin_le}*$Project->{durfac_le}*$Project->{'rythmtype_mw'}) if ($dur > ($Project->{durmin_le}*$Project->{durfac_le}*$Project->{'rythmtype_mw'}));
 		$parlist{dur} = $dur;
 		## KEYWORD = "fq1":
 		my $freqtype = $CsgObj->instruments->{$ins.'_freq_type'};
@@ -6310,7 +6109,7 @@ sub inote {
 		elsif ($freqtype =~ /^(cpspch)$/) { $parlist{fq1} = $fq1 =  $ref->pc1 }
 		elsif ($freqtype =~ /^(midi)$/){ $parlist{fq1} = $fq1 = $ref->mi1 }
 		$fq1 =~ s/^(.+\.\d{3})(.+)$/$1/;	
-		&Csgrouper::Describe($subname, "$ins : $freqtype : $fq1");
+		&Csgrouper::Debug($subname, "$ins : $freqtype : $fq1");
 		## KEYWORD = "amp":
 		my $amp = $CsgObj->defaults->{$spref}->{'amp'}//= "0"; $parlist{amp} = $amp;
 		## KEYWORD = "atk":
@@ -6366,7 +6165,7 @@ sub inote {
 		## KEYWORD = "sre": sf2 register
 		my $sre = $CsgObj->defaults->{$spref}->{'sre'}//= "24:60:108"; $parlist{sre} = $sre;
 		&Csgrouper::Debug($subname, "dur=".$dur." amp=".$amp." atk=".$atk);
-		## KEYWORDS = "fq1", "pan", "gli", "hus", etc.:
+		## KEYWORDS = "fq1", "pan", "gli", "sil", etc.:
 		## These other params are treated below by overfun() based on 
 		## their Note object defaults.
 		## 2. OVERWRITE LIST OF PARAMS:
@@ -6437,11 +6236,11 @@ sub inseth {
 		## Find special functions for this set:
 		foreach (@XYfun) {
 			my $varfun = $_;
-			my $varname = "part_".$varfun."_le";
-			my $vartext = $Part->{$varname}; ## The actual box contents.
+			my $varname = "".$varfun."_le";
+			my $vartext = $Project->{$varname}; ## The actual box contents.
 			my $reg1 = $set.$Csgrouper::PARSEP;
 			my $reg2 = $Csgrouper::SETSEP.$set.$Csgrouper::PARSEP;
-			&Csgrouper::Describe($subname, "$varfun   $vartext");
+			&Csgrouper::Debug($subname, "$varfun   $vartext");
 			next if ( ($vartext !~ /^($reg1)(.*)/) &&
 								($vartext !~ /($reg2)(.*)/)	);
 			my @setpars = split /$Csgrouper::SETSEP/,$vartext;
@@ -6468,7 +6267,7 @@ sub inseth {
 sub overdef {
   my ($parlist,$spref,$i) = @_; 
   my $subname = "overdef";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
 	if ($Csgrouper::DEBFLAG//= 0 == 1){
@@ -6498,7 +6297,7 @@ sub overdef {
 sub overfun { 
   my ($parlist,$setref,$spref,$i) = @_; 
   my $subname = "overfun";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
 	## 3.2 PARAM VALUES BY SET:
@@ -6511,9 +6310,9 @@ sub overfun {
 		if (defined $CsgObj->inseth->{$set}{xdur}){
 			## 3 cases : normal xfun, modification by factor or limit values.
 			## Here do the normal Xfun computation if any..
-			&Csgrouper::Describe($subname,"note $i ==========================> xdur a");
+			&Csgrouper::Debug($subname,"note $i ==========================> xdur a");
 			goto ENDXDUR unless (defined ${$CsgObj->inseth->{$set}{xdur}}[0]);
-			&Csgrouper::Describe($subname,"note $i ##########################> xdur b");
+			&Csgrouper::Debug($subname,"note $i ##########################> xdur b");
 			my $exp0 = ${$CsgObj->inseth->{$set}{xdur}}[0];
 			$exp0 = eval($exp0) if (eval($exp0));
 			if (defined $CsgObj->inseth->{$set}{xdur}[1]){
@@ -6531,9 +6330,9 @@ sub overfun {
 		} ## END if defined inseth->dur. 
 		if (defined $CsgObj->inseth->{$set}{xamp}){
 			## Here do the normal Xfun computation if any..
-			&Csgrouper::Describe($subname,"note $i ==========================> xamp a");
+			&Csgrouper::Debug($subname,"note $i ==========================> xamp a");
 			goto ENDXAMP unless (defined ${$CsgObj->inseth->{$set}{xamp}}[0]);
-			&Csgrouper::Describe($subname,"note $i ##########################> xamp b");
+			&Csgrouper::Debug($subname,"note $i ##########################> xamp b");
 			my $exp0 = ${$CsgObj->inseth->{$set}{xamp}}[0];
 			$exp0 = eval($exp0) if (eval($exp0));
 			if (defined $CsgObj->inseth->{$set}{xamp}[1]){
@@ -6548,21 +6347,21 @@ sub overfun {
 			}
 			ENDXAMP:
 		} ## END if defined inseth->amp. 
-		if (defined $CsgObj->inseth->{$set}{xhus}){
+		if (defined $CsgObj->inseth->{$set}{xsil}){
 			## Here do the normal Xfun computation if any..
 			my $ref = $CsgObj->sequences->{$spref}->tree->notes->{$i};
-			goto ENDXHUS unless ($ref->scmp2 == 1 || $ref->scmp3 == 1); 
+			goto ENDXSIL unless ($ref->scmp2 == 1 || $ref->scmp3 == 1); 
 			$parlist->{amp} = 0;
-			&Csgrouper::Describe($subname,"note $i ==========================> xhus a");
-			## xhus sets xamp to 0..
+			&Csgrouper::Debug($subname,"note $i ==========================> xsil a");
+			## xsil sets xamp to 0..
 			## No override for now: either the note is played or not.
-			ENDXHUS:
+			ENDXSIL:
 		} ## END if defined inseth->amp. 
 		if (defined $CsgObj->inseth->{$set}{xatk}){ ## ATTACK
 			## Here do the normal Xfun computation if any..
-			&Csgrouper::Describe($subname,"note $i ==========================> xatk a");
+			&Csgrouper::Debug($subname,"note $i ==========================> xatk a");
 			goto ENDXATK unless (defined ${$CsgObj->inseth->{$set}{xatk}}[0]);
-			&Csgrouper::Describe($subname,"note $i ##########################> xatk b");
+			&Csgrouper::Debug($subname,"note $i ##########################> xatk b");
 			## Here we set both atk and rel.
 			## 2 duration factor params whose sum is less than 1.
 			my $exp0 = ${$CsgObj->inseth->{$set}{xatk}}[0];
@@ -6582,9 +6381,9 @@ sub overfun {
 		} ## END if defined inseth->atk. 
 		if (defined $CsgObj->inseth->{$set}{xpan}){
 			## Here do the normal Xfun computation if any..
-			&Csgrouper::Describe($subname,"note $i ==========================> xpan a");
+			&Csgrouper::Debug($subname,"note $i ==========================> xpan a");
 			goto ENDXPAN unless (defined ${$CsgObj->inseth->{$set}{xpan}}[0]);
-			&Csgrouper::Describe($subname,"note $i ##########################> xpan b");
+			&Csgrouper::Debug($subname,"note $i ##########################> xpan b");
 			## Here we set both pa1 and pa2.
 			my $exp0 = ${$CsgObj->inseth->{$set}{xpan}}[0];
 			$exp0 = eval($exp0) if (eval($exp0));
@@ -6617,7 +6416,7 @@ sub overfun {
 			goto ENDXGLI unless ($ref->ocmp2 == $ref->ocmp3); ## indio == inoto
 			my $ins = $CsgObj->sequences->{$spref}->instr; ## Instr. id.
 			my $freqtype = $CsgObj->instruments->{$ins.'_freq_type'};
-			&Csgrouper::Describe($subname,"note $i ==========================> xgli a");
+			&Csgrouper::Debug($subname,"note $i ==========================> xgli a");
 			if ($freqtype =~ /midi/){
 					goto ENDXGLI; ## No glissandi for midi notes?
 			}
@@ -6629,7 +6428,7 @@ sub overfun {
 				$parlist->{pc3} = $targ->pc1 unless ($ref->ocmp1 == $ref->ocmp2); ## TODO : Check for a better criterium for gauss curve frequency shift here. 
 			}
 			goto ENDXGLI unless (defined ${$CsgObj->inseth->{$set}{xgli}}[0]);
-			&Csgrouper::Describe($subname,"note $i ##########################> xgli b");
+			&Csgrouper::Debug($subname,"note $i ##########################> xgli b");
 			## Here we set both gl1,gl2 and hd1,hd2.
 			## 4 factor params:
 			my $exp0 = ${$CsgObj->inseth->{$set}{xgli}}[0];
@@ -6672,7 +6471,7 @@ sub overfun {
 sub setpval {
   my ($val,$fun,$spref,$i) = @_; 
   my $subname = "setpval";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
   goto SETPVALEND unless (defined $val);
@@ -6735,7 +6534,7 @@ sub Yfun {
 		my $funs;
 		&Csgrouper::Describe($subname, "inseth $set =>");
 		while (my($key,$cont) = each %$val){
-			&Csgrouper::Describe($subname, "$key => ".join '' ,@$cont);
+			&Csgrouper::Debug($subname, "$key => ".join '' ,@$cont);
 			$funs .= $key;
 		}
 		next if ($funs !~ /(yryc)|(yens)/);
@@ -6906,7 +6705,7 @@ sub yryc {
 sub tabs { ## 
   my ($n) = @_; 
   my $subname = "tabs";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   my $oldebflag = $Csgrouper::DEBFLAG;
   # $Csgrouper::DEBFLAG = 1;
   my $out = "";
@@ -7094,7 +6893,7 @@ sub Compstr0 {
 sub Compstr1 { 
   my ($ser) = @_;
   my $subname = "Csgrouperinter::Compstr1";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   ## The use of Imap allows indistinct elements and modes.
 	return &Csgrouper::Dimap(&Csgrouper::Powerp(&Csgrouper::Natural($ser),&Csgrouper::Imap($ser),2),$ser);
 }
@@ -7105,7 +6904,7 @@ sub Compstr1 {
 sub Compstr2 {
   my ($ser) = @_; 
   my $subname = "Csgrouperinter::Compstr2";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   ## The use of Imap allows indistinct elements and modes.
 	return &Csgrouper::Dimap(&Csgrouper::Powerp(&Csgrouper::Natural($ser),&Csgrouper::Imap($ser),-1),$ser);
 } ## END Compstr2
@@ -7116,7 +6915,7 @@ sub Compstr2 {
 sub Compstr3 { 
   my ($ser) = @_; 
   my $subname = "Csgrouperinter::Compstr3";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   ## The use of Imap allows indistinct elements and modes.
 	return &Csgrouper::Dimap(&Csgrouper::Powerp(&Csgrouper::Natural($ser),&Csgrouper::Imap($ser),-2),$ser);
 } ## END Compstr3
@@ -7130,7 +6929,7 @@ sub Compstr3 {
 sub Compstr4 { 
   my ($ser) = @_;
   my $subname = "Csgrouperinter::Compstr4";
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   my @seq = split //,$ser;
   my @res;  
   foreach my $el (@seq) {
@@ -7156,7 +6955,7 @@ __DATA__
 
 =head2 Command lines
 
-	&Csgrouper::says($subname, $Part->{'Seq_2_name'};
+	&Csgrouper::says($subname, $Project->{'Seq_2_name'};
 	&Csgrouper::says($subname, $Sequences{Seq_1_sel});
 	$DEBUG = 1; $DEBUG = 0;
 	print &Csgrouper::Map(&Csgrouper::Oppose("089AB2145673"),"089AB2145673"); ## (=289A14365B70).
@@ -7187,48 +6986,5 @@ __DATA__
 =head2 Colors
 
 The Tk original colorpalette is grey but black text isn't too readable then and some objects like the manual Tk::Pod::Text do not accept color settings. $CsgObj->sequences->{Seq_n}. Fortunately there's another ready made palette available which was the original Tcl-Tk palette, named "bisque" and with correct display for black text. See how to make a color palette of my own. 
-
-=head2 Bugs
-
-=head3 Tk Bugs
-
-The Tk::Notebook -Podtext problem: the Podtext parameter disturbs proper Tk display here. See : my $Man_top_tw = $Tabs{'man'}->Scrolled. Perlmonks 120323 fix: use Tk::option (actually Tk::Cmdline) to override default color. 
- 
-The Tk::Text control chars bug: see our workaround from Perlmonks.org.
-
-The Tk::Pod::Text bug: overwrites the main window title with the head1 entry.
-
-The Tk::Table size bug (long strings are not displayed - but is it a bug?). 
-
-=head3 My own bugs history
-
-111120	The struct_ctl section bug.
-111018	The sequence deletion bug.
-
-=head4 Description
-
-While deleting multiple sequences but after objects have been created and struct_ctl has been run: lots of sequences but not all the possible sequences are created (stops at 571 instead of 576 why?) and this process ends up with this message:
-	
- (in validation command executed by entry)
-Tk::Error: Can't call method "set_ready" without a package or object reference at ~/Csgrouper/lib/csgrouper.pl line 5378.
- [\&main::__ANON__]
- (in validation command executed by entry)
-	
-When deleting the same sequences before struct_ctl, the job is done but ends like:
-
-Tk::Error: Can't call method "set_ready" without a package or object reference at ~/Csgrouper/lib/csgrouper.pl line 5388.
- \\&main::__ANON__
- (in validation command executed by entry)
-
-struct_ctl seems to be creating unnecessary sequences as Tkrow entries, when I delete my 4 sequences and keep 1  I only delete 4 of 576 = 572...
-
-=head4 Solution
-
-I had the following line in the begining of the struct_ctl() loop:
-
-	$self->sequences->{$tpref."_id"}//= "";
-
-so the object was created...
-
 
 =cut

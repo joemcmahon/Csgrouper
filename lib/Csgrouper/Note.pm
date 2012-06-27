@@ -148,7 +148,7 @@ has 'ft2'	=> (isa => 'Csgrouper::Types::num', is => 'rw', required => 0, default
 has 'ft3'	=> (isa => 'Csgrouper::Types::num', is => 'rw', required => 0, default => $Csgrouper::CSG{'ft_base'});  
 has 'ft4'	=> (isa => 'Csgrouper::Types::num', is => 'rw', required => 0, default => $Csgrouper::CSG{'ft_base'});  
 ## xfun states:
-has 'hus'	=> (isa => 'Csgrouper::Types::num',is => 'rw', required => 1, default => 0);
+has 'sil'	=> (isa => 'Csgrouper::Types::num',is => 'rw', required => 1, default => 0);
 ## yfun states:
 has 'ryc'	=> (isa => 'Csgrouper::Types::num',is => 'rw', required => 1, default => 0);
 has 'ens'	=> (isa => 'Csgrouper::Types::num',is => 'rw', required => 1, default => 0);
@@ -166,7 +166,7 @@ has 'ens'	=> (isa => 'Csgrouper::Types::num',is => 'rw', required => 1, default 
 sub BUILD { ## 
   my ($self) = @_;  
  	my $subname = 'Note::BUILD';
-  # { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
   my $oldebflag = $Csgrouper::DEBFLAG; 
   # $Csgrouper::DEBFLAG = 1;
  	&Csgrouper::Debug($subname, $self->gind);
@@ -228,7 +228,7 @@ sub freqset {
 	my ($self) = @_;
 	## Init:
 	my $subname = 'Note::freqset';
-  { no warnings; &Csgrouper::says($subname, "@_"); }
+  &Csgrouper::Debug($subname, "@_");
 	my $oldebflag = $Csgrouper::DEBFLAG; 
 	# $Csgrouper::DEBFLAG = 1;
 	&Csgrouper::Error($subname,"Private method called.",1) 

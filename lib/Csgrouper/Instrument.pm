@@ -30,19 +30,19 @@ At present this object only serves the purpose of providing a file to contain it
 
 Instruments are Csound text files, not written in Perl. 
 
-Instruments variables are mainly accessed as csgrouper.pl $Part params though accessible through the Csgrouper main object ($CsgObj). Instrument params can correspond to params defined in the Types class and a dedicated table on top of the instrument tab allows to attribute these specific param names to instrument's p-values. In this case these named parameters will fall in the scope of Xfuns. However there is no control on the names attributed there and in case of mismatch, the routine will simply assign default values (second line in the table) without warning.
+Instruments variables are mainly accessed as csgrouper.pl $Project params though accessible through the Csgrouper main object ($CsgObj). Instrument params can correspond to params defined in the Types class and a dedicated table on top of the instrument tab allows to attribute these specific param names to instrument's p-values, then the named parameters will fall in the scope of Xfuns. However there is no control on the names attributed there and in case of mismatch, the routine will simply assign default values (second line in the table) without warning.
 
-The method for adding a Csgrouper defined instrument param to an instrument that did not posess this param consists in adding a line with ivar,kvar or avar = pn depending on the need with n=param number. Now after an update, pn is listed in the param table above the instrument text and a default value as well as a predefined name can be attributed while the variable defined in the instrument text will contain this value and be usable anywhere within this instrument... or not! ivar's purpose was just to make Csgrouper know about that param, a better regex would certainly have made this trick superfluous.
+Params are listed automatically by Csgrouper at load time. The attribution of Xfun names must be done manually for several or (more rarely) all the parameters of an instrument.
 
-Any instrument parameter greater than 2 (because 1,2 are unmodifiable id and start time) can see its value ovewritten by a special mention following the instrument name as in 
+Additionnally any instrument parameter greater than 2 (because 1,2 are unmodifiable id and start time) can see its value ovewritten by a special mention following the instrument name in the main Sequences table as in 
 
 	"i24,p5=f10,p6=0.5,p7=sub{&myfunction($CsgObj->class->attr)}" 
 	
-for example, where parameters overwriting strings will be parsed and evaluated by the subroutine Xfun(). These params however can in turn be overwritten by xfunctions set parameters (see csgrouper.pl manual: Parameter overwriting).
+for example, where parameters overwriting strings will be parsed and evaluated by the subroutine Xfun(). These params however can in turn be overwritten by Xfun set parameters (see csgrouper.pl manual: Parameter overwriting).
 
-In order to add easily a new instrument param without overwriting or skipping a valid param name, the Tk table in the interface orchestra tab can be updated with each new param that would be inserted into the instrument text as a valid line containing an additionnal p-value. 
+In order to add easily a new instrument parameter without overwriting or skipping a valid param name, the Tk table in the interface orchestra has to be updated for each new parameter name that would be attributed in the instrument's param table. 
 
-Note that saving a part where the score has been written already will store this content too, duplicating the orchestra records.
+Note that saving a project where the score has been written already will store this content too, duplicating the orchestra records.
 =cut
 	
 package Csgrouper::Instrument; 

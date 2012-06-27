@@ -1,0 +1,94 @@
+
+
+*** News / Todo / Questions / Problems / Recent Changes / Bugs (see at EOF)
+
+ - 120627 : NEEDED: Someone generous who would correct my English in Help texts and others (contact emilbarton@ymail.com).
+ 
+ - 120627 : Manual pages have still to be written, but I think that Csgrouper can more and more be used by non Perl programmers.
+ 
+ - 120627 : The fact that my class hierarchy is not quite hierarchical makes me wonder about the appropriateness of using Moose, and even of trying to follow an OO model in this project. Moose has the drawback of requiring a lot of other Cpan modules to be installed. What's your opinion on this? 
+
+ - 120627 : the modifications brought in the last days represent a first important revision: version is now 2.0.2 (version.release.revision).
+
+ - 120627 : change in project names: 'parts' are renamed as 'projects' since a musical part is precisely not the whole of a musical score as it is in csgrouper. The program tree has to be changed too.
+
+ - 120627 : correction of the reload() bug (see at the end of this page).
+
+ - 120625 : correction of the ins_parnum() bug (see at the end of this page) and improvement of instruments loading (ins_load), suppression of redundant subroutines (ins_def).
+
+ - 120620 : introduction of Tk Balloon help: they will be gradually created for each functionnality.
+
+ - 120317: From now on and for a while, most changes will concern the Manual pages that need to be completed and they will be mentionned on Github by a "Minor comment fix." to distinguish them from possible minor code fixes. 
+
+ - Problem with the instruments fields: 
+ in spite of correct bindings sometimes unsupported utf8 are recorded. If a .csg recorded project refuses to load it's that some unwanted multibyte char  has been inserted at some stage by some keypress (e.g. from Emacs-like reflexes). In this case XML:Simple aborts. The solution is to find and destroy the bad char  (showing some special prefixe like ^) with an editor as nano or vi.
+
+
+*** Bugs
+
+*** *** Tk Bugs
+
+The Tk::Notebook -Podtext problem: the Podtext parameter disturbs proper Tk display here. See : my $Man_top_tw = $Tabs{'man'}->Scrolled. Perlmonks 120323 fix: use Tk::option (actually Tk::Cmdline) to override default color. 
+ 
+The Tk::Text control chars bug: see our workaround from Perlmonks.org.
+
+The Tk::Pod::Text bug: overwrites the main window title with the head1 entry.
+
+The Tk::Table : long strings are not displayed (is it a bug?). 
+
+The Tk::TextEntry : validatecommand is called on widget creation (is it a bug?).
+
+
+
+*** *** Csgrouper bugs:
+
+- 120626 : The reload() bug.
+
+ Description
+
+The reload() command was inverting sequence selection.
+
+ Solution
+
+The -validatecommand option in Tk text entries is run at creation time, thus our rows are deselected. We had met this problem already and needed only to reuse the same $STARTEXEC fake init time trick.
+
+- 120625 : The ins_parnum() bug.
+
+ Description
+
+As soon as a parameter was missing from the instrument text ins_parnum was not numbering parameters correctly anymore, in consequence parameters had to be verified and even listed with unuseful variables to ensure their taking into account. Unfortunately this situation arises normally for the duration param p3 and sometimes also for params prepared but not exploited yet.
+
+ Solution
+
+ins_parnum has been written better and now accepts (and even warns for) missing params, no need to list them specially in the beggining of instrument text anymore, no error in consequent parameter numbering. The only param that can be ommited without warning is the last one for any instrument, in that case Csound will complain about an incorrect param count.
+
+111120 : The struct_ctl() section bug.
+
+111018 : The sequence deletion bug.
+
+ Description
+
+While deleting multiple sequences but after objects have been created and struct_ctl has been run: lots of sequences but not all the possible sequences are created (stops at 571 instead of 576 why?) and this process ends up with this message:
+	
+ (in validation command executed by entry)
+Tk::Error: Can't call method "set_ready" without a package or object reference at ~/Csgrouper/lib/csgrouper.pl line 5378.
+ [\&main::__ANON__]
+ (in validation command executed by entry)
+	
+When deleting the same sequences before struct_ctl, the job is done but ends like:
+
+Tk::Error: Can't call method "set_ready" without a package or object reference at ~/Csgrouper/lib/csgrouper.pl line 5388.
+ \\&main::__ANON__
+ (in validation command executed by entry)
+
+struct_ctl seems to be creating unnecessary sequences as Tkrow entries, when I delete my 4 sequences and keep 1  I only delete 4 of 576 = 572...
+
+ Solution
+
+I had the following line in the begining of the struct_ctl() loop:
+
+	$self->sequences->{$tpref."_id"}//= "";
+
+so the object was created...
+
+EOF

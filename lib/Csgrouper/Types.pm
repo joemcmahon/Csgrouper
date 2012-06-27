@@ -145,37 +145,37 @@ We encounter some problems with regex types in tk valid_entry() that require to 
 
 if ($entry =~ /$Csgrouper::Types::REGEX{not_digit}/): works
 
-but if ($entry =~ /$Csgrouper::Types::REGEX{digit}/): doesn't..
+but if ($entry !~ /$Csgrouper::Types::REGEX{digit}/): doesn't..
 
 nor: if ($entry !~ /$Csgrouper::Types::REGEX{digit}/), with $REGEX{digit}	= qr/[0-9]+/ and $REGEX{not_digit} = qr/[^0-9]+/ 
 (inner parentheses do not change anything).
 
 Here positive regexes are complete sequences, while complementary regexes are character-scoped. The complementary version dedicated to character validation, cannot provide a full validation for the constructed sequence:
 
-	$REGEX{'alnum'}							= qr/[0-9_A-Za-z]+/o;
-	$REGEX{'non_alnum'}					= qr/[^0-9_A-Za-z]+/o;
-	$REGEX{'digicom'}						= qr/[0-9:,.-]+/o;
-	$REGEX{'non_digicom'}				= qr/[^0-9:,.-]+/o; 
-	$REGEX{'digit'}							= qr/^([0-9]+)$/o;
-	$REGEX{'non_digit'}					= qr/[^0-9]+/o;
-	$REGEX{'float'}							= qr/^(([+\-]?\d+[\.]?\d*)|([+\-]?\d*[\.]?\d+))$/o;
-	$REGEX{'non_float'}					= qr/[^0-9\.\-\+]+/o;
-	$REGEX{'inst'}							= qr/^(i[0-9]+)$/o;
-	$REGEX{'non_inst'}					= qr/[^0-9i]+/o;
-	$REGEX{'plusminus'}					= qr/[+-]+/o;
-	$REGEX{'non_plusminus'}			= qr/[^+-]+/o; 
-	$REGEX{'plusalnumin'}			  = qr/[0-9_A-Za-z +-]+/o; ## alnum + plus + minus.
-	$REGEX{'non_plusalnumin'}		= qr/[^0-9_A-Za-z +-]+/o; 
-	$REGEX{'spalnumin'}					= qr/[0-9_A-Za-z -]+/o; ## alnum + space + minus.
-	$REGEX{'non_spalnumin'}			= qr/[^0-9_A-Za-z -]+/o; 
-	$REGEX{'subset'}						= qr/[0-9,;]+/o; ## digit + coma + semicolon.
-	$REGEX{'non_subset'}				= qr/[^0-9,;]+/o; 
-	$REGEX{'text'}							= qr/[0-9_A-Za-z ,;:.+-]+/o;  ## alnum + space + dot + coma + semicolon + colon + minus + plus.
-	$REGEX{'non_text'}					= qr/[^0-9_A-Za-z ,;:.+-]+/o; 
-	$REGEX{'param'}							= qr/^([0-9 =A-Z]+)$/o; ## For Randcond params.
-	$REGEX{'non_param'}					= qr/[^0-9 =A-Z]+/o;
-	$REGEX{'xphonic'}						= qr/^([0-9ABCDEFGHIJKLMN]+)$/o;
-	$REGEX{'non_xphonic'}				= qr/[^0-9ABCDEFGHIJKLMN]+/o;
+	$REGEX{'alnum'}             = qr/[0-9_A-Za-z]+/o;
+	$REGEX{'non_alnum'}         = qr/[^0-9_A-Za-z]+/o;
+	$REGEX{'digicom'}           = qr/[0-9:,.-]+/o;
+	$REGEX{'non_digicom'}       = qr/[^0-9:,.-]+/o; 
+	$REGEX{'digit'}             = qr/^([0-9]+)$/o;
+	$REGEX{'non_digit'}         = qr/[^0-9]+/o;
+	$REGEX{'float'}             = qr/^(([+\-]?\d+[\.]?\d*)|([+\-]?\d*[\.]?\d+))$/o;
+	$REGEX{'non_float'}         = qr/[^0-9\.\-\+]+/o;
+	$REGEX{'inst'}              = qr/^(i[0-9]+)$/o;
+	$REGEX{'non_inst'}          = qr/[^0-9i]+/o;
+	$REGEX{'plusminus'}         = qr/[+-]+/o;
+	$REGEX{'non_plusminus'}     = qr/[^+-]+/o; 
+	$REGEX{'plusalnumin'}       = qr/[0-9_A-Za-z +-]+/o; ## alnum + plus + minus.
+	$REGEX{'non_plusalnumin'}   = qr/[^0-9_A-Za-z +-]+/o; 
+	$REGEX{'spalnumin'}         = qr/[0-9_A-Za-z -]+/o; ## alnum + space + minus.
+	$REGEX{'non_spalnumin'}     = qr/[^0-9_A-Za-z -]+/o; 
+	$REGEX{'subset'}            = qr/[0-9,;]+/o; ## digit + coma + semicolon.
+	$REGEX{'non_subset'}        = qr/[^0-9,;]+/o; 
+	$REGEX{'text'}              = qr/[0-9_A-Za-z ,;:.+-]+/o;  ## alnum + space + dot + coma + semicolon + colon + minus + plus.
+	$REGEX{'non_text'}          = qr/[^0-9_A-Za-z ,;:.+-]+/o; 
+	$REGEX{'param'}             = qr/^([0-9 =A-Z]+)$/o; ## For Randcond params.
+	$REGEX{'non_param'}         = qr/[^0-9 =A-Z]+/o;
+	$REGEX{'xphonic'}           = qr/^([0-9ABCDEFGHIJKLMN]+)$/o;
+	$REGEX{'non_xphonic'}       = qr/[^0-9ABCDEFGHIJKLMN]+/o;
 
 =cut
 
@@ -184,8 +184,8 @@ our 	%REGEX;
 	$REGEX{'non_alnum'}					= qr/[^0-9_A-Za-z]+/o;
 	$REGEX{'digicom'}						= qr/[0-9§:#,.-]+/o;
 	$REGEX{'non_digicom'}				= qr/[^0-9§:#,.-]+/o; 
-	$REGEX{'digicominst'}						= qr/[0-9i§:#,.-]+/o;
-	$REGEX{'non_digicominst'}				= qr/[^0-9i§:#,.-]+/o; 
+	$REGEX{'digicominst'}				= qr/[0-9i§:#,.-]+/o;
+	$REGEX{'non_digicominst'}		= qr/[^0-9i§:#,.-]+/o; 
 	$REGEX{'digit'}							= qr/^([0-9]+)$/o;
 	$REGEX{'non_digit'}					= qr/[^0-9]+/o;
 	$REGEX{'float'}							= qr/^(([+\-]?\d+[\.]?\d*)|([+\-]?\d*[\.]?\d+))$/o;

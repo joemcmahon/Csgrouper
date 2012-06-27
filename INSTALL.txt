@@ -57,8 +57,8 @@ Csgrouper/lib/Csgrouper/Note.pm
 Csgrouper/lib/Csgrouper/Sequence.pm
 Csgrouper/lib/Csgrouper/Series.pm
 Csgrouper/lib/Csgrouper/Types.pm
-Csgrouper/part/
-Csgrouper/part/xpace-flute.xml
+Csgrouper/proj/
+Csgrouper/proj/xpace-flute.xml
 Csgrouper/run/
 Csgrouper/run/csgrouper -> ../lib/csgrouper.pl
 Csgrouper/run/default.xml
