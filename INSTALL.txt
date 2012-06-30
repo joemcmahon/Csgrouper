@@ -1,30 +1,24 @@
+Csgrouper was  created on Debian Linux. It is compatible with Unix-like systems.
+
+*** Installing Csgrouper
+
+Once the required modules and third party software are installed, it's easiest 
+to unpack the Csgrouper.tar.gz file in your home directory, make sure the 
+Csgrouper directory is writable, and leave it there while you try it out. Once 
+everything is up and running, it's possible to move it elsewhere by changing paths
+via the GUI. You'll probably also need to correct some configuration files by 
+hand [1]; there are a few things that haven't quite been worked out completely yet.
 
 
-Csgrouper was made on Linux Debian. It is compatible with Unix-like systems.
-
-
-
-*** How to install Csgrouper?
-
-Once the required module and third party software are installed, the best thing
-to do is to unpack the tar file on top of the home directory, make it writable 
-to leave it there for the first trials of the software. Once everything will be 
-up and running it will be possible to install elsewhere by changing paths from 
-the GUI (and probably also correcting some configuration files by hand [1]). 
-These are the kind of things that haven't been worked out a lot while programming.
-
-
-
-*** Required Cpan modules and third party software:
+*** Required CPAN modules and third party software:
 
 
 --- Third party:
 
-	Csound  : a package from standard distribution will do.
-	Xterm   : located in /usr/bin (didn't optionalize this yet).
+	Csound  : any standard distribution will do.
+	Xterm   : assumed to be located in /usr/bin; this isn't a modifiable option yet.
 
-
---- Cpan Modules:
+--- CPAN Modules:
 
 	Cwd 
 	Data::Dumper 
@@ -36,49 +30,14 @@ These are the kind of things that haven't been worked out a lot while programmin
 	Scalar::Util 
 	Tk 
 	XML::Simple 
-
-
 	
-*** Csgrouper list of files and directories [2]:
-
-Csgrouper/
-Csgrouper/INSTALL.txt
-Csgrouper/README.txt
-Csgrouper/RUN.txt
-Csgrouper/ins/
-Csgrouper/ins/flute.in
-Csgrouper/ins/xpace-csg.in
-Csgrouper/lib/csg_Sets.pm
-Csgrouper/lib/Csgrouper.pm
-Csgrouper/lib/csgrouper.pl
-Csgrouper/lib/Csgrouper/
-Csgrouper/lib/Csgrouper/Instrument.pm
-Csgrouper/lib/Csgrouper/Note.pm
-Csgrouper/lib/Csgrouper/Sequence.pm
-Csgrouper/lib/Csgrouper/Series.pm
-Csgrouper/lib/Csgrouper/Types.pm
-Csgrouper/proj/
-Csgrouper/proj/xpace-flute.xml
-Csgrouper/run/
-Csgrouper/run/csgrouper -> ../lib/csgrouper.pl
-Csgrouper/run/default.xml
-Csgrouper/run/bkp/
-Csgrouper/run/sndout/
-Csgrouper/run/sndout/ballad.csd
-Csgrouper/run/sndout/ballad.mp3
-Csgrouper/run/sndout/xpace-flute_raw-csg.csd
-Csgrouper/run/sndout/xpace-flute_raw-csg.mp3
-
+See the MANIFEST file for all the files and directories expected.
 
 	
 *** Notes:
 
-[1] Typically the 'use lib ("$ENV{HOME}/Csgrouper/lib");' code line in csgrouper.pl 
-will have to be corrected manually when changing the software from standard location, 
-as well as the 'our 	$INSTALLDIR = $ENV{HOME};' in Csgrouper.pm. 
-
-[2] Csgrouper can run into problem due to a specificity in Github that destroys 
-unused folders (like Csgrouper/run/bkp) when their presence is required for the
-application to play a score.
+[1] At the moment, the 'use lib ("$ENV{HOME}/Csgrouper/lib");' line in csgrouper.pl 
+will have to be updated manually when moving the software from to a new location; 
+the 'our $INSTALLDIR = $ENV{HOME};' in Csgrouper.pm will need to be fixed as well.. 
 
 EOF

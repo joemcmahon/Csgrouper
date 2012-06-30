@@ -1,102 +1,108 @@
 
 
-*** How to run Csgrouper?
+*** Running Csgrouper
 
-Once installed Csgrouper can be started with the default piece by entering 
+Once installed, Csgrouper can be started with the default piece by entering 
 
-	~/Csgrouper/run/csgrouper from a terminal.
+	~/Csgrouper/run/csgrouper
+    
+at the command line. Optionally, you can add an argument which is the name
+of a project file:
+
+    ~/Csgrouper/run/csgrouper project_file.xml
 
 This command is equivalent to :
 
-	~/Csgrouper/lib/csgrouper.pl ~/Csgrouper/run/default.xml
-
-It can also take an argument which is the name of a project file as in:
-
-	~/Csgrouper/run/csgrouper ~/Csgrouper/proj/xpace-flute.xml
-
-(in the original package xpace-flute.xml is a copy of default.xml).
+	~/Csgrouper/lib/csgrouper.pl project_file.xml
 
 
+*** Playing audio
 
-*** How to produce audio output?
+Once a set of sequences is defined, click the "Eval" button in the 
+"Sequences" tab or the "CSD" tab to check it. If it passes, click the "Rewrite"
+button in the "CSD" tab to save it, then the "Play" button from the "CSD" tab
+to actualy play it.
 
-Once a set of sequences is properly defined it can pass the evaluation stage 
-(button "Eval" from the "Sequences" tab or from the "CSD" tab). If this evaluation 
-completes, it's ready to be written (button "Rewrite" from the "CSD" tab) 
-and then only it can be heard through the button "Play" from the "CSD" tab.
-
-When producing output some sequences can be easily commented out but this must be 
-done from the "CSD" tab by mentionning their coma-separated ids list into the proper 
-field instead of deselecting them from the "Sequences" tab, because this last action 
-would modify the structure of the project and its resulting output. 
-
-
-
-*** The most important field: 
-
-The user should be aware that the "mode " is the most important field in any 
-Csgrouper setup - either in the Sequences table or in the Series tab - if this 
-field is not correctly filled Csgrouper will fail at some point. The idea is 
-simple: whatever you want to do with some suite of notes located in any field, 
-the "mode" field must contain the list of signs that you authorize in your 
-output - and the same number of signs  that define your intervals (e.g. 12 for 
-dodecaphonism or chromatism). So even if you filled properly the "base" field 
-with 14, Csgrouper won't be able to work in base 14 unless you enter the first 
-14 signs into the "mode" field. (It is the case in the default "Series" tab 
-where the suite "A" contains 18 notes but mode 12 only: an invalid setup that 
-will produce failures in several functions calls). 
-
-Later if you want to work in a particular musical mode, you will be able to do 
-so by replacing some of the distinct signs in the "mode" field with some indistinct
-signs, keeping the same number of signs which is the "base" of the sequences. 
-For example "0123456789AB" is the normal western chromatic mode, however one can
-work in the classic "Dorian" mode by replacing all the other notes in the same 
-mode string, and that gives: "00224557799B". Csgrouper will then proceed to its 
-normal computation except that at the time of output it will replace each "1" by 
-a "0", each "3" by a "2" etc., so producing a modulation.
+You can comment out sequences to prevent them from playing by entering them as
+a comma-separated list into the (name here) field on the "CSD" tab; don't deselect
+them in the "Sequences" tab, as this modifies the structure of the project and
+changes the nature of all of the output, as opposed to simply silencing portions
+of it.
 
 
+*** The importance of modes
 
-*** In case of problem:
+You should be aware that the "mode" is the most important field in any 
+Csgrouper setup, either in the "Sequences" tab or the "Series" tab. If this 
+field is not correctly filled out, Csgrouper *will* fail at some point. 
 
-In the beggining, it's easy to replace a valid setup by a setup that will not 
-complete evaluation. In this case one can come back to the default project 
-provided with Csgrouper, that is located in folder "proj" under the name 
-"xpace-flute.xml". Just copy that file onto Csgrouper/run/default.xml and relaunch
-the program to come back to the valid default piece.
+The idea is simple: the number of notes you list in the "mode" field must match
+the number in the "base" field. For example, if you set the "base" field to 14,
+yoju must also enter 14 signs in the "mode" field.
 
-If Csgrouper refuses to play a score in spite of proper Csound setup, it can
-be due to the mere absence of an empty folder Csgrouper/run/bkp where Csound 
-runtime process happens (see INSTALL.txt for more info on package files).
+Currently, there is a bug in the default "Series" tab: the "base" is set to 18,
+but the "mode" only contains 12 signs, which will cause several things to fail.
 
-*** How to run in DEBUG mode?
+If you want to set up to use a particular musical mode, you'll need to replace
+some of the signs with identical, duplicate ones. For instance, if "base" is set
+to "12" and the mode is "0123456789AB", this defines a standard 12-tone chromatic
+scale. To switch this to the classical Dorian mode, you'd need to replace unwanted
+notes with notes you *do* want. In our example, this would be "00224557799B", 
+replacing the half-steps we don't want with duplicates of notes in the mode that
+we do want. Csgrouper will proceed normally, but will only use the defined subset
+of the notes you provided in the mode; where it would previously have used a "1"
+(the second item in the chromatic scale) it will instead use the "0" (the 
+second item in the mode we defined), and so on.
 
-Csgrouper outputs a lot of description output on the terminal, prefixed by 
-' *** DESCR', but it can output still much more when running in debug mode.
 
-One can do this through various means, either for a particular subroutine, 
-for a group of them or for all.
+*** Diagnosing errors
 
-a) Debug All:
+When you're first starting out, it's easy to create a setup that will not 
+pass evaluation. It's usually easiest to just go back to the default project
+(in proj/xpace-flute.xml) by copying it to Csgrouper/run/default.xml and
+restarting Csgrouper.
 
-From the "Series" tab, type:
+If Csgrouper refuses to play a score even though you've tested your Csound
+setup and found it to be working, it may be that the Csgrouper/run/bkp 
+directory is missing; this is the directory in which Csgrouper places the
+Csound input files. The MANIFEST lists all of the files and directories 
+that Csgrouper expects to have.
+
+*** DEBUG mode
+
+Csgrouper already prints a lot of descriptive output on the terminal, 
+prefixed by ' *** DESCR', but running in DEBUG mode will output still more
+information that may be useful in tracking down a problem.
+
+You can turn on debugging for a particular subroutine, for a group of them,
+or for all.
+
+a) To debug everything:
+
+In the "Series" tab, type:
 
 	~$Csgrouper::DEBFLAG = 1 
 
-into the "cmd line" field and press button "Send". 
-All commands prefixed with a '~' are Perl oneliners that can access the modules' globals. 
-(Command without prefixe are Csgrouper function calls mainly useful for csg_Sets.pm).
+into the "cmd line" field and press the "Send" button. 
 
-	~$Csgrouper::DEBFLAG = 0 (to suppress debug output).
+All commands prefixed with a '~' are interpreted as Perl one-liners, with 
+access to the modules' globals. (Commands without the "~" are Csgrouper
+function calls, which are mainly useful for for invoking set functions
+from csg_Sets.pm.)
 
-b) Debug some subroutines, type:
+	~$Csgrouper::DEBFLAG = 0
+
+will turn off debug output.
+
+b) To debug specific subroutines, type:
 
 	~$Csgrouper::DEBSUBS = "Csgrouper::struct_ctl Csgrouper::comp_tracks"
 	
-and only these subs (written with module name prefixe) will be debugged.
+and only these subroutines (note that you should use their fully-qualified names)
+will be debugged.
 
-c) Debug one subroutine all the time:
+c) To permanently turn on debugging for a specific single subroutine:
 
-	correct the sub's code by setting $DEBFLAG = 1 at the beggining.
+	Edit the subroutine's code to add a "$DEBFLAG = 1;"  at the beginning.
 
 EOF

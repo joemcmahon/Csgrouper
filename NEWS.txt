@@ -1,44 +1,34 @@
 
 
-*** News / Todo / Questions / Problems / Recent Changes / Bugs (see at EOF) 
+*** News / TODOs / Questions / Problems / Recent Changes / Bugs (see at EOF) 
 
- - 120627 : NEEDED: Someone generous who would correct my English in Help texts
- and others (contact emilbarton@ymail.com). 
+ - Some minor rewording and editing by Joe McMahon (mcmahon@cpan.org).
+
+ - 120627: Manual pages still need to be written, but Csgrouper should now
+be usable by those who aren't Perl programmers.
  
- - 120627 : Manual pages have still  to be written, but I think that Csgrouper 
- can more and more be used by non Perl programmers. 
- 
- - 120627 : The fact that my class hierarchy is not quite hierarchical makes me 
+ - 120627: The fact that my class hierarchy is not quite hierarchical makes me 
  wonder about the appropriateness of using Moose, and even of trying to follow 
  an OO model in this project. Moose has the drawback of requiring a lot of other 
  Cpan modules to be installed. What's your opinion on this?
 
- - 120627 : the modifications brought in the last days represent a first
- important revision: version is now 2.0.2 (version.release.revision).
+ - 120627: We're now at version 2.0.2.
 
- - 120627 : change in project names: 'parts' are renamed as 'projects' since a
- musical part is precisely not the whole of a musical score as it is in
- csgrouper. The program tree has to be changed too.
+ - 120627: 'Parts' have been renamed to 'projects' since a musical part is 
+not exactly the same as the whole of a musical score as it is in csgrouper.
+Various places updated to reflect this.
 
- - 120627 : correction of the reload() bug (see at the end of this page).
+ - 120627: The reload() bug is now fixed (see the end of this page).
 
- - 120625 : correction of the ins_parnum() bug (see at the end of this page) and
- improvement of instruments loading (ins_load), suppression of redundant
- subroutines (ins_def).
+ - 120625: The ins_parnum() bug is now fixed (see the end of this page).
 
- - 120620 : introduction of Tk Balloon help: they will be gradually created for
- each functionnality.
+ - 120625: ins_load (instrument loading) improved.
 
- - 120317: From now on and for a while, most changes will concern the Manual
- pages that need to be completed and they will be mentionned on Github by a
- "Minor comment fix." to distinguish them from possible minor code fixes.
+ - 120625: Redundant subroutines removed.
 
- - Problem with the instruments fields: in spite of correct bindings sometimes
- unsupported utf8 are recorded. If a .csg recorded project refuses to load it's
- that some unwanted multibyte char has been inserted at some stage by some
- keypress (e.g. from Emacs-like reflexes). In this case XML:Simple aborts. The
- solution is to find and destroy the bad char (showing some special prefixe like
- ^) with an editor as nano or vi.
+ - 120620:  Tk Balloon help added. More ballon help will be added incrementally.
+
+ - 120317: Documentation fixes will be noted separately from code changes.
 
 *** Bugs
 
@@ -118,5 +108,14 @@ I had the following line in the begining of the struct_ctl() loop:
 	$self->sequences->{$tpref."_id"}//= "";
 
 so the object was created.
+
+*** *** Perl-related bugs:
+
+ - UTF-8 in instrument fields: despite code to eliminate it, instrument fields
+can record bad UTF-8 characters (e.g., from Emacs-like reflexes). If a .csg 
+project refuses to load, it may be because an unwanted multibyte character
+has accidentally been inserted; this will cause XML::Simple to die. Currently,
+the solution is to find and delete the bad character using nano or vi (it will
+appear with a leading ^).
 
 EOF
