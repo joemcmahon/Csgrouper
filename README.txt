@@ -92,7 +92,7 @@ Csgrouper has no test suite.
 *** Goals
 
 I've shared this code via Github, and I'd very much like  programmers 
-interessed by this project to help me to improve it. I'll be happy 
+interested by this project to help me to improve it. I'll be happy 
 to see the project fork, become smarter, less redundant, have a new and better 
 GUI and increase in quality to help musicians make music.
 
