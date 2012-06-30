@@ -38,21 +38,26 @@ field is not correctly filled out, Csgrouper *will* fail at some point.
 
 The idea is simple: the number of notes you list in the "mode" field must match
 the number in the "base" field. For example, if you set the "base" field to 14,
-yoju must also enter 14 signs in the "mode" field.
+you must also enter 14 "note" symbols in the "mode" field.
 
 Currently, there is a bug in the default "Series" tab: the "base" is set to 18,
-but the "mode" only contains 12 signs, which will cause several things to fail.
+but the "mode" only contains 12 note symbols. You'll need to change one or the
+other to proceed successfully.
 
 If you want to set up to use a particular musical mode, you'll need to replace
-some of the signs with identical, duplicate ones. For instance, if "base" is set
+some of the note symbols with identical, duplicate ones to fill out the
+list of symbols to match the number in "base". For instance, if "base" is set
 to "12" and the mode is "0123456789AB", this defines a standard 12-tone chromatic
-scale. To switch this to the classical Dorian mode, you'd need to replace unwanted
-notes with notes you *do* want. In our example, this would be "00224557799B", 
-replacing the half-steps we don't want with duplicates of notes in the mode that
-we do want. Csgrouper will proceed normally, but will only use the defined subset
+scale. To switch this to the classical Dorian mode, which only has 7 distinct
+notes instead of 12, you'd need to replace the unwanted notes with ones you 
+*do* want. In our example, we could use "00224557799B", replacing the half-steps 
+in the chromatic scale that we don't want with duplicates of notes that we do want.
+Csgrouper will proceed normally, but will only use the defined subset
 of the notes you provided in the mode; where it would previously have used a "1"
 (the second item in the chromatic scale) it will instead use the "0" (the 
-second item in the mode we defined), and so on.
+second item in the mode we defined), and so on. It will use all of the symbols
+while processing, so your choice of which notes to duplicate will change the 
+statistics of the output sequences.
 
 
 *** Diagnosing errors
